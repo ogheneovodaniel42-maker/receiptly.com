@@ -1,0 +1,4449 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Security & Access Control — Receiptly Owner</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ════════════════════════════════════════════════════════════
+               CSS VARIABLES & RESET (shared with admin-dashboard)
+               ════════════════════════════════════════════════════════════ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-display: "Fraunces", Georgia, serif;
+
+            --bg-body: #f1f5f9;
+            --bg-card: rgba(255, 255, 255, 0.78);
+            --bg-card-border: rgba(255, 255, 255, 0.30);
+            --bg-input: #f1f5f9;
+            --bg-input-hover: #e8edf5;
+            --bg-sidebar: rgba(255, 255, 255, 0.92);
+            --bg-header: rgba(255, 255, 255, 0.72);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --text-inverse: #ffffff;
+            --accent: #7c3aed;
+            --accent-dark: #6d28d9;
+            --accent-glow: rgba(124, 58, 237, 0.25);
+            --accent-soft: #ede9fe;
+            --accent-light: #d8b4fe;
+            --border-light: #e2e8f0;
+            --border-strong: #cbd5e1;
+            --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 8px 30px rgba(15, 23, 42, 0.06);
+            --shadow-lg: 0 20px 60px rgba(15, 23, 42, 0.10);
+            --shadow-input: 0 0 0 4px rgba(124, 58, 237, 0.10);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --blur-amount: 20px;
+            --sidebar-width: 260px;
+            --header-height: 64px;
+            --success: #059669;
+            --success-soft: #ecfdf5;
+            --error: #dc2626;
+            --error-soft: #fef2f2;
+            --orange: #d97706;
+            --orange-soft: #fffbeb;
+            --blue: #2563eb;
+            --blue-soft: #eff6ff;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0b1220;
+            --bg-card: rgba(17, 27, 46, 0.80);
+            --bg-card-border: rgba(255, 255, 255, 0.05);
+            --bg-input: #1e293b;
+            --bg-input-hover: #263348;
+            --bg-sidebar: rgba(15, 23, 42, 0.92);
+            --bg-header: rgba(11, 18, 32, 0.80);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent: #8b5cf6;
+            --accent-dark: #7c3aed;
+            --accent-glow: rgba(139, 92, 246, 0.20);
+            --accent-soft: rgba(139, 92, 246, 0.12);
+            --accent-light: #a78bfa;
+            --border-light: #1e293b;
+            --border-strong: #334155;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.35);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+            --shadow-input: 0 0 0 4px rgba(139, 92, 246, 0.15);
+            --success: #34d399;
+            --success-soft: #064e3b;
+            --error: #f87171;
+            --error-soft: #450a0a;
+            --orange: #fbbf24;
+            --orange-soft: #2a1f0f;
+            --blue: #60a5fa;
+            --blue-soft: #1e293b;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: var(--font-sans);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            transition: background var(--transition-slow), color var(--transition-slow);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        button {
+            font: inherit;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: inherit;
+        }
+        input,
+        select,
+        textarea {
+            font: inherit;
+            color: inherit;
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-strong);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* ─── APP LAYOUT ─────────────────────────────────────────── */
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ─── SIDEBAR ────────────────────────────────────────────── */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-right: 1px solid var(--bg-card-border);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition), background var(--transition-slow), border-color var(--transition-slow);
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-bottom: 20px;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 20px 16px;
+            border-bottom: 1px solid var(--border-light);
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand .brand-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 800;
+            flex-shrink: 0;
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+
+        .sidebar-brand .brand-text {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        .sidebar-brand .brand-text .accent {
+            color: var(--accent);
+        }
+        .sidebar-brand .brand-sub {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 1px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .sidebar-nav .nav-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            padding: 12px 14px 6px;
+        }
+
+        .sidebar-nav .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            width: 100%;
+            text-align: left;
+            position: relative;
+        }
+
+        .sidebar-nav .nav-item .nav-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            opacity: 0.6;
+            transition: opacity var(--transition);
+        }
+
+        .sidebar-nav .nav-item:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+        .sidebar-nav .nav-item:hover .nav-icon {
+            opacity: 1;
+        }
+        .sidebar-nav .nav-item.active {
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .sidebar-nav .nav-item.active .nav-icon {
+            opacity: 1;
+            color: var(--accent);
+        }
+        .sidebar-nav .nav-item.active::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 6px;
+            bottom: 6px;
+            width: 3px;
+            border-radius: 0 4px 4px 0;
+            background: var(--accent);
+        }
+
+        .sidebar-footer {
+            padding: 12px 12px 0;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            width: 100%;
+            text-align: left;
+        }
+        .sidebar-footer .nav-item .nav-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            opacity: 0.6;
+        }
+        .sidebar-footer .nav-item:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+        .sidebar-footer .nav-item.logout:hover {
+            color: var(--error);
+        }
+        .sidebar-footer .nav-item.logout:hover .nav-icon {
+            opacity: 1;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+            display: none;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .sidebar-overlay.open {
+            display: block;
+        }
+
+        /* ─── MAIN ───────────────────────────────────────────────── */
+        .main {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left var(--transition);
+        }
+        .main.sidebar-closed {
+            margin-left: 0;
+        }
+
+        /* ─── TOP HEADER ────────────────────────────────────────── */
+        .top-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-header);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-bottom: 1px solid var(--bg-card-border);
+            padding: 0 24px;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            transition: background var(--transition-slow), border-color var(--transition-slow);
+        }
+
+        .top-header__left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 4.5px;
+            padding: 6px;
+            border-radius: var(--radius-sm);
+            transition: background var(--transition);
+        }
+        .hamburger:hover {
+            background: var(--bg-input);
+        }
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2.5px;
+            background: var(--text-primary);
+            border-radius: 100px;
+            transition: all 0.3s ease;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        .top-header__title {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .top-header__title .sub {
+            font-weight: 400;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-left: 6px;
+        }
+
+        .top-header__right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .header-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            font-size: 1rem;
+        }
+        .header-btn:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+
+        .header-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 14px 4px 4px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+            transition: all var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+        .header-profile:hover {
+            border-color: var(--border-strong);
+            background: var(--bg-input);
+        }
+        .header-profile .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+        .header-profile .profile-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        .header-profile .profile-info .name {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .header-profile .profile-info .role {
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+        }
+        .header-profile .chevron {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            margin-left: 2px;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            min-width: 200px;
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            padding: 8px 0;
+            display: none;
+            z-index: 200;
+            overflow: hidden;
+        }
+        .profile-dropdown.open {
+            display: block;
+            animation: dropDown 0.2s ease;
+        }
+        @keyframes dropDown {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .profile-dropdown .drop-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 18px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            width: 100%;
+            text-align: left;
+        }
+        .profile-dropdown .drop-item:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+        .profile-dropdown .drop-item svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            opacity: 0.6;
+        }
+        .profile-dropdown .divider {
+            height: 1px;
+            background: var(--border-light);
+            margin: 4px 12px;
+        }
+        .profile-dropdown .drop-item.logout {
+            color: var(--error);
+        }
+        .profile-dropdown .drop-item.logout:hover {
+            background: var(--error-soft);
+        }
+
+        /* ─── PAGE CONTENT ──────────────────────────────────────── */
+        .page-content {
+            flex: 1;
+            padding: 24px 24px 40px;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+        .page-header h1 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        .page-header h1 .highlight {
+            background: linear-gradient(135deg, var(--accent), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            margin-top: 2px;
+        }
+
+        .page-header .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .page-header .last-check {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .page-header .last-check .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+        .page-header .last-check .dot.checking {
+            animation: pulse-dot 1s infinite;
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 20px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.82rem;
+            transition: all var(--transition);
+            border: 1px solid transparent;
+        }
+        .btn--primary {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn--primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+        .btn--primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .btn--outline {
+            border-color: var(--border-light);
+            color: var(--text-secondary);
+            background: transparent;
+        }
+        .btn--outline:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+        .btn--danger {
+            background: var(--error);
+            color: #fff;
+        }
+        .btn--danger:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25);
+        }
+        .btn--warning {
+            background: var(--orange);
+            color: #fff;
+        }
+        .btn--warning:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(217, 119, 6, 0.25);
+        }
+        .btn .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            border-top-color: #fff;
+            border-radius: 50%;
+            display: none;
+            animation: spin 0.7s linear infinite;
+        }
+        .btn .spinner.show {
+            display: inline-block;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+            font-size: 0.9rem;
+        }
+        .btn-icon:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+
+        /* ─── SECURITY SCORE ──────────────────────────────────────── */
+        .score-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            padding: 24px 28px;
+            margin-bottom: 24px;
+            transition: all var(--transition);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px 40px;
+            align-items: center;
+        }
+        .score-card:hover {
+            border-color: var(--border-strong);
+        }
+
+        .score-card .score-ring {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            flex-shrink: 0;
+        }
+
+        .score-card .score-ring svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .score-card .score-ring .bg {
+            fill: none;
+            stroke: var(--bg-input);
+            stroke-width: 8;
+        }
+
+        .score-card .score-ring .progress {
+            fill: none;
+            stroke: var(--accent);
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dasharray 0.8s ease, stroke 0.8s ease;
+        }
+
+        .score-card .score-ring .score-label {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--text-primary);
+        }
+
+        .score-card .score-ring .score-label .sub {
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-top: -2px;
+        }
+
+        .score-card .score-info {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .score-card .score-info .score-status {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .score-card .score-info .score-status .badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 12px;
+            border-radius: var(--radius-full);
+            margin-left: 8px;
+        }
+
+        .score-card .score-info .score-status .badge.excellent {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .score-card .score-info .score-status .badge.good {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+        .score-card .score-info .score-status .badge.needs-attention {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .score-card .score-info .score-status .badge.critical {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+
+        .score-card .score-info .score-desc {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .score-card .score-info .score-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .score-card .score-info .score-details .item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .score-card .score-info .score-details .item .icon {
+            font-size: 0.85rem;
+        }
+
+        .score-card .score-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-left: auto;
+        }
+
+        /* ─── STATS ──────────────────────────────────────────────── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-md);
+            padding: 16px 18px;
+            transition: all var(--transition);
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--border-strong);
+        }
+        .stat-card .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2px;
+        }
+        .stat-card .stat-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+        }
+        .stat-card .stat-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.85rem;
+        }
+        .stat-card .stat-icon--purple {
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+        .stat-card .stat-icon--blue {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+        .stat-card .stat-icon--green {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .stat-card .stat-icon--orange {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .stat-card .stat-icon--red {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .stat-card .stat-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: var(--text-primary);
+        }
+        .stat-card .stat-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+        .stat-card .stat-status {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 1px 8px;
+            border-radius: var(--radius-full);
+            display: inline-block;
+        }
+        .stat-card .stat-status--good {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .stat-card .stat-status--warning {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .stat-card .stat-status--danger {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+
+        /* ─── ALERT BANNER ────────────────────────────────────────── */
+        .alert-banner {
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-left: 4px solid transparent;
+        }
+
+        .alert-banner--danger {
+            background: var(--error-soft);
+            border-left-color: var(--error);
+            color: var(--error);
+        }
+
+        .alert-banner--warning {
+            background: var(--orange-soft);
+            border-left-color: var(--orange);
+            color: var(--orange);
+        }
+
+        .alert-banner--success {
+            background: var(--success-soft);
+            border-left-color: var(--success);
+            color: var(--success);
+        }
+
+        .alert-banner .alert-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .alert-banner .alert-content .alert-icon {
+            font-size: 1.2rem;
+        }
+
+        .alert-banner .alert-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .alert-banner .alert-actions .btn-sm {
+            padding: 5px 14px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            border-radius: var(--radius-full);
+            border: 1px solid currentColor;
+            background: transparent;
+            color: inherit;
+            transition: all var(--transition);
+            cursor: pointer;
+        }
+        .alert-banner .alert-actions .btn-sm:hover {
+            background: currentColor;
+            color: #fff;
+        }
+
+        /* ─── SECURITY SETTINGS ───────────────────────────────────── */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .settings-panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all var(--transition);
+        }
+        .settings-panel:hover {
+            border-color: var(--border-strong);
+        }
+
+        .settings-panel .panel-header {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .settings-panel .panel-header h3 {
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+        .settings-panel .panel-header .panel-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .settings-panel .panel-body {
+            padding: 16px 18px;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+
+        .setting-row .setting-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+        .setting-row .setting-info .setting-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .setting-row .setting-info .setting-desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .setting-row .setting-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .setting-row .setting-control select {
+            border: 1px solid var(--border-light);
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            padding: 4px 10px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            outline: none;
+            transition: all var(--transition);
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            padding-right: 28px;
+            position: relative;
+        }
+        .setting-row .setting-control select:focus {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-input);
+        }
+        .setting-row .setting-control .select-wrap {
+            position: relative;
+        }
+        .setting-row .setting-control .select-wrap::after {
+            content: "▾";
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.6rem;
+            pointer-events: none;
+        }
+        .setting-row .setting-control .select-wrap select {
+            padding-right: 28px;
+        }
+
+        .setting-row .setting-control input[type="number"] {
+            width: 60px;
+            padding: 4px 8px;
+            border: 1px solid var(--border-light);
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            font-size: 0.78rem;
+            color: var(--text-primary);
+            outline: none;
+            transition: all var(--transition);
+        }
+        .setting-row .setting-control input[type="number"]:focus {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-input);
+        }
+
+        /* ─── TOGGLES ─────────────────────────────────────────────── */
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .toggle-switch .slider {
+            position: absolute;
+            inset: 0;
+            background: var(--bg-input);
+            border-radius: 24px;
+            transition: all var(--transition);
+            border: 1px solid var(--border-light);
+        }
+
+        .toggle-switch .slider::before {
+            content: "";
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            left: 2px;
+            bottom: 2px;
+            background: #fff;
+            border-radius: 50%;
+            transition: all var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .toggle-switch input:checked+.slider {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .toggle-switch input:checked+.slider::before {
+            transform: translateX(20px);
+        }
+
+        .toggle-switch input:disabled+.slider {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .toggle-switch .toggle-label-text {
+            position: absolute;
+            left: calc(100% + 10px);
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        /* ─── 2FA SECTION ────────────────────────────────────────── */
+        .twofa-methods {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .twofa-methods .method-chip {
+            padding: 4px 14px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: var(--bg-input);
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .twofa-methods .method-chip:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+        }
+        .twofa-methods .method-chip.active {
+            background: var(--accent-soft);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .twofa-methods .method-chip .chip-status {
+            font-size: 0.6rem;
+        }
+        .twofa-methods .method-chip .chip-status.enabled {
+            color: var(--success);
+        }
+        .twofa-methods .method-chip .chip-status.disabled {
+            color: var(--text-muted);
+        }
+
+        /* ─── PASSWORD STRENGTH ────────────────────────────────────── */
+        .strength-bar {
+            display: flex;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .strength-bar .segment {
+            height: 4px;
+            flex: 1;
+            border-radius: 2px;
+            background: var(--bg-input);
+            transition: background var(--transition);
+        }
+
+        .strength-bar .segment.filled {
+            background: var(--error);
+        }
+        .strength-bar .segment.filled.weak {
+            background: var(--error);
+        }
+        .strength-bar .segment.filled.fair {
+            background: var(--orange);
+        }
+        .strength-bar .segment.filled.good {
+            background: var(--blue);
+        }
+        .strength-bar .segment.filled.strong {
+            background: var(--success);
+        }
+
+        .strength-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* ─── RECENT EVENTS ───────────────────────────────────────── */
+        .events-panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all var(--transition);
+            margin-bottom: 24px;
+        }
+        .events-panel:hover {
+            border-color: var(--border-strong);
+        }
+
+        .events-panel .panel-header {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .events-panel .panel-header h3 {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .events-panel .panel-body {
+            padding: 4px 0;
+            max-height: 340px;
+            overflow-y: auto;
+        }
+
+        .event-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 18px;
+            border-bottom: 1px solid var(--border-light);
+            transition: background var(--transition);
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .event-item:last-child {
+            border-bottom: none;
+        }
+        .event-item:hover {
+            background: var(--bg-input);
+        }
+
+        .event-item .ev-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .event-item .ev-severity {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 2px 10px;
+            border-radius: var(--radius-full);
+        }
+        .event-item .ev-severity--info {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+        .event-item .ev-severity--warning {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .event-item .ev-severity--critical {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+
+        .event-item .ev-desc {
+            font-size: 0.82rem;
+            color: var(--text-primary);
+        }
+
+        .event-item .ev-user {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .event-item .ev-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .event-item .ev-date {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .event-item .ev-view {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--accent);
+            cursor: pointer;
+            transition: color var(--transition);
+        }
+        .event-item .ev-view:hover {
+            color: var(--accent-dark);
+            text-decoration: underline;
+        }
+
+        .events-empty {
+            padding: 30px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* ─── RECOMMENDATIONS ─────────────────────────────────────── */
+        .recommendations-panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all var(--transition);
+            margin-bottom: 24px;
+        }
+        .recommendations-panel:hover {
+            border-color: var(--border-strong);
+        }
+
+        .recommendations-panel .panel-header {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .recommendations-panel .panel-header h3 {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .recommendations-panel .panel-body {
+            padding: 4px 0;
+        }
+
+        .rec-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 18px;
+            border-bottom: 1px solid var(--border-light);
+            transition: background var(--transition);
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .rec-item:last-child {
+            border-bottom: none;
+        }
+        .rec-item:hover {
+            background: var(--bg-input);
+        }
+
+        .rec-item .rec-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rec-item .rec-icon {
+            font-size: 1rem;
+        }
+
+        .rec-item .rec-desc {
+            font-size: 0.82rem;
+            color: var(--text-primary);
+        }
+
+        .rec-item .rec-priority {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 1px 8px;
+            border-radius: var(--radius-full);
+        }
+        .rec-item .rec-priority--high {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .rec-item .rec-priority--medium {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .rec-item .rec-priority--low {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+
+        .rec-item .rec-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rec-item .rec-fix {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--accent);
+            cursor: pointer;
+            padding: 3px 12px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--accent);
+            background: transparent;
+            transition: all var(--transition);
+        }
+        .rec-item .rec-fix:hover {
+            background: var(--accent-soft);
+        }
+
+        .rec-empty {
+            padding: 20px 18px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* ─── DANGER ZONE ─────────────────────────────────────────── */
+        .danger-zone {
+            border: 1px solid var(--error);
+            border-radius: var(--radius-lg);
+            padding: 20px 22px;
+            background: var(--error-soft);
+            margin-bottom: 24px;
+        }
+
+        .danger-zone .danger-title {
+            font-weight: 700;
+            color: var(--error);
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        .danger-zone .danger-desc {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .danger-zone .danger-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .danger-zone .danger-actions .btn-sm {
+            padding: 6px 16px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--error);
+            background: transparent;
+            color: var(--error);
+            transition: all var(--transition);
+            cursor: pointer;
+        }
+        .danger-zone .danger-actions .btn-sm:hover {
+            background: var(--error);
+            color: #fff;
+        }
+
+        /* ─── SECURITY NOTICE ────────────────────────────────────── */
+        .security-notice {
+            background: var(--bg-input);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            border: 1px solid var(--border-light);
+            margin-bottom: 24px;
+        }
+
+        .security-notice .notice-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .security-notice .notice-text {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ─── TOAST ──────────────────────────────────────────────── */
+        .toast-host {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 380px;
+            width: 100%;
+        }
+
+        .toast {
+            padding: 12px 18px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast.hide {
+            transform: translateX(120%);
+            opacity: 0;
+        }
+        .toast .t-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+        .toast.error .t-icon {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .toast.success .t-icon {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .toast.info .t-icon {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+        .toast .t-msg {
+            flex: 1;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .toast .t-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0 4px;
+            transition: color var(--transition);
+            line-height: 1;
+        }
+        .toast .t-close:hover {
+            color: var(--text-primary);
+        }
+
+        /* ─── MODALS ─────────────────────────────────────────────── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .modal-overlay.is-visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            max-width: 520px;
+            width: 100%;
+            padding: 28px 30px;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(12px) scale(0.98);
+            transition: transform var(--transition);
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal-overlay.is-visible .modal {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: color var(--transition);
+            line-height: 1;
+            padding: 4px;
+        }
+        .modal .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .modal .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+        .modal .modal-icon--danger {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .modal .modal-icon--warning {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .modal .modal-icon--info {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+
+        .modal .modal-title {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 4px;
+        }
+        .modal .modal-msg {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .modal .modal-msg strong {
+            color: var(--text-primary);
+        }
+
+        .modal .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .modal .event-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 16px;
+            margin-bottom: 12px;
+        }
+        .modal .event-detail-grid .ed-item {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+        .modal .event-detail-grid .ed-item .ed-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+        }
+        .modal .event-detail-grid .ed-item .ed-value {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* ─── SKELETON ───────────────────────────────────────────── */
+        .skeleton {
+            background: var(--bg-input);
+            border-radius: 6px;
+            animation: pulse 1.5s ease-in-out infinite;
+            height: 20px;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+        .skeleton-text {
+            height: 14px;
+            margin-bottom: 4px;
+        }
+        .skeleton-text.w-75 {
+            width: 75%;
+        }
+        .skeleton-text.w-50 {
+            width: 50%;
+        }
+        .skeleton-text.w-25 {
+            width: 25%;
+        }
+
+        /* ─── RESPONSIVE ─────────────────────────────────────────── */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main {
+                margin-left: 0;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .top-header {
+                padding: 0 16px;
+            }
+            .page-content {
+                padding: 16px 16px 32px;
+            }
+            .header-profile .profile-info {
+                display: none;
+            }
+            .header-profile .chevron {
+                display: none;
+            }
+            .header-profile {
+                padding: 4px;
+                border: none;
+                background: transparent;
+            }
+            .header-profile:hover {
+                background: transparent;
+            }
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+            .score-card {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .score-card .score-ring {
+                margin: 0 auto;
+            }
+            .score-card .score-actions {
+                margin-left: 0;
+                justify-content: center;
+            }
+            .score-card .score-info .score-details {
+                justify-content: center;
+            }
+            .modal .event-detail-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .stat-card {
+                padding: 12px 14px;
+            }
+            .stat-card .stat-value {
+                font-size: 1.1rem;
+            }
+            .top-header__title .sub {
+                display: none;
+            }
+            .page-content {
+                padding: 12px 12px 24px;
+            }
+            .score-card {
+                padding: 16px 18px;
+            }
+            .score-card .score-ring {
+                width: 80px;
+                height: 80px;
+            }
+            .score-card .score-ring .score-label {
+                font-size: 1.2rem;
+            }
+            .setting-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            .setting-row .setting-control {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .alert-banner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .alert-banner .alert-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .twofa-methods {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .modal {
+                padding: 16px;
+                margin: 8px;
+            }
+            .modal .modal-close {
+                top: 12px;
+                right: 12px;
+            }
+            .toast-host {
+                bottom: 16px;
+                right: 16px;
+                left: 16px;
+                max-width: none;
+            }
+            .danger-zone {
+                padding: 14px 16px;
+            }
+            .danger-zone .danger-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .event-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .event-item .ev-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .rec-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .rec-item .rec-right {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .stat-card {
+                padding: 8px 10px;
+            }
+            .stat-card .stat-value {
+                font-size: 1rem;
+            }
+            .stat-card .stat-label {
+                font-size: 0.55rem;
+            }
+            .stat-card .stat-icon {
+                width: 24px;
+                height: 24px;
+                font-size: 0.7rem;
+            }
+            .page-header h1 {
+                font-size: 1.2rem;
+            }
+            .btn {
+                font-size: 0.7rem;
+                padding: 6px 12px;
+            }
+            .score-card .score-ring {
+                width: 64px;
+                height: 64px;
+            }
+            .score-card .score-ring .score-label {
+                font-size: 1rem;
+            }
+            .score-card .score-ring .score-label .sub {
+                font-size: 0.5rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .sidebar {
+                transition: none;
+            }
+            .toast {
+                transition: none;
+            }
+            .modal {
+                transition: none;
+            }
+            .skeleton {
+                animation: none;
+                opacity: 0.4;
+            }
+            .score-card .score-ring .progress {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ════════════════════════════════════════════════════════════
+    SIDEBAR
+    ════════════════════════════════════════════════════════════ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <span class="brand-icon">R</span>
+            <div class="brand-text">
+                Receipt<span class="accent">ly</span>
+                <span class="brand-sub">Owner Panel</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-label">Main</div>
+            <a class="nav-item" href="admin-dashboard.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a class="nav-item" href="admin-analytics.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M4 20l16-16"/></svg>
+                Analytics
+            </a>
+
+            <div class="nav-label">Management</div>
+            <a class="nav-item" href="admin-users.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Users
+            </a>
+            <div class="nav-label">Finance</div>
+            <a class="nav-item" href="admin-payments.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                Payments
+            </a>
+            <div class="nav-label">Content</div>
+            <a class="nav-item" href="admin-templates.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+                Templates
+            </a>
+            <a class="nav-item" href="admin-announcements.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                Announcements
+            </a>
+
+            <div class="nav-label">Communication</div>
+            <a class="nav-item" href="admin-support.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Support
+            </a>
+            <a class="nav-item" href="admin-messages.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Messages
+                <span id="msgNavBadge" style="margin-left:auto;background:#dc2626;color:#fff;font-size:0.65rem;font-weight:800;border-radius:999px;padding:1px 6px;min-width:16px;text-align:center;display:none;">0</span>
+            </a>
+            <a class="nav-item" href="admin-reports.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Reports
+            </a>
+
+            <div class="nav-label">Administration</div>
+            <a class="nav-item" href="admin-settings.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Settings
+            </a>
+            <a class="nav-item" href="admin-roles.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Roles &amp; Permissions
+            </a>
+            <a class="nav-item" href="admin-permissions.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Permissions
+            </a>
+            <a class="nav-item" href="admin-sessions.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Sessions
+            </a>
+            <a class="nav-item active" href="admin-security.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Security
+            </a>
+            <a class="nav-item" href="company-profile.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Company Profile
+            </a>
+
+        </nav>
+        <div class="sidebar-footer">
+            <button class="nav-item logout" id="logoutBtn">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+                Logout
+            </button>
+        </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    MAIN CONTENT
+    ════════════════════════════════════════════════════════════ -->
+    <div class="main" id="mainContent">
+        <!-- TOP HEADER -->
+        <header class="top-header">
+            <div class="top-header__left">
+                <button class="hamburger" id="hamburger" aria-label="Toggle sidebar">
+                    <span></span><span></span><span></span>
+                </button>
+                <div class="top-header__title">
+                    Security &amp; Access Control
+                    <span class="sub">Admin / Security</span>
+                </div>
+            </div>
+
+            <div class="top-header__right">
+                <button class="header-btn" id="themeToggleBtn" aria-label="Toggle theme">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                </button>
+
+                <div class="header-profile" id="profileBtn">
+                    <div class="avatar" id="headerAvatar">A</div>
+                    <div class="profile-info">
+                        <span class="name" id="headerName">Admin</span>
+                        <span class="role">Super Admin</span>
+                    </div>
+                    <span class="chevron">▾</span>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <button class="drop-item" data-page="account-profile.html">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            My Account
+                        </button>
+                        <button class="drop-item" data-page="admin-security.html">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            Security
+                        </button>
+                        <button class="drop-item" data-page="admin-settings.html">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                            System Settings
+                        </button>
+                        <div class="divider"></div>
+                        <button class="drop-item logout" id="dropdownLogout">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- PAGE CONTENT -->
+        <div class="page-content" id="pageContent">
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1>Security &amp; Access Control</h1>
+                    <p>Protect your Receiptly administrator accounts, sessions, and sensitive system access.</p>
+                </div>
+                <div class="action-bar">
+                    <div class="last-check" id="lastCheck">
+                        <span class="dot" id="statusDot"></span>
+                        <span id="lastCheckText">Last check: just now</span>
+                    </div>
+                    <button class="btn btn--outline" id="securityCheckBtn">
+                        <span class="spinner" id="checkSpinner"></span>
+                        <span id="checkText">Security Check</span>
+                    </button>
+                    <button class="btn btn--primary" id="saveBtn">
+                        <span class="spinner" id="saveSpinner"></span>
+                        <span id="saveText">Save Changes</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ─── SECURITY SCORE ──────────────────────────────────── -->
+            <div class="score-card" id="scoreCard">
+                <div class="score-ring">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="bg" cx="50" cy="50" r="42" />
+                        <circle class="progress" cx="50" cy="50" r="42" stroke-dasharray="263.89" stroke-dashoffset="263.89" id="scoreCircle" />
+                    </svg>
+                    <div class="score-label" id="scoreLabel">
+                        <span id="scoreNumber">0</span>
+                        <span class="sub">/ 100</span>
+                    </div>
+                </div>
+                <div class="score-info">
+                    <div class="score-status">
+                        <span id="scoreStatusText">Security Score</span>
+                        <span class="badge" id="scoreBadge">Good</span>
+                    </div>
+                    <div class="score-desc" id="scoreDesc">Your security configuration is in good shape.</div>
+                    <div class="score-details" id="scoreDetails">
+                        <!-- populated by JS -->
+                    </div>
+                </div>
+                <div class="score-actions">
+                    <button class="btn btn--outline" id="runCheckBtn">🔄 Run Full Check</button>
+                </div>
+            </div>
+
+            <!-- ─── STATS ───────────────────────────────────────────── -->
+            <div class="stats-grid" id="statsGrid">
+                <!-- populated by JS -->
+            </div>
+
+            <!-- ─── ALERT BANNER ────────────────────────────────────── -->
+            <div class="alert-banner" id="alertBanner" style="display:none;">
+                <div class="alert-content">
+                    <span class="alert-icon" id="alertIcon">⚠️</span>
+                    <span id="alertText">Your security configuration needs attention.</span>
+                </div>
+                <div class="alert-actions">
+                    <button class="btn-sm" id="alertFixBtn">Fix Now</button>
+                </div>
+            </div>
+
+            <!-- ─── SECURITY SETTINGS ──────────────────────────────── -->
+            <div class="settings-grid">
+
+                <!-- Two-Factor Authentication -->
+                <div class="settings-panel">
+                    <div class="panel-header">
+                        <h3>🔐 Two-Factor Authentication</h3>
+                        <span class="panel-sub">Add an extra verification step</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Enable Two-Factor Authentication</span>
+                                <span class="setting-desc">Require a second verification step for admin logins</span>
+                            </div>
+                            <div class="setting-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="twoFactorEnabled" />
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="twofa-methods" id="twofaMethods">
+                            <span class="method-chip" data-method="app">
+                                <span>📱 Authenticator App</span>
+                                <span class="chip-status disabled">Disabled</span>
+                            </span>
+                            <span class="method-chip" data-method="email">
+                                <span>✉ Email Verification</span>
+                                <span class="chip-status disabled">Disabled</span>
+                            </span>
+                            <span class="method-chip" data-method="sms">
+                                <span>📲 SMS Verification</span>
+                                <span class="chip-status disabled">Disabled</span>
+                            </span>
+                        </div>
+                        <div style="margin-top:10px;font-size:0.7rem;color:var(--text-muted);">
+                            ℹ️ Actual two-factor verification requires backend authentication support.
+                        </div>
+                        <button class="btn btn--outline" style="margin-top:8px;padding:4px 16px;font-size:0.72rem;" id="configure2faBtn">Configure</button>
+                    </div>
+                </div>
+
+                <!-- Login Security -->
+                <div class="settings-panel">
+                    <div class="panel-header">
+                        <h3>🔑 Login Security</h3>
+                        <span class="panel-sub">Protect against unauthorized access</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Maximum Login Attempts</span>
+                                <span class="setting-desc">Lockout after failed attempts</span>
+                            </div>
+                            <div class="setting-control">
+                                <div class="select-wrap">
+                                    <select id="maxLoginAttempts">
+                                        <option value="3">3 attempts</option>
+                                        <option value="5" selected>5 attempts</option>
+                                        <option value="10">10 attempts</option>
+                                        <option value="0">Unlimited</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Lockout Duration</span>
+                                <span class="setting-desc">Time before retry</span>
+                            </div>
+                            <div class="setting-control">
+                                <div class="select-wrap">
+                                    <select id="lockoutDuration">
+                                        <option value="5">5 minutes</option>
+                                        <option value="10">10 minutes</option>
+                                        <option value="15" selected>15 minutes</option>
+                                        <option value="30">30 minutes</option>
+                                        <option value="60">1 hour</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Track Failed Login Attempts</span>
+                                <span class="setting-desc">Monitor and log failed login events</span>
+                            </div>
+                            <div class="setting-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="trackFailedLogins" checked />
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Notify About Suspicious Logins</span>
+                                <span class="setting-desc">Alert admins of unusual login activity</span>
+                            </div>
+                            <div class="setting-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="suspiciousLoginNotify" checked />
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Policy -->
+                <div class="settings-panel">
+                    <div class="panel-header">
+                        <h3>🔒 Password Policy</h3>
+                        <span class="panel-sub">Enforce strong password requirements</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Minimum Password Length</span>
+                                <span class="setting-desc">Require at least N characters</span>
+                            </div>
+                            <div class="setting-control">
+                                <div class="select-wrap">
+                                    <select id="minPasswordLength">
+                                        <option value="8">8 characters</option>
+                                        <option value="10">10 characters</option>
+                                        <option value="12" selected>12 characters</option>
+                                        <option value="14">14 characters</option>
+                                        <option value="16">16 characters</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Require Uppercase</span>
+                                <span class="setting-desc">At least one uppercase letter</span>
+                            </div>
+                            <div class="setting-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="requireUppercase" checked />
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Require Lowercase</span>
+                                <span class="setting-desc">At least one lowercase letter</span>
+                            </div>
+                            <div class="setting-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="requireLowercase" checked />
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Require Number</span>
+                                <span class="setting-desc">At least one numeric digit</span>
+                            </div>
+                            <div class="setting-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="requireNumber" checked />
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Require Special Character</span>
+                                <span class="setting-desc">At least one special character</span>
+                            </div>
+                            <div class="setting-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="requireSpecial" checked />
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Password Expiration</span>
+                                <span class="setting-desc">Force password rotation</span>
+                            </div>
+                            <div class="setting-control">
+                                <div class="select-wrap">
+                                    <select id="passwordExpiration">
+                                        <option value="0">Never</option>
+                                        <option value="30">30 days</option>
+                                        <option value="60">60 days</option>
+                                        <option value="90" selected>90 days</option>
+                                        <option value="180">180 days</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Prevent Reused Passwords</span>
+                                <span class="setting-desc">Block reuse of recent passwords</span>
+                            </div>
+                            <div class="setting-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="preventReuse" checked />
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div style="margin-top:10px;">
+                            <div style="font-size:0.7rem;font-weight:600;color:var(--text-secondary);">Password Strength Preview</div>
+                            <div class="strength-bar" id="strengthBar">
+                                <span class="segment filled strong"></span>
+                                <span class="segment filled strong"></span>
+                                <span class="segment filled strong"></span>
+                                <span class="segment filled strong"></span>
+                            </div>
+                            <div class="strength-label" id="strengthLabel">Strong (meets all requirements)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Session Management -->
+                <div class="settings-panel">
+                    <div class="panel-header">
+                        <h3>🕐 Session Management</h3>
+                        <span class="panel-sub">Control admin session behavior</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Session Timeout</span>
+                                <span class="setting-desc">Auto-logout after inactivity</span>
+                            </div>
+                            <div class="setting-control">
+                                <div class="select-wrap">
+                                    <select id="sessionTimeout">
+                                        <option value="15">15 minutes</option>
+                                        <option value="30" selected>30 minutes</option>
+                                        <option value="60">1 hour</option>
+                                        <option value="120">2 hours</option>
+                                        <option value="240">4 hours</option>
+                                        <option value="480">8 hours</option>
+                                        <option value="1440">24 hours</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Remember Admin Session</span>
+                                <span class="setting-desc">Keep session active across browser restarts</span>
+                            </div>
+                            <div class="setting-control">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="rememberSession" checked />
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Maximum Active Sessions</span>
+                                <span class="setting-desc">Limit concurrent admin sessions</span>
+                            </div>
+                            <div class="setting-control">
+                                <div class="select-wrap">
+                                    <select id="maxActiveSessions">
+                                        <option value="1">1 session</option>
+                                        <option value="2">2 sessions</option>
+                                        <option value="3" selected>3 sessions</option>
+                                        <option value="5">5 sessions</option>
+                                        <option value="10">10 sessions</option>
+                                        <option value="0">Unlimited</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top:8px;font-size:0.7rem;color:var(--text-muted);">
+                            ℹ️ Active sessions are tracked in the Sessions page.
+                        </div>
+                        <button class="btn btn--outline" style="margin-top:8px;padding:4px 16px;font-size:0.72rem;" id="viewSessionsBtn">View Active Sessions</button>
+                    </div>
+                </div>
+
+                <!-- Admin Access Control -->
+                <div class="settings-panel" style="grid-column:1 / -1;">
+                    <div class="panel-header">
+                        <h3>🛡️ Administrator Access Control</h3>
+                        <span class="panel-sub">Manage admin account security policies</span>
+                    </div>
+                    <div class="panel-body">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;">
+                            <div class="setting-row" style="border-bottom:none;padding:4px 0;">
+                                <div class="setting-info">
+                                    <span class="setting-label">Allow administrator login</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="allowAdminLogin" checked />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="setting-row" style="border-bottom:none;padding:4px 0;">
+                                <div class="setting-info">
+                                    <span class="setting-label">Require administrator approval</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="requireAdminApproval" />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="setting-row" style="border-bottom:none;padding:4px 0;">
+                                <div class="setting-info">
+                                    <span class="setting-label">Restrict inactive administrators</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="restrictInactive" checked />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="setting-row" style="border-bottom:none;padding:4px 0;">
+                                <div class="setting-info">
+                                    <span class="setting-label">Block inactive accounts</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="blockInactive" />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="setting-row" style="border-bottom:none;padding:4px 0;">
+                                <div class="setting-info">
+                                    <span class="setting-label">Allow multiple sessions</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="allowMultipleSessions" checked />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="setting-row" style="border-bottom:none;padding:4px 0;">
+                                <div class="setting-info">
+                                    <span class="setting-label">Require verification for sensitive actions</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="requireSensitiveVerify" checked />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top:8px;font-size:0.7rem;color:var(--text-muted);">
+                            Sensitive actions include: Delete administrator, Delete role, Change permissions, Export sensitive data.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Notifications -->
+                <div class="settings-panel" style="grid-column:1 / -1;">
+                    <div class="panel-header">
+                        <h3>🔔 Security Notifications</h3>
+                        <span class="panel-sub">Alert admins about security events</span>
+                    </div>
+                    <div class="panel-body">
+                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px 20px;">
+                            <div class="setting-row" style="border-bottom:none;padding:4px 0;">
+                                <div class="setting-info">
+                                    <span class="setting-label" style="font-size:0.75rem;">New administrator login</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="notifyNewLogin" checked />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="setting-row" style="border-bottom:none;padding:4px 0;">
+                                <div class="setting-info">
+                                    <span class="setting-label" style="font-size:0.75rem;">Failed login attempts</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="notifyFailedLogin" checked />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="setting-row" style="border-bottom:none;padding:4px 0;">
+                                <div class="setting-info">
+                                    <span class="setting-label" style="font-size:0.75rem;">Password changes</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="notifyPasswordChange" checked />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="setting-row" style="border-bottom:none;padding:4px 0;">
+                                <div class="setting-info">
+                                    <span class="setting-label" style="font-size:0.75rem;">Role changes</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="notifyRoleChange" checked />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="setting-row" style="border-bottom:none;padding:4px 0;">
+                                <div class="setting-info">
+                                    <span class="setting-label" style="font-size:0.75rem;">Permission changes</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="notifyPermissionChange" checked />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="setting-row" style="border-bottom:none;padding:4px 0;">
+                                <div class="setting-info">
+                                    <span class="setting-label" style="font-size:0.75rem;">Session revocation</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="notifySessionRevoke" checked />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="setting-row" style="border-bottom:none;padding:4px 0;">
+                                <div class="setting-info">
+                                    <span class="setting-label" style="font-size:0.75rem;">Suspicious activity</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="notifySuspicious" checked />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="setting-row" style="border-bottom:none;padding:4px 0;">
+                                <div class="setting-info">
+                                    <span class="setting-label" style="font-size:0.75rem;">Security setting changes</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="notifySecurityChange" checked />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="setting-row" style="border-bottom:none;padding:4px 0;">
+                                <div class="setting-info">
+                                    <span class="setting-label" style="font-size:0.75rem;">Security check alerts</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="notifySecurityCheck" checked />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ─── RECOMMENDATIONS ─────────────────────────────────── -->
+            <div class="recommendations-panel" id="recommendationsPanel">
+                <div class="panel-header">
+                    <h3>💡 Security Recommendations</h3>
+                    <span style="font-size:0.75rem;color:var(--text-muted);">Suggested improvements</span>
+                </div>
+                <div class="panel-body" id="recommendationsBody">
+                    <!-- populated by JS -->
+                </div>
+            </div>
+
+            <!-- ─── SECURITY EVENTS ─────────────────────────────────── -->
+            <div class="events-panel" id="eventsPanel">
+                <div class="panel-header">
+                    <h3>📋 Recent Security Events</h3>
+                    <span style="font-size:0.75rem;color:var(--text-muted);">Last 10 events</span>
+                </div>
+                <div class="panel-body" id="eventsBody">
+                    <!-- populated by JS -->
+                </div>
+            </div>
+
+            <!-- ─── DANGER ZONE ─────────────────────────────────────── -->
+            <div class="danger-zone">
+                <div class="danger-title">⚠️ Danger Zone</div>
+                <div class="danger-desc">These actions are destructive and should be used with caution.</div>
+                <div class="danger-actions">
+                    <button class="btn-sm" id="resetSecurityBtn">Reset Security Settings</button>
+                    <button class="btn-sm" id="revokeAllSessionsBtn">Revoke All Other Sessions</button>
+                    <button class="btn-sm" id="resetLoginAttemptsBtn">Reset Login Attempt Counter</button>
+                    <button class="btn-sm" id="resetConfigBtn">Reset Security Configuration</button>
+                </div>
+            </div>
+
+            <!-- ─── SECURITY NOTICE ─────────────────────────────────── -->
+            <div class="security-notice">
+                <div class="notice-title">Frontend Security Notice</div>
+                <div class="notice-text">
+                    Receiptly currently uses frontend storage for this security configuration. These controls manage the administrator interface and local application behavior. True authentication enforcement, server-side session revocation, password policy enforcement, IP restrictions, and two-factor authentication require backend security infrastructure.
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    TOAST HOST
+    ════════════════════════════════════════════════════════════ -->
+    <div class="toast-host" id="toastHost"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    MODALS
+    ════════════════════════════════════════════════════════════ -->
+    <!-- Confirm Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal" style="max-width:460px;">
+            <button class="modal-close" data-action="close-confirm">&times;</button>
+            <div class="modal-icon" id="confirmIcon">⚠️</div>
+            <h3 class="modal-title" id="confirmTitle">Are you sure?</h3>
+            <p class="modal-msg" id="confirmMsg"></p>
+            <div class="modal-actions">
+                <button class="btn btn--outline" data-action="cancel-confirm">Cancel</button>
+                <button class="btn btn--danger" id="confirmOkBtn" data-action="ok-confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Detail Modal -->
+    <div class="modal-overlay" id="eventModal">
+        <div class="modal">
+            <button class="modal-close" data-action="close-event">&times;</button>
+            <div class="modal-icon modal-icon--info">📋</div>
+            <h3 class="modal-title" id="eventModalTitle">Event Details</h3>
+            <p class="modal-msg" id="eventModalSub"></p>
+            <div class="event-detail-grid" id="eventDetailGrid">
+                <!-- populated by JS -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn--outline" data-action="close-event">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unsaved Changes Modal -->
+    <div class="modal-overlay" id="unsavedModal">
+        <div class="modal">
+            <button class="modal-close" data-action="close-unsaved">&times;</button>
+            <div class="modal-icon modal-icon--warning">💡</div>
+            <h3 class="modal-title">Unsaved Changes</h3>
+            <p class="modal-msg">You have unsaved security changes. Are you sure you want to leave?</p>
+            <div class="modal-actions">
+                <button class="btn btn--outline" data-action="stay">Stay</button>
+                <button class="btn btn--danger" id="leaveBtn" data-action="leave">Leave</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    SCRIPTS
+    ════════════════════════════════════════════════════════════ -->
+    <script src="../js/security.js"></script>
+    <script src="../js/sessions.js"></script>
+    <script src="../js/roles.js"></script>
+    <script src="../js/admin-auth.js">
+    </script>
+    <script src="../js/ui-popup.js"></script>
+    <script src="../js/storage.js"></script>
+    <script>
+        (function() {
+            "use strict";
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  1. AUTH GUARD
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            if (typeof AdminAuth === "undefined") {
+                window.location.href = "../admin-login.html";
+                return;
+            }
+            var admin = AdminAuth.requireAdmin ? AdminAuth.requireAdmin("admin-login.html") : null;
+            if (!admin) {
+                var session = AdminAuth.getSession ? AdminAuth.getSession() : null;
+                if (!session) {
+                    window.location.href = "../admin-login.html";
+                    return;
+                }
+                admin = session;
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  2. HELPERS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var ACCOUNT_ID = admin.id || admin.email || "default_account";
+
+            function getStorageKey() {
+                return "receiptly_security_settings_" + ACCOUNT_ID;
+            }
+
+            function getDefaultSettings() {
+                return {
+                    twoFactorEnabled: false,
+                    twoFactorMethods: { app: false, email: false, sms: false },
+                    maxLoginAttempts: 5,
+                    lockoutDuration: 15,
+                    trackFailedLogins: true,
+                    suspiciousLoginNotify: true,
+                    minPasswordLength: 12,
+                    requireUppercase: true,
+                    requireLowercase: true,
+                    requireNumber: true,
+                    requireSpecial: true,
+                    passwordExpiration: 90,
+                    preventReuse: true,
+                    sessionTimeout: 30,
+                    rememberSession: true,
+                    maxActiveSessions: 3,
+                    allowAdminLogin: true,
+                    requireAdminApproval: false,
+                    restrictInactive: true,
+                    blockInactive: false,
+                    allowMultipleSessions: true,
+                    requireSensitiveVerify: true,
+                    notifications: {
+                        newLogin: true,
+                        failedLogin: true,
+                        passwordChange: true,
+                        roleChange: true,
+                        permissionChange: true,
+                        sessionRevoke: true,
+                        suspicious: true,
+                        securityChange: true,
+                        securityCheck: true
+                    },
+                    updatedAt: null
+                };
+            }
+
+            // Maps this page's local field names to js/security.js's
+            // canonical config field names (the ones login.html,
+            // admin-login.html, and session-timeout checks actually read).
+            var SECURITY_FIELD_MAP = {
+                twoFactorEnabled: "twoFactorRequired",
+                minPasswordLength: "minPasswordLength",
+                requireUppercase: "passwordRequireUppercase",
+                requireNumber: "passwordRequireNumber",
+                requireSpecial: "passwordRequireSymbol",
+                maxLoginAttempts: "maxLoginAttempts",
+                lockoutDuration: "lockoutDurationMinutes",
+                sessionTimeout: "sessionTimeoutMinutes",
+                maxActiveSessions: "maxActiveSessions",
+                requireSensitiveVerify: "requireSensitiveVerify"
+            };
+
+            function getSettings() {
+                try {
+                    var data = localStorage.getItem(getStorageKey());
+                    var parsed;
+                    if (data) {
+                        parsed = JSON.parse(data);
+                        var def = getDefaultSettings();
+                        // Merge to ensure all fields exist
+                        for (var key in def) {
+                            if (parsed[key] === undefined) {
+                                parsed[key] = def[key];
+                            }
+                        }
+                        // Deep merge notifications
+                        if (parsed.notifications) {
+                            for (var n in def.notifications) {
+                                if (parsed.notifications[n] === undefined) {
+                                    parsed.notifications[n] = def.notifications[n];
+                                }
+                            }
+                        }
+                        // Deep merge twoFactorMethods
+                        if (parsed.twoFactorMethods) {
+                            for (var m in def.twoFactorMethods) {
+                                if (parsed.twoFactorMethods[m] === undefined) {
+                                    parsed.twoFactorMethods[m] = def.twoFactorMethods[m];
+                                }
+                            }
+                        }
+                    } else {
+                        parsed = getDefaultSettings();
+                    }
+                    // Overlay the REAL enforced config (js/security.js) onto
+                    // the matching local fields so this form always displays
+                    // (and edits) the actual values login/session checks use,
+                    // not a possibly-stale local copy.
+                    if (typeof Security !== "undefined") {
+                        var real = Security.getConfig();
+                        Object.keys(SECURITY_FIELD_MAP).forEach(function(localKey) {
+                            var canonicalKey = SECURITY_FIELD_MAP[localKey];
+                            if (real[canonicalKey] !== undefined) parsed[localKey] = real[canonicalKey];
+                        });
+                    }
+                    return parsed;
+                } catch (_) {}
+                return getDefaultSettings();
+            }
+
+            function saveSettings(settings) {
+                settings.updatedAt = new Date().toISOString();
+                localStorage.setItem(getStorageKey(), JSON.stringify(settings));
+                // Push the security-critical subset into the centralized,
+                // actually-enforced config.
+                if (typeof Security !== "undefined") {
+                    var patch = {};
+                    Object.keys(SECURITY_FIELD_MAP).forEach(function(localKey) {
+                        if (settings[localKey] !== undefined) patch[SECURITY_FIELD_MAP[localKey]] = settings[localKey];
+                    });
+                    Security.saveConfig(patch);
+
+                    // If the active-session cap was just lowered, apply it
+                    // immediately rather than waiting for each admin's next
+                    // login — otherwise an admin already over the new limit
+                    // stays over it until they happen to sign in again, and
+                    // Security Test would keep reporting a FAIL that this
+                    // page's own save just caused.
+                    if (patch.maxActiveSessions !== undefined && typeof Sessions !== "undefined" &&
+                        typeof Sessions.enforceSessionLimit === "function" && typeof AdminAuth !== "undefined") {
+                        (AdminAuth.getAdmins ? AdminAuth.getAdmins() : []).forEach(function (a) {
+                            Sessions.enforceSessionLimit("admin", a.id);
+                        });
+                    }
+                }
+            }
+
+            function esc(str) {
+                if (!str) return "";
+                return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g,
+                    "&quot;");
+            }
+
+            function initials(name) {
+                if (!name) return "U";
+                return name.trim().split(/\s+/).slice(0, 2).map(function(w) { return w[0]; }).join("").toUpperCase();
+            }
+
+            function getAdminName() {
+                return admin.name || "Admin";
+            }
+
+            function getAdminId() {
+                return admin.id || "admin_" + (admin.name || "Admin").toLowerCase().replace(/\s+/g, "_");
+            }
+
+            // Adapter over the REAL centralized session store (js/sessions.js),
+            // same store and scoping admin-sessions.html uses. This used to
+            // read "receiptly_admin_sessions_" + ACCOUNT_ID, a key nothing
+            // in the app ever wrote to — so the "Active Sessions" stat card
+            // always showed 0/stale data. Idle (timed-out but not yet
+            // revoked) sessions are surfaced with status "idle" so they
+            // aren't miscounted as active, matching admin-sessions.html.
+            function getActiveSessions() {
+                if (typeof Sessions === "undefined") return [];
+                return Sessions.getSessions("admin", admin.id).map(function (s) {
+                    var status = s.status;
+                    if (status === "active" && typeof Security !== "undefined" && Security.isSessionTimedOut(s.lastActive)) {
+                        status = "idle";
+                    }
+                    return Object.assign({}, s, { status: status });
+                });
+            }
+
+            function getActivityLogs() {
+                try {
+                    var data = localStorage.getItem("receiptly_activity_logs");
+                    return data ? JSON.parse(data) : [];
+                } catch (_) { return []; }
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  3. TOAST SYSTEM
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function toast(message, type) {
+                type = type || "info";
+                var host = document.getElementById("toastHost");
+                var el = document.createElement("div");
+                el.className = "toast " + type;
+                var icon = type === "error" ? "✕" : type === "success" ? "✓" : "ⓘ";
+                el.innerHTML =
+                    '<span class="t-icon">' + icon + '</span>' +
+                    '<span class="t-msg">' + esc(message) + '</span>' +
+                    '<button class="t-close">&times;</button>';
+                host.appendChild(el);
+
+                requestAnimationFrame(function() {
+                    el.classList.add("show");
+                });
+
+                el.querySelector(".t-close").addEventListener("click", function() {
+                    dismissToast(el);
+                });
+
+                setTimeout(function() {
+                    dismissToast(el);
+                }, 4000);
+
+                return el;
+            }
+
+            function dismissToast(el) {
+                if (!el || el.classList.contains("hide")) return;
+                el.classList.remove("show");
+                el.classList.add("hide");
+                setTimeout(function() {
+                    if (el.parentNode) el.remove();
+                }, 400);
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  4. THEME
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function getTheme() {
+                return localStorage.getItem("receiptly_theme") || "dark";
+            }
+
+            function setTheme(theme) {
+                document.documentElement.setAttribute("data-theme", theme);
+                localStorage.setItem("receiptly_theme", theme);
+                var icon = document.querySelector("#themeToggleBtn svg");
+                if (theme === "dark") {
+                    icon.innerHTML =
+                        '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+                } else {
+                    icon.innerHTML =
+                        '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+                }
+            }
+
+            setTheme(getTheme());
+
+            document.getElementById("themeToggleBtn").addEventListener("click", function() {
+                var current = document.documentElement.getAttribute("data-theme");
+                setTheme(current === "dark" ? "light" : "dark");
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  5. SIDEBAR / HEADER
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var sidebar = document.getElementById("sidebar");
+            var overlay = document.getElementById("sidebarOverlay");
+            var hamburger = document.getElementById("hamburger");
+
+            function toggleSidebar() {
+                sidebar.classList.toggle("open");
+                hamburger.classList.toggle("active");
+                overlay.classList.toggle("open");
+            }
+
+            hamburger.addEventListener("click", toggleSidebar);
+            overlay.addEventListener("click", toggleSidebar);
+
+            // Profile dropdown
+            var profileBtn = document.getElementById("profileBtn");
+            var profileDropdown = document.getElementById("profileDropdown");
+            var dropdownOpen = false;
+
+            profileBtn.addEventListener("click", function(e) {
+                e.stopPropagation();
+                dropdownOpen = !dropdownOpen;
+                profileDropdown.classList.toggle("open", dropdownOpen);
+            });
+
+            document.addEventListener("click", function(e) {
+                if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                    profileDropdown.classList.remove("open");
+                    dropdownOpen = false;
+                }
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  6. LOGOUT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function handleLogout() {
+                if (AdminAuth.logout) {
+                    AdminAuth.logout();
+                } else {
+                    localStorage.removeItem("receiptly_admin_session");
+                }
+                window.location.href = "../admin-login.html";
+            }
+
+            document.getElementById("logoutBtn").addEventListener("click", handleLogout);
+            document.getElementById("dropdownLogout").addEventListener("click", handleLogout);
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  7. HEADER ADMIN INFO
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            document.getElementById("headerName").textContent = getAdminName();
+            document.getElementById("headerAvatar").textContent = initials(getAdminName());
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  8. SECURITY DATA MANAGEMENT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var settings = getSettings();
+            var originalSettings = JSON.parse(JSON.stringify(settings));
+            var hasUnsavedChanges = false;
+            var isSaving = false;
+            var isChecking = false;
+            var securityEvents = [];
+            var allSessions = [];
+
+            // DOM refs
+            var saveBtn = document.getElementById("saveBtn");
+            var saveText = document.getElementById("saveText");
+            var saveSpinner = document.getElementById("saveSpinner");
+            var statusDot = document.getElementById("statusDot");
+            var lastCheckText = document.getElementById("lastCheckText");
+
+            var scoreNumber = document.getElementById("scoreNumber");
+            var scoreCircle = document.getElementById("scoreCircle");
+            var scoreStatusText = document.getElementById("scoreStatusText");
+            var scoreBadge = document.getElementById("scoreBadge");
+            var scoreDesc = document.getElementById("scoreDesc");
+            var scoreDetails = document.getElementById("scoreDetails");
+
+            var alertBanner = document.getElementById("alertBanner");
+            var alertIcon = document.getElementById("alertIcon");
+            var alertText = document.getElementById("alertText");
+            var alertFixBtn = document.getElementById("alertFixBtn");
+
+            var statsGrid = document.getElementById("statsGrid");
+            var eventsBody = document.getElementById("eventsBody");
+            var recommendationsBody = document.getElementById("recommendationsBody");
+
+            // ─── Populate Form ──────────────────────────────────────
+            function populateForm() {
+                document.getElementById("twoFactorEnabled").checked = settings.twoFactorEnabled || false;
+                document.getElementById("maxLoginAttempts").value = settings.maxLoginAttempts || 5;
+                document.getElementById("lockoutDuration").value = settings.lockoutDuration || 15;
+                document.getElementById("trackFailedLogins").checked = settings.trackFailedLogins !== false;
+                document.getElementById("suspiciousLoginNotify").checked = settings.suspiciousLoginNotify !== false;
+
+                document.getElementById("minPasswordLength").value = settings.minPasswordLength || 12;
+                document.getElementById("requireUppercase").checked = settings.requireUppercase !== false;
+                document.getElementById("requireLowercase").checked = settings.requireLowercase !== false;
+                document.getElementById("requireNumber").checked = settings.requireNumber !== false;
+                document.getElementById("requireSpecial").checked = settings.requireSpecial !== false;
+                document.getElementById("passwordExpiration").value = settings.passwordExpiration || 90;
+                document.getElementById("preventReuse").checked = settings.preventReuse !== false;
+
+                document.getElementById("sessionTimeout").value = settings.sessionTimeout || 30;
+                document.getElementById("rememberSession").checked = settings.rememberSession !== false;
+                document.getElementById("maxActiveSessions").value = settings.maxActiveSessions || 3;
+
+                document.getElementById("allowAdminLogin").checked = settings.allowAdminLogin !== false;
+                document.getElementById("requireAdminApproval").checked = settings.requireAdminApproval || false;
+                document.getElementById("restrictInactive").checked = settings.restrictInactive !== false;
+                document.getElementById("blockInactive").checked = settings.blockInactive || false;
+                document.getElementById("allowMultipleSessions").checked = settings.allowMultipleSessions !== false;
+                document.getElementById("requireSensitiveVerify").checked = settings.requireSensitiveVerify !== false;
+
+                // Notifications
+                var notifs = settings.notifications || {};
+                document.getElementById("notifyNewLogin").checked = notifs.newLogin !== false;
+                document.getElementById("notifyFailedLogin").checked = notifs.failedLogin !== false;
+                document.getElementById("notifyPasswordChange").checked = notifs.passwordChange !== false;
+                document.getElementById("notifyRoleChange").checked = notifs.roleChange !== false;
+                document.getElementById("notifyPermissionChange").checked = notifs.permissionChange !== false;
+                document.getElementById("notifySessionRevoke").checked = notifs.sessionRevoke !== false;
+                document.getElementById("notifySuspicious").checked = notifs.suspicious !== false;
+                document.getElementById("notifySecurityChange").checked = notifs.securityChange !== false;
+                document.getElementById("notifySecurityCheck").checked = notifs.securityCheck !== false;
+
+                // 2FA methods
+                var methods = settings.twoFactorMethods || {};
+                document.querySelectorAll("#twofaMethods .method-chip").forEach(function(chip) {
+                    var method = chip.dataset.method;
+                    var enabled = methods[method] || false;
+                    var statusEl = chip.querySelector(".chip-status");
+                    statusEl.textContent = enabled ? "Enabled" : "Disabled";
+                    statusEl.className = "chip-status " + (enabled ? "enabled" : "disabled");
+                    chip.classList.toggle("active", enabled);
+                });
+
+                updatePasswordStrength();
+                updateSecurityScore();
+                updateStats();
+                loadSecurityEvents();
+                loadRecommendations();
+                updateAlertBanner();
+
+                // Reset unsaved state
+                hasUnsavedChanges = false;
+                updateSaveButton();
+            }
+
+            // ─── Gather Form Data ────────────────────────────────────
+            function gatherFormData() {
+                var notifs = {
+                    newLogin: document.getElementById("notifyNewLogin").checked,
+                    failedLogin: document.getElementById("notifyFailedLogin").checked,
+                    passwordChange: document.getElementById("notifyPasswordChange").checked,
+                    roleChange: document.getElementById("notifyRoleChange").checked,
+                    permissionChange: document.getElementById("notifyPermissionChange").checked,
+                    sessionRevoke: document.getElementById("notifySessionRevoke").checked,
+                    suspicious: document.getElementById("notifySuspicious").checked,
+                    securityChange: document.getElementById("notifySecurityChange").checked,
+                    securityCheck: document.getElementById("notifySecurityCheck").checked
+                };
+
+                var methods = {
+                    app: document.querySelector('#twofaMethods .method-chip[data-method="app"]')?.classList.contains(
+                    "active") || false,
+                    email: document.querySelector('#twofaMethods .method-chip[data-method="email"]')?.classList
+                    .contains("active") || false,
+                    sms: document.querySelector('#twofaMethods .method-chip[data-method="sms"]')?.classList.contains(
+                        "active") || false
+                };
+
+                return {
+                    twoFactorEnabled: document.getElementById("twoFactorEnabled").checked,
+                    twoFactorMethods: methods,
+                    maxLoginAttempts: parseInt(document.getElementById("maxLoginAttempts").value),
+                    lockoutDuration: parseInt(document.getElementById("lockoutDuration").value),
+                    trackFailedLogins: document.getElementById("trackFailedLogins").checked,
+                    suspiciousLoginNotify: document.getElementById("suspiciousLoginNotify").checked,
+                    minPasswordLength: parseInt(document.getElementById("minPasswordLength").value),
+                    requireUppercase: document.getElementById("requireUppercase").checked,
+                    requireLowercase: document.getElementById("requireLowercase").checked,
+                    requireNumber: document.getElementById("requireNumber").checked,
+                    requireSpecial: document.getElementById("requireSpecial").checked,
+                    passwordExpiration: parseInt(document.getElementById("passwordExpiration").value),
+                    preventReuse: document.getElementById("preventReuse").checked,
+                    sessionTimeout: parseInt(document.getElementById("sessionTimeout").value),
+                    rememberSession: document.getElementById("rememberSession").checked,
+                    maxActiveSessions: parseInt(document.getElementById("maxActiveSessions").value),
+                    allowAdminLogin: document.getElementById("allowAdminLogin").checked,
+                    requireAdminApproval: document.getElementById("requireAdminApproval").checked,
+                    restrictInactive: document.getElementById("restrictInactive").checked,
+                    blockInactive: document.getElementById("blockInactive").checked,
+                    allowMultipleSessions: document.getElementById("allowMultipleSessions").checked,
+                    requireSensitiveVerify: document.getElementById("requireSensitiveVerify").checked,
+                    notifications: notifs,
+                    twoFactorMethods: methods
+                };
+            }
+
+            // ─── Update Save Button ──────────────────────────────────
+            function updateSaveButton() {
+                if (isSaving) {
+                    saveBtn.disabled = true;
+                    saveText.textContent = "Saving...";
+                    saveSpinner.classList.add("show");
+                    statusDot.className = "dot checking";
+                    lastCheckText.textContent = "Saving...";
+                    return;
+                }
+
+                var hasChanges = hasUnsavedChanges;
+                saveBtn.disabled = !hasChanges;
+                saveText.textContent = hasChanges ? "Save Changes*" : "Save Changes";
+                saveSpinner.classList.remove("show");
+
+                if (hasChanges) {
+                    statusDot.className = "dot";
+                    statusDot.style.background = "var(--orange)";
+                    lastCheckText.textContent = "Unsaved changes";
+                } else {
+                    statusDot.className = "dot";
+                    statusDot.style.background = "var(--success)";
+                    lastCheckText.textContent = "All saved";
+                }
+            }
+
+            // ─── Mark Dirty ──────────────────────────────────────────
+            function markDirty() {
+                if (!hasUnsavedChanges) {
+                    hasUnsavedChanges = true;
+                    updateSaveButton();
+                }
+            }
+
+            // ─── All input change listeners ──────────────────────────
+            document.querySelectorAll("#pageContent input, #pageContent select").forEach(function(el) {
+                el.addEventListener("change", function() {
+                    markDirty();
+                    if (this.id === "twoFactorEnabled") {
+                        updateSecurityScore();
+                        updateAlertBanner();
+                        updateRecommendations();
+                    }
+                    if (this.id.startsWith("require") || this.id === "minPasswordLength") {
+                        updatePasswordStrength();
+                        updateSecurityScore();
+                    }
+                    if (this.id === "maxLoginAttempts" || this.id === "lockoutDuration" || this.id ===
+                        "sessionTimeout" || this.id === "maxActiveSessions") {
+                        updateSecurityScore();
+                    }
+                    updateRecommendations();
+                });
+                el.addEventListener("input", function() {
+                    if (this.type !== "checkbox") {
+                        markDirty();
+                    }
+                });
+            });
+
+            // 2FA method chips
+            document.querySelectorAll("#twofaMethods .method-chip").forEach(function(chip) {
+                chip.addEventListener("click", function() {
+                    var method = this.dataset.method;
+                    var isActive = this.classList.contains("active");
+                    if (isActive) {
+                        this.classList.remove("active");
+                        this.querySelector(".chip-status").textContent = "Disabled";
+                        this.querySelector(".chip-status").className = "chip-status disabled";
+                    } else {
+                        this.classList.add("active");
+                        this.querySelector(".chip-status").textContent = "Enabled";
+                        this.querySelector(".chip-status").className = "chip-status enabled";
+                    }
+                    // Update the 2FA toggle if any method is enabled
+                    var anyEnabled = document.querySelectorAll("#twofaMethods .method-chip.active").length > 0;
+                    document.getElementById("twoFactorEnabled").checked = anyEnabled;
+                    markDirty();
+                    updateSecurityScore();
+                    updateAlertBanner();
+                    updateRecommendations();
+                });
+            });
+
+            // Configure 2FA button
+            document.getElementById("configure2faBtn").addEventListener("click", function() {
+                toast("Two-factor authentication configuration requires backend support. The settings are saved locally.",
+                    "info");
+            });
+
+            // ─── Password Strength ────────────────────────────────────
+            function updatePasswordStrength() {
+                var length = parseInt(document.getElementById("minPasswordLength").value) || 8;
+                var upper = document.getElementById("requireUppercase").checked;
+                var lower = document.getElementById("requireLowercase").checked;
+                var number = document.getElementById("requireNumber").checked;
+                var special = document.getElementById("requireSpecial").checked;
+
+                var requirements = 0;
+                var total = 5; // length + 4 requirements
+                if (length >= 12) requirements++;
+                if (upper) requirements++;
+                if (lower) requirements++;
+                if (number) requirements++;
+                if (special) requirements++;
+
+                var segments = document.querySelectorAll("#strengthBar .segment");
+                var filled = Math.min(Math.ceil((requirements / total) * 4), 4);
+
+                segments.forEach(function(seg, idx) {
+                    seg.className = "segment";
+                    if (idx < filled) {
+                        seg.classList.add("filled");
+                        if (filled <= 2) seg.classList.add("weak");
+                        else if (filled === 3) seg.classList.add("fair");
+                        else if (filled === 4) seg.classList.add("strong");
+                    }
+                });
+
+                var label = document.getElementById("strengthLabel");
+                var labels = ["Very Weak", "Weak", "Fair", "Strong"];
+                var colors = ["var(--error)", "var(--error)", "var(--orange)", "var(--success)"];
+                var classes = ["weak", "weak", "fair", "strong"];
+                var idx = Math.max(0, filled - 1);
+                label.textContent = labels[idx] + " (" + requirements + "/" + total + " requirements)";
+                label.style.color = colors[idx];
+            }
+
+            // ─── Security Score ──────────────────────────────────────
+            function calculateSecurityScore() {
+                var data = gatherFormData();
+                var score = 0;
+
+                // 2FA: +20
+                if (data.twoFactorEnabled || Object.values(data.twoFactorMethods).some(function(v) { return v; })) {
+                    score += 20;
+                }
+
+                // Password policy: +15
+                var pwRequirements = 0;
+                if (data.minPasswordLength >= 12) pwRequirements++;
+                if (data.requireUppercase) pwRequirements++;
+                if (data.requireLowercase) pwRequirements++;
+                if (data.requireNumber) pwRequirements++;
+                if (data.requireSpecial) pwRequirements++;
+                if (data.preventReuse) pwRequirements++;
+                if (data.passwordExpiration > 0) pwRequirements++;
+                var pwScore = Math.min((pwRequirements / 7) * 15, 15);
+                score += pwScore;
+
+                // Login attempt protection: +15
+                if (data.maxLoginAttempts > 0 && data.maxLoginAttempts <= 5) score += 8;
+                else if (data.maxLoginAttempts > 0 && data.maxLoginAttempts <= 10) score += 5;
+                else if (data.maxLoginAttempts === 0) score += 0;
+                if (data.lockoutDuration >= 5 && data.lockoutDuration <= 15) score += 7;
+                else if (data.lockoutDuration > 15) score += 5;
+
+                // Session timeout: +15
+                if (data.sessionTimeout <= 30) score += 10;
+                else if (data.sessionTimeout <= 60) score += 7;
+                else if (data.sessionTimeout <= 120) score += 4;
+                else score += 2;
+                if (data.maxActiveSessions > 0 && data.maxActiveSessions <= 3) score += 5;
+                else if (data.maxActiveSessions > 0 && data.maxActiveSessions <= 5) score += 3;
+                else score += 1;
+
+                // Security notifications: +10
+                var notifCount = 0;
+                var totalNotifs = 0;
+                for (var key in data.notifications) {
+                    totalNotifs++;
+                    if (data.notifications[key]) notifCount++;
+                }
+                score += Math.min((notifCount / totalNotifs) * 10, 10);
+
+                // Admin access controls: +5
+                var accessScore = 0;
+                if (data.allowAdminLogin) accessScore += 1;
+                if (data.restrictInactive) accessScore += 1;
+                if (data.requireSensitiveVerify) accessScore += 1;
+                if (data.requireAdminApproval) accessScore += 1;
+                if (data.blockInactive) accessScore += 1;
+                score += Math.min((accessScore / 5) * 5, 5);
+
+                // Sensitive action verification: +10
+                if (data.requireSensitiveVerify) score += 10;
+
+                // Round
+                return Math.round(Math.min(score, 100));
+            }
+
+            function updateSecurityScore() {
+                var score = calculateSecurityScore();
+                var circumference = 2 * Math.PI * 42; // 263.89
+                var offset = circumference - (score / 100) * circumference;
+
+                scoreNumber.textContent = score;
+                scoreCircle.style.strokeDasharray = circumference;
+                scoreCircle.style.strokeDashoffset = offset;
+
+                // Color based on score
+                var color;
+                var statusText;
+                var badgeText;
+                var badgeClass;
+                var desc;
+
+                if (score >= 80) {
+                    color = "var(--success)";
+                    statusText = "Security Score";
+                    badgeText = "Excellent";
+                    badgeClass = "excellent";
+                    desc = "Your security configuration is excellent. All critical protections are in place.";
+                } else if (score >= 65) {
+                    color = "var(--blue)";
+                    statusText = "Security Score";
+                    badgeText = "Good";
+                    badgeClass = "good";
+                    desc = "Your security configuration is in good shape. Consider enabling additional protections.";
+                } else if (score >= 45) {
+                    color = "var(--orange)";
+                    statusText = "Security Score";
+                    badgeText = "Needs Attention";
+                    badgeClass = "needs-attention";
+                    desc = "Some security settings require your attention to improve protection.";
+                } else {
+                    color = "var(--error)";
+                    statusText = "Security Score";
+                    badgeText = "Critical";
+                    badgeClass = "critical";
+                    desc = "Your security configuration has critical gaps. Please review all settings.";
+                }
+
+                scoreCircle.style.stroke = color;
+                scoreStatusText.textContent = statusText;
+                scoreBadge.textContent = badgeText;
+                scoreBadge.className = "badge " + badgeClass;
+                scoreDesc.textContent = desc;
+
+                // Score details
+                var details = [
+                    { icon: "🔐", label: "2FA", value: (settings.twoFactorEnabled || Object.values(settings
+                            .twoFactorMethods || {}).some(function(v) { return v; })) ? "Enabled" :
+                        "Disabled" },
+                    { icon: "🔒", label: "Password Policy", value: settings.minPasswordLength + "+ chars" },
+                    { icon: "⏱️", label: "Session Timeout", value: settings.sessionTimeout + " min" },
+                    { icon: "🛡️", label: "Login Protection", value: settings.maxLoginAttempts > 0 ? settings
+                            .maxLoginAttempts + " attempts" : "Unlimited" },
+                ];
+
+                scoreDetails.innerHTML = details.map(function(d) {
+                    return '<span class="item"><span class="icon">' + d.icon + '</span> ' + esc(d.label) +
+                        ': <strong>' + esc(d.value) + '</strong></span>';
+                }).join("");
+            }
+
+            // ─── Stats ────────────────────────────────────────────────
+            function updateStats() {
+                var sessions = getActiveSessions();
+                var activeSessions = sessions.filter(function(s) {
+                    return s.status === "active" || s.current === true;
+                }).length;
+
+                var logs = getActivityLogs();
+                var failedLogins = logs.filter(function(l) {
+                    return l.action && l.action.indexOf("failed_login") !== -1;
+                }).length;
+
+                var securityEvents = logs.filter(function(l) {
+                    return l.action && (l.action.indexOf("security") !== -1 || l.action.indexOf("session") !== -1);
+                }).length;
+
+                var admins = [];
+                try {
+                    var adminsData = localStorage.getItem("receiptly_admins_" + ACCOUNT_ID);
+                    if (adminsData) admins = JSON.parse(adminsData);
+                } catch (_) {}
+
+                var stats = [
+                    { label: "Active Sessions", value: activeSessions, icon: "🟢", iconClass: "stat-icon--green",
+                        sub: "Currently active", status: activeSessions > 0 ? "Good" : "No active sessions",
+                        statusClass: activeSessions > 0 ? "stat-status--good" : "stat-status--warning" },
+                    { label: "Failed Login Attempts", value: failedLogins, icon: "🚫", iconClass: "stat-icon--red",
+                        sub: "Last 30 days", status: failedLogins > 10 ? "Warning" : "Normal",
+                        statusClass: failedLogins > 10 ? "stat-status--danger" : "stat-status--good" },
+                    { label: "Security Alerts", value: securityEvents, icon: "🔔", iconClass: "stat-icon--orange",
+                        sub: "Recent security events", status: securityEvents > 5 ? "Review" : "All clear",
+                        statusClass: securityEvents > 5 ? "stat-status--warning" : "stat-status--good" },
+                    { label: "Protected Administrators", value: admins.length || 1, icon: "🛡️",
+                        iconClass: "stat-icon--purple", sub: "Accounts with access",
+                        status: "Protected", statusClass: "stat-status--good" },
+                ];
+
+                statsGrid.innerHTML = "";
+                stats.forEach(function(s) {
+                    var card = document.createElement("div");
+                    card.className = "stat-card";
+                    card.innerHTML =
+                        '<div class="stat-top">' +
+                        '<span class="stat-label">' + esc(s.label) + '</span>' +
+                        '<span class="stat-icon ' + s.iconClass + '">' + s.icon + '</span>' +
+                        '</div>' +
+                        '<div class="stat-value">' + s.value + '</div>' +
+                        '<div class="stat-sub">' + esc(s.sub) + '</div>' +
+                        '<span class="stat-status ' + s.statusClass + '" style="margin-top:4px;display:inline-block;">' +
+                        esc(s.status) + '</span>';
+                    statsGrid.appendChild(card);
+                });
+            }
+
+            // ─── Alert Banner ─────────────────────────────────────────
+            function updateAlertBanner() {
+                var issues = [];
+                var data = gatherFormData();
+
+                if (!data.twoFactorEnabled && !Object.values(data.twoFactorMethods).some(function(v) { return v; })) {
+                    issues.push("Two-factor authentication is not enabled.");
+                }
+                if (data.minPasswordLength < 10) {
+                    issues.push("Password length is below 10 characters.");
+                }
+                if (data.maxLoginAttempts === 0) {
+                    issues.push("Login attempt limit is disabled.");
+                }
+                if (data.sessionTimeout > 120) {
+                    issues.push("Session timeout is set to " + data.sessionTimeout + " minutes.");
+                }
+                if (data.maxActiveSessions === 0) {
+                    issues.push("Maximum active sessions is unlimited.");
+                }
+                if (!data.requireSensitiveVerify) {
+                    issues.push("Sensitive action verification is disabled.");
+                }
+
+                var banner = document.getElementById("alertBanner");
+                if (issues.length > 0) {
+                    banner.style.display = "flex";
+                    banner.className = "alert-banner alert-banner--danger";
+                    document.getElementById("alertIcon").textContent = "⚠️";
+                    document.getElementById("alertText").textContent = issues.join(" ") +
+                        " Review your security settings.";
+                    document.getElementById("alertFixBtn").style.display = "inline-block";
+                    // Fix Now applies real, safe corrections for each
+                    // detected issue instead of just scrolling the page.
+                    alertFixBtn.onclick = function() {
+                        if (typeof AdminAuth !== "undefined" && !AdminAuth.hasPermission("edit_security_settings")) {
+                            toast("You do not have permission to change security settings.", "error");
+                            return;
+                        }
+                        var fixed = [];
+                        if (!data.twoFactorEnabled && !Object.values(data.twoFactorMethods).some(function(v) { return v; })) {
+                            settings.twoFactorEnabled = true;
+                            fixed.push("enabled two-factor authentication");
+                        }
+                        if (data.minPasswordLength < 10) {
+                            settings.minPasswordLength = 12;
+                            fixed.push("raised minimum password length to 12");
+                        }
+                        if (data.maxLoginAttempts === 0) {
+                            settings.maxLoginAttempts = 5;
+                            fixed.push("set login attempt limit to 5");
+                        }
+                        if (data.sessionTimeout > 120) {
+                            settings.sessionTimeout = 60;
+                            fixed.push("lowered session timeout to 60 minutes");
+                        }
+                        if (data.maxActiveSessions === 0) {
+                            settings.maxActiveSessions = 5;
+                            fixed.push("limited maximum active sessions to 5");
+                        }
+                        if (!data.requireSensitiveVerify) {
+                            settings.requireSensitiveVerify = true;
+                            fixed.push("enabled sensitive-action verification");
+                        }
+                        if (!fixed.length) return;
+                        saveSettings(settings);
+                        originalSettings = JSON.parse(JSON.stringify(settings));
+                        populateForm();
+                        hasUnsavedChanges = false;
+                        updateSaveButton();
+                        updateSecurityScore();
+                        updateStats();
+                        updateAlertBanner();
+                        updateRecommendations();
+                        logActivity("security_auto_fix_applied");
+                        toast("Fixed: " + fixed.join(", ") + ".", "success");
+                    };
+                } else {
+                    banner.style.display = "flex";
+                    banner.className = "alert-banner alert-banner--success";
+                    document.getElementById("alertIcon").textContent = "✅";
+                    document.getElementById("alertText").textContent =
+                        "Your security configuration looks good. All critical protections are in place.";
+                    document.getElementById("alertFixBtn").style.display = "none";
+                }
+            }
+
+            // ─── Security Events ─────────────────────────────────────
+            function loadSecurityEvents() {
+                var logs = getActivityLogs();
+                var securityLogs = logs.filter(function(l) {
+                    return l.action && (l.action.indexOf("security") !== -1 || l.action.indexOf("session") !== -1 ||
+                        l.action.indexOf("login") !== -1 || l.action.indexOf("password") !== -1 ||
+                        l.action.indexOf("role") !== -1 || l.action.indexOf("permission") !== -1);
+                });
+
+                // Sort by timestamp (newest first)
+                securityLogs.sort(function(a, b) {
+                    return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+                });
+
+                var recent = securityLogs.slice(0, 10);
+                var body = eventsBody;
+
+                if (recent.length === 0) {
+                    body.innerHTML = '<div class="events-empty">No security events yet.</div>';
+                    return;
+                }
+
+                body.innerHTML = "";
+                recent.forEach(function(log) {
+                    var severity = "info";
+                    var severityLabel = "Info";
+                    if (log.action && (log.action.indexOf("failed") !== -1 || log.action.indexOf("revoked") !== -1 ||
+                            log.action.indexOf("delete") !== -1)) {
+                        severity = "critical";
+                        severityLabel = "Critical";
+                    } else if (log.action && (log.action.indexOf("change") !== -1 || log.action.indexOf(
+                            "updated") !== -1)) {
+                        severity = "warning";
+                        severityLabel = "Warning";
+                    }
+
+                    var actionLabel = (log.action || "").replace(/_/g, " ").replace(/\b\w/g, function(l) { return l
+                        .toUpperCase(); });
+
+                    var div = document.createElement("div");
+                    div.className = "event-item";
+                    div.innerHTML =
+                        '<div class="ev-left">' +
+                        '<span class="ev-severity ev-severity--' + severity + '">' + severityLabel +
+                        '</span>' +
+                        '<span class="ev-desc">' + esc(actionLabel || "Unknown event") + '</span>' +
+                        '<span class="ev-user">by ' + esc(log.adminName || "System") + '</span>' +
+                        '</div>' +
+                        '<div class="ev-right">' +
+                        '<span class="ev-date">' + new Date(log.timestamp).toLocaleString() + '</span>' +
+                        '<span class="ev-view" data-log=\'' + JSON.stringify(log).replace(/'/g, "&apos;") +
+                        '\'>View</span>' +
+                        '</div>';
+                    body.appendChild(div);
+                });
+
+                // Event view click
+                body.querySelectorAll(".ev-view").forEach(function(el) {
+                    el.addEventListener("click", function() {
+                        try {
+                            var log = JSON.parse(this.dataset.log);
+                            showEventDetail(log);
+                        } catch (_) {
+                            toast("Unable to load event details.", "error");
+                        }
+                    });
+                });
+            }
+
+            function showEventDetail(log) {
+                document.getElementById("eventModalTitle").textContent = "Event Details";
+                document.getElementById("eventModalSub").textContent = (log.action || "").replace(/_/g, " ").replace(
+                    /\b\w/g, function(l) { return l.toUpperCase(); });
+
+                var grid = document.getElementById("eventDetailGrid");
+                grid.innerHTML =
+                    '<div class="ed-item"><span class="ed-label">Event</span><span class="ed-value">' + esc(log
+                        .action || "Unknown") + '</span></div>' +
+                    '<div class="ed-item"><span class="ed-label">Administrator</span><span class="ed-value">' + esc(
+                        log.adminName || "System") + '</span></div>' +
+                    '<div class="ed-item"><span class="ed-label">Date &amp; Time</span><span class="ed-value">' +
+                    new Date(log.timestamp).toLocaleString() + '</span></div>' +
+                    '<div class="ed-item"><span class="ed-label">Details</span><span class="ed-value">' + esc(log
+                        .details || log.targetId || "—") + '</span></div>';
+
+                document.getElementById("eventModal").classList.add("is-visible");
+            }
+
+            document.getElementById("eventModal").addEventListener("click", function(e) {
+                if (e.target === this || e.target.closest('[data-action="close-event"]')) {
+                    this.classList.remove("is-visible");
+                }
+            });
+
+            // ─── Recommendations ─────────────────────────────────────
+            function loadRecommendations() {
+                var data = gatherFormData();
+                var recs = [];
+
+                if (!data.twoFactorEnabled && !Object.values(data.twoFactorMethods).some(function(v) { return v; })) {
+                    recs.push({
+                        icon: "🔐",
+                        desc: "Enable two-factor authentication for all admin accounts.",
+                        priority: "high",
+                        fix: function() {
+                            document.getElementById("twoFactorEnabled").checked = true;
+                            document.querySelector('#twofaMethods .method-chip[data-method="app"]')?.click();
+                            markDirty();
+                            updateSecurityScore();
+                            updateAlertBanner();
+                            loadRecommendations();
+                            toast("2FA enabled. Click Save to apply.", "success");
+                        }
+                    });
+                }
+
+                if (data.minPasswordLength < 10) {
+                    recs.push({
+                        icon: "🔒",
+                        desc: "Set a minimum password length of 12 characters.",
+                        priority: "high",
+                        fix: function() {
+                            document.getElementById("minPasswordLength").value = "12";
+                            markDirty();
+                            updatePasswordStrength();
+                            updateSecurityScore();
+                            loadRecommendations();
+                            toast("Password length set to 12. Click Save to apply.", "success");
+                        }
+                    });
+                }
+
+                if (data.maxLoginAttempts === 0) {
+                    recs.push({
+                        icon: "🚫",
+                        desc: "Set a maximum login attempt limit to prevent brute force.",
+                        priority: "medium",
+                        fix: function() {
+                            document.getElementById("maxLoginAttempts").value = "5";
+                            markDirty();
+                            updateSecurityScore();
+                            loadRecommendations();
+                            toast("Login attempts set to 5. Click Save to apply.", "success");
+                        }
+                    });
+                }
+
+                if (data.sessionTimeout > 120) {
+                    recs.push({
+                        icon: "⏱️",
+                        desc: "Reduce session timeout to 30 minutes for better security.",
+                        priority: "medium",
+                        fix: function() {
+                            document.getElementById("sessionTimeout").value = "30";
+                            markDirty();
+                            updateSecurityScore();
+                            loadRecommendations();
+                            toast("Session timeout set to 30 minutes. Click Save to apply.", "success");
+                        }
+                    });
+                }
+
+                if (data.maxActiveSessions === 0) {
+                    recs.push({
+                        icon: "👥",
+                        desc: "Limit maximum active sessions to 3 to reduce risk.",
+                        priority: "medium",
+                        fix: function() {
+                            document.getElementById("maxActiveSessions").value = "3";
+                            markDirty();
+                            updateSecurityScore();
+                            loadRecommendations();
+                            toast("Max sessions set to 3. Click Save to apply.", "success");
+                        }
+                    });
+                }
+
+                if (!data.requireSensitiveVerify) {
+                    recs.push({
+                        icon: "🛡️",
+                        desc: "Enable verification for sensitive admin actions.",
+                        priority: "high",
+                        fix: function() {
+                            document.getElementById("requireSensitiveVerify").checked = true;
+                            markDirty();
+                            updateSecurityScore();
+                            loadRecommendations();
+                            toast("Sensitive action verification enabled. Click Save to apply.", "success");
+                        }
+                    });
+                }
+
+                if (recs.length === 0) {
+                    recs.push({
+                        icon: "✅",
+                        desc: "All security recommendations have been addressed.",
+                        priority: "low",
+                        fix: function() { toast("All security recommendations are satisfied.", "success"); }
+                    });
+                }
+
+                var body = recommendationsBody;
+                body.innerHTML = "";
+                recs.forEach(function(rec) {
+                    var div = document.createElement("div");
+                    div.className = "rec-item";
+                    div.innerHTML =
+                        '<div class="rec-left">' +
+                        '<span class="rec-icon">' + rec.icon + '</span>' +
+                        '<span class="rec-desc">' + esc(rec.desc) + '</span>' +
+                        '<span class="rec-priority rec-priority--' + rec.priority + '">' + esc(rec
+                            .priority.toUpperCase()) + '</span>' +
+                        '</div>' +
+                        '<div class="rec-right">' +
+                        '<button class="rec-fix" data-fix=\'' + recs.indexOf(rec) + '\'>Fix →</button>' +
+                        '</div>';
+                    body.appendChild(div);
+                });
+
+                body.querySelectorAll(".rec-fix").forEach(function(btn) {
+                    btn.addEventListener("click", function() {
+                        var idx = parseInt(this.dataset.fix);
+                        if (recs[idx] && recs[idx].fix) {
+                            recs[idx].fix();
+                        }
+                    });
+                });
+            }
+
+            function updateRecommendations() {
+                loadRecommendations();
+            }
+
+            // ─── Save ────────────────────────────────────────────────
+            function saveChanges() {
+                if (isSaving) return;
+
+                if (typeof AdminAuth !== "undefined" && !AdminAuth.hasPermission("edit_security_settings")) {
+                    toast("You do not have permission to edit security settings.", "error");
+                    return;
+                }
+
+                isSaving = true;
+                updateSaveButton();
+
+                var data = gatherFormData();
+                // Merge with existing settings
+                for (var key in data) {
+                    if (key === "notifications" || key === "twoFactorMethods") {
+                        settings[key] = data[key];
+                    } else {
+                        settings[key] = data[key];
+                    }
+                }
+
+                saveSettings(settings);
+                originalSettings = JSON.parse(JSON.stringify(settings));
+                hasUnsavedChanges = false;
+                isSaving = false;
+
+                updateSaveButton();
+                updateSecurityScore();
+                updateStats();
+                updateAlertBanner();
+                updateRecommendations();
+
+                // Activity log
+                logActivity("security_settings_updated");
+
+                toast("Security settings saved successfully.", "success");
+            }
+
+            // ─── Security Check ──────────────────────────────────────
+            function runSecurityCheck() {
+                if (isChecking) return;
+                if (typeof AdminAuth !== "undefined" && !AdminAuth.hasPermission("run_security_test")) {
+                    toast("You do not have permission to run the security test.", "error");
+                    return;
+                }
+                isChecking = true;
+
+                var btn = document.getElementById("securityCheckBtn");
+                var text = document.getElementById("checkText");
+                var spinner = document.getElementById("checkSpinner");
+                btn.disabled = true;
+                text.textContent = "Checking...";
+                spinner.classList.add("show");
+                document.getElementById("statusDot").className = "dot checking";
+                document.getElementById("lastCheckText").textContent = "Checking security...";
+
+                setTimeout(function() {
+                    var score = calculateSecurityScore();
+                    var issues = [];
+                    var data = gatherFormData();
+
+                    if (!data.twoFactorEnabled && !Object.values(data.twoFactorMethods).some(function(v) { return v;
+                        })) {
+                        issues.push("2FA disabled");
+                    }
+                    if (data.minPasswordLength < 10) issues.push("Weak password policy");
+                    if (data.maxLoginAttempts === 0) issues.push("No login attempt limit");
+                    if (data.sessionTimeout > 120) issues.push("Long session timeout");
+                    if (data.maxActiveSessions === 0) issues.push("Unlimited active sessions");
+                    if (!data.requireSensitiveVerify) issues.push("No sensitive action verification");
+
+                    var passed = [];
+                    var needsAttention = [];
+                    var notConfigured = [];
+
+                    // Build check results
+                    if (data.twoFactorEnabled || Object.values(data.twoFactorMethods).some(function(v) { return v; })) {
+                        passed.push("Two-factor authentication enabled");
+                    } else {
+                        needsAttention.push("Two-factor authentication disabled");
+                    }
+
+                    if (data.minPasswordLength >= 12) {
+                        passed.push("Strong password policy");
+                    } else if (data.minPasswordLength >= 8) {
+                        needsAttention.push("Password policy could be stronger");
+                    } else {
+                        notConfigured.push("Weak password policy");
+                    }
+
+                    if (data.maxLoginAttempts > 0 && data.maxLoginAttempts <= 5) {
+                        passed.push("Login attempt protection");
+                    } else if (data.maxLoginAttempts > 0 && data.maxLoginAttempts <= 10) {
+                        needsAttention.push("Login attempts limit could be lower");
+                    } else {
+                        notConfigured.push("No login attempt limit");
+                    }
+
+                    if (data.sessionTimeout <= 30) {
+                        passed.push("Session timeout enabled");
+                    } else if (data.sessionTimeout <= 60) {
+                        needsAttention.push("Session timeout could be shorter");
+                    } else {
+                        notConfigured.push("Session timeout too long");
+                    }
+
+                    if (data.maxActiveSessions > 0 && data.maxActiveSessions <= 3) {
+                        passed.push("Active session management");
+                    } else if (data.maxActiveSessions > 0 && data.maxActiveSessions <= 5) {
+                        needsAttention.push("Active sessions limit could be lower");
+                    } else {
+                        notConfigured.push("No active session limit");
+                    }
+
+                    if (data.requireSensitiveVerify) {
+                        passed.push("Sensitive action verification");
+                    } else {
+                        needsAttention.push("Sensitive action verification disabled");
+                    }
+
+                    // Merge in REAL-STATE findings from the centralized
+                    // Security module (actual admin 2FA adoption, actual
+                    // active-session counts vs. the configured limit,
+                    // actual accounts currently locked out) — checks the
+                    // saved config can't see just by reading form fields.
+                    if (typeof Security !== "undefined") {
+                        var realTest = Security.runSecurityTest();
+                        realTest.checks.forEach(function(c) {
+                            if (c.key === "active-lockouts" || c.key === "session-limit") {
+                                if (c.status === "FAIL") notConfigured.push(c.detail);
+                                else if (c.status === "WARNING") needsAttention.push(c.detail);
+                            }
+                        });
+                    }
+
+                    // Show results
+                    var resultMsg = "Security Check Complete.\n";
+                    resultMsg += "Score: " + score + "/100\n\n";
+                    if (passed.length > 0) resultMsg += "✅ Passed: " + passed.join(", ") + "\n";
+                    if (needsAttention.length > 0) resultMsg += "⚠️ Needs Attention: " + needsAttention.join(", ") +
+                        "\n";
+                    if (notConfigured.length > 0) resultMsg += "❌ Not Configured: " + notConfigured.join(", ");
+
+                    // Show in a modal
+                    showSecurityCheckModal(score, passed, needsAttention, notConfigured);
+
+                    isChecking = false;
+                    btn.disabled = false;
+                    text.textContent = "Security Check";
+                    spinner.classList.remove("show");
+                    document.getElementById("statusDot").className = "dot";
+                    document.getElementById("lastCheckText").textContent = "Last check: just now";
+
+                    // Log the check
+                    logActivity("security_check_completed");
+
+                }, 800);
+            }
+
+            function showSecurityCheckModal(score, passed, needsAttention, notConfigured) {
+                var modal = document.getElementById("confirmModal");
+                var icon = document.getElementById("confirmIcon");
+                var title = document.getElementById("confirmTitle");
+                var msg = document.getElementById("confirmMsg");
+                var okBtn = document.getElementById("confirmOkBtn");
+
+                icon.textContent = "🛡️";
+                icon.className = "modal-icon modal-icon--info";
+                title.textContent = "Security Check Complete";
+                var status = score >= 80 ? "Excellent" : score >= 65 ? "Good" : score >= 45 ? "Needs Attention" :
+                    "Critical";
+                var statusColor = score >= 80 ? "var(--success)" : score >= 65 ? "var(--blue)" : score >= 45 ?
+                    "var(--orange)" : "var(--error)";
+
+                var html = '<div style="text-align:center;margin-bottom:12px;">';
+                html += '<span style="font-size:2.5rem;font-weight:800;color:' + statusColor + ';">' + score +
+                    '</span>';
+                html += '<span style="font-size:1rem;color:var(--text-muted);"> / 100</span>';
+                html += '<div style="font-weight:600;font-size:1.05rem;color:' + statusColor + ';">' + status +
+                    '</div>';
+                html += '</div>';
+
+                html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:0.82rem;">';
+                html += '<div><span style="color:var(--success);">✅</span> Passed: <strong>' + passed.length +
+                    '</strong></div>';
+                html += '<div><span style="color:var(--orange);">⚠️</span> Needs Attention: <strong>' + needsAttention
+                    .length + '</strong></div>';
+                html += '<div><span style="color:var(--error);">❌</span> Not Configured: <strong>' + notConfigured
+                    .length + '</strong></div>';
+                html += '</div>';
+
+                if (passed.length > 0) {
+                    html += '<div style="margin-top:8px;font-size:0.78rem;color:var(--text-muted);">✅ ' + passed
+                        .join(", ") + '</div>';
+                }
+                if (needsAttention.length > 0) {
+                    html += '<div style="margin-top:4px;font-size:0.78rem;color:var(--orange);">⚠️ ' + needsAttention
+                        .join(", ") + '</div>';
+                }
+                if (notConfigured.length > 0) {
+                    html += '<div style="margin-top:4px;font-size:0.78rem;color:var(--error);">❌ ' + notConfigured
+                        .join(", ") + '</div>';
+                }
+
+                msg.innerHTML = html;
+                okBtn.textContent = "Close";
+                okBtn.className = "btn btn--outline";
+                okBtn.onclick = function() {
+                    modal.classList.remove("is-visible");
+                };
+
+                modal.classList.add("is-visible");
+            }
+
+            // ─── View Sessions ──────────────────────────────────────
+            document.getElementById("viewSessionsBtn").addEventListener("click", function() {
+                window.location.href = "admin-sessions.html";
+            });
+
+            // ─── Log Activity ────────────────────────────────────────
+            function logActivity(action) {
+                try {
+                    var logs = JSON.parse(localStorage.getItem("receiptly_activity_logs") || "[]");
+                    logs.push({
+                        adminId: getAdminId(),
+                        adminName: getAdminName(),
+                        action: action,
+                        targetId: "security_settings",
+                        details: "Security settings updated",
+                        timestamp: new Date().toISOString()
+                    });
+                    if (logs.length > 500) logs = logs.slice(-500);
+                    localStorage.setItem("receiptly_activity_logs", JSON.stringify(logs));
+                } catch (_) {}
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  9. DANGER ZONE ACTIONS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            // Reset Security Settings
+            document.getElementById("resetSecurityBtn").addEventListener("click", function() {
+                if (typeof AdminAuth !== "undefined" && !AdminAuth.hasPermission("edit_security_settings")) {
+                    toast("You do not have permission to reset security settings.", "error");
+                    return;
+                }
+                showConfirmModal(
+                    "Reset Security Settings?",
+                    "This will restore all security settings to their safe default values.",
+                    "⚠️",
+                    "Reset Settings",
+                    "btn--warning",
+                    function() {
+                        var def = getDefaultSettings();
+                        for (var key in def) {
+                            settings[key] = def[key];
+                        }
+                        if (typeof Security !== "undefined") Security.resetConfig();
+                        saveSettings(settings);
+                        originalSettings = JSON.parse(JSON.stringify(settings));
+                        populateForm();
+                        hasUnsavedChanges = false;
+                        updateSaveButton();
+                        updateSecurityScore();
+                        updateStats();
+                        updateAlertBanner();
+                        updateRecommendations();
+                        logActivity("security_settings_reset");
+                        toast("Security settings reset to defaults.", "success");
+                    }
+                );
+            });
+
+            // Revoke All Other Sessions — uses the REAL centralized session
+            // store (js/sessions.js), the same one admin-sessions.html and
+            // account-profile.html read, instead of a separate mock list.
+            document.getElementById("revokeAllSessionsBtn").addEventListener("click", function() {
+                if (typeof AdminAuth === "undefined" || typeof Sessions === "undefined") return;
+                if (!AdminAuth.hasPermission("revoke_sessions")) {
+                    toast("You do not have permission to revoke sessions.", "error");
+                    return;
+                }
+                var currentSessionId = AdminAuth.getSession() ? AdminAuth.getSession().sessionId : null;
+                var others = Sessions.getSessions("admin", admin.id).filter(function(s) {
+                    return s.status === "active" && s.id !== currentSessionId;
+                });
+                if (others.length === 0) {
+                    toast("No other active sessions to revoke.", "info");
+                    return;
+                }
+
+                showConfirmModal(
+                    "Revoke All Other Sessions?",
+                    "This will sign out all administrator sessions except your current session.",
+                    "⚠️",
+                    "Revoke Sessions",
+                    "btn--danger",
+                    function() {
+                        var count = Sessions.revokeOtherSessions("admin", admin.id, currentSessionId);
+                        if (typeof Security !== "undefined") {
+                            Security.recordEvent({ action: "revoked_all_sessions", description: count + " other session(s) revoked" });
+                        }
+                        logActivity("revoked_all_sessions");
+                        toast(count + " other session(s) revoked.", "success");
+                        updateStats();
+                    }
+                );
+            });
+
+            // Reset Login Attempt Counter — clears the REAL lockout store
+            // (js/security.js), which is what actually gates login.html /
+            // admin-login.html, not just cosmetic log entries.
+            document.getElementById("resetLoginAttemptsBtn").addEventListener("click", function() {
+                if (typeof AdminAuth !== "undefined" && !AdminAuth.hasPermission("edit_security_settings")) {
+                    toast("You do not have permission to reset login attempts.", "error");
+                    return;
+                }
+                showConfirmModal(
+                    "Reset Login Attempt Counter?",
+                    "This will clear the failed login attempt counter for all administrators.",
+                    "💡",
+                    "Reset Counter",
+                    "btn--warning",
+                    function() {
+                        if (typeof Security !== "undefined") Security.resetAllLoginAttempts();
+                        // Also clear the cosmetic log entries so the Recent
+                        // Activity list matches the real state.
+                        try {
+                            var logs = JSON.parse(localStorage.getItem("receiptly_activity_logs") || "[]");
+                            logs = logs.filter(function(l) {
+                                return l.action && l.action.indexOf("failed_login") === -1;
+                            });
+                            localStorage.setItem("receiptly_activity_logs", JSON.stringify(logs));
+                        } catch (_) {}
+                        logActivity("reset_login_attempts");
+                        toast("Login attempt counter reset.", "success");
+                        updateStats();
+                        loadSecurityEvents();
+                    }
+                );
+            });
+
+            // Reset Security Configuration
+            document.getElementById("resetConfigBtn").addEventListener("click", function() {
+                if (typeof AdminAuth !== "undefined" && !AdminAuth.hasPermission("edit_security_settings")) {
+                    toast("You do not have permission to reset the security configuration.", "error");
+                    return;
+                }
+                showConfirmModal(
+                    "Reset Security Configuration?",
+                    "This will remove all custom security settings and restore the default configuration.",
+                    "⚠️",
+                    "Reset Config",
+                    "btn--danger",
+                    function() {
+                        localStorage.removeItem(getStorageKey());
+                        if (typeof Security !== "undefined") Security.resetConfig();
+                        settings = getDefaultSettings();
+                        originalSettings = JSON.parse(JSON.stringify(settings));
+                        populateForm();
+                        hasUnsavedChanges = false;
+                        updateSaveButton();
+                        updateSecurityScore();
+                        updateStats();
+                        updateAlertBanner();
+                        updateRecommendations();
+                        logActivity("security_config_reset");
+                        toast("Security configuration reset.", "success");
+                    }
+                );
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  10. MODAL HELPERS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var confirmModal = document.getElementById("confirmModal");
+            var confirmIcon = document.getElementById("confirmIcon");
+            var confirmTitle = document.getElementById("confirmTitle");
+            var confirmMsg = document.getElementById("confirmMsg");
+            var confirmOkBtn = document.getElementById("confirmOkBtn");
+            var confirmResolve = null;
+
+            function showConfirmModal(title, msg, icon, confirmText, confirmClass, onConfirm) {
+                confirmIcon.textContent = icon || "⚠️";
+                confirmIcon.className = "modal-icon";
+                if (icon === "⚠️") confirmIcon.classList.add("modal-icon--danger");
+                else if (icon === "💡") confirmIcon.classList.add("modal-icon--warning");
+                else confirmIcon.classList.add("modal-icon--warning");
+
+                confirmTitle.textContent = title;
+                confirmMsg.innerHTML = msg;
+                confirmOkBtn.textContent = confirmText || "Confirm";
+                confirmOkBtn.className = "btn " + (confirmClass || "btn--danger");
+
+                confirmModal.classList.add("is-visible");
+
+                return new Promise(function(resolve) {
+                    confirmResolve = resolve;
+                }).then(function(result) {
+                    if (result && onConfirm) onConfirm();
+                });
+            }
+
+            function closeConfirmModal() {
+                confirmModal.classList.remove("is-visible");
+                if (confirmResolve) confirmResolve(false);
+                confirmResolve = null;
+            }
+
+            confirmModal.addEventListener("click", function(e) {
+                if (e.target === confirmModal || e.target.closest('[data-action="close-confirm"]') || e.target
+                    .closest('[data-action="cancel-confirm"]')) {
+                    closeConfirmModal();
+                }
+                if (e.target.closest('[data-action="ok-confirm"]')) {
+                    confirmModal.classList.remove("is-visible");
+                    if (confirmResolve) confirmResolve(true);
+                    confirmResolve = null;
+                }
+            });
+
+            // ─── Unsaved Modal ──────────────────────────────────────
+            var unsavedModal = document.getElementById("unsavedModal");
+            var unsavedResolve = null;
+
+            function showUnsavedModal(onResult) {
+                unsavedModal.classList.add("is-visible");
+                return new Promise(function(resolve) {
+                    unsavedResolve = resolve;
+                }).then(function(result) {
+                    if (onResult) onResult(result);
+                });
+            }
+
+            function closeUnsavedModal() {
+                unsavedModal.classList.remove("is-visible");
+                if (unsavedResolve) unsavedResolve(false);
+                unsavedResolve = null;
+            }
+
+            unsavedModal.addEventListener("click", function(e) {
+                if (e.target === unsavedModal || e.target.closest('[data-action="close-unsaved"]') || e.target
+                    .closest('[data-action="stay"]')) {
+                    closeUnsavedModal();
+                }
+                if (e.target.closest('[data-action="leave"]')) {
+                    unsavedModal.classList.remove("is-visible");
+                    if (unsavedResolve) unsavedResolve(true);
+                    unsavedResolve = null;
+                    hasUnsavedChanges = false;
+                    updateSaveButton();
+                }
+            });
+
+            // ─── Before unload ──────────────────────────────────────
+            window.addEventListener("beforeunload", function(e) {
+                if (hasUnsavedChanges) {
+                    e.preventDefault();
+                    e.returnValue = "You have unsaved security changes. Are you sure you want to leave?";
+                    return e.returnValue;
+                }
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  11. EVENT LISTENERS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            // Save
+            saveBtn.addEventListener("click", saveChanges);
+
+            // Security Check
+            document.getElementById("securityCheckBtn").addEventListener("click", runSecurityCheck);
+            document.getElementById("runCheckBtn").addEventListener("click", runSecurityCheck);
+
+            // Keyboard shortcut: Ctrl+S
+            document.addEventListener("keydown", function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+                    e.preventDefault();
+                    if (!saveBtn.disabled) {
+                        saveChanges();
+                    }
+                }
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  12. INIT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            populateForm();
+
+        })();
+    </script>
+</body>
+</html>

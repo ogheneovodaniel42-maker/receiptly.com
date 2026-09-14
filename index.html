@@ -1,0 +1,3426 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Receiptly — Create Professional Receipts in Seconds</title>
+    <meta name="description" content="Receiptly makes it simple to create, customize, manage, download, and print professional receipts for your business." />
+
+    <style>
+        /* ============================================================
+           CSS VARIABLES — BLUE + WHITE ONLY
+           ============================================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+            /* BLUE + WHITE only */
+            --blue-50: #eff6ff;
+            --blue-100: #dbeafe;
+            --blue-200: #bfdbfe;
+            --blue-300: #93c5fd;
+            --blue-400: #60a5fa;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --blue-700: #1d4ed8;
+            --blue-800: #1e40af;
+            --blue-900: #1e3a8a;
+
+            --white: #ffffff;
+            --off-white: #f8fafc;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+
+            /* Light theme — BLUE + WHITE */
+            --bg-body: var(--off-white);
+            --bg-surface: var(--white);
+            --bg-elevated: var(--white);
+            --bg-soft: var(--blue-50);
+            --bg-glass: rgba(255, 255, 255, 0.70);
+            --bg-glass-border: rgba(255, 255, 255, 0.30);
+
+            --text-primary: var(--gray-900);
+            --text-secondary: var(--gray-600);
+            --text-muted: var(--gray-400);
+            --text-inverse: var(--white);
+
+            --border-light: var(--gray-200);
+            --border-strong: var(--gray-300);
+
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.07), 0 4px 16px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.04);
+            --shadow-glow: 0 0 40px rgba(37, 99, 235, 0.12);
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+
+            --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-slow: 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+            --accent: var(--blue-600);
+            --accent-soft: var(--blue-50);
+            --accent-glow: rgba(37, 99, 235, 0.12);
+            --accent-dark: var(--blue-700);
+
+            --max-width: 1200px;
+            --nav-height: 72px;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0f172a;
+            --bg-surface: #1e293b;
+            --bg-elevated: #273548;
+            --bg-soft: #1a2744;
+            --bg-glass: rgba(15, 23, 42, 0.80);
+            --bg-glass-border: rgba(255, 255, 255, 0.06);
+
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --text-inverse: #0f172a;
+
+            --border-light: #334155;
+            --border-strong: #475569;
+
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.6);
+            --shadow-glow: 0 0 40px rgba(37, 99, 235, 0.08);
+
+            --accent: #3b82f6;
+            --accent-soft: #1a2744;
+            --accent-glow: rgba(59, 130, 246, 0.10);
+            --accent-dark: #2563eb;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background var(--transition), color var(--transition);
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        button {
+            font: inherit;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: inherit;
+        }
+        img {
+            max-width: 100%;
+            display: block;
+        }
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-soft);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--blue-300);
+            border-radius: 100px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--blue-400);
+        }
+
+        /* ===== TYPOGRAPHY ===== */
+        .heading-xl {
+            font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+            font-weight: 700;
+            line-height: 1.08;
+            letter-spacing: -0.03em;
+        }
+        .heading-lg {
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 700;
+            line-height: 1.12;
+            letter-spacing: -0.02em;
+        }
+        .heading-md {
+            font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        .heading-sm {
+            font-size: clamp(1rem, 1.4vw, 1.2rem);
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        .text-body {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        .text-muted {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .text-small {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all var(--transition);
+            border: 1.5px solid transparent;
+            text-align: center;
+            white-space: nowrap;
+            min-height: 48px;
+        }
+        .btn--primary {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .btn--primary:hover {
+            background: var(--accent-dark);
+            border-color: var(--accent-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+        .btn--secondary {
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            border-color: var(--border-light);
+        }
+        .btn--secondary:hover {
+            background: var(--bg-soft);
+            border-color: var(--border-strong);
+            transform: translateY(-2px);
+        }
+        .btn--ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            border-color: transparent;
+        }
+        .btn--ghost:hover {
+            color: var(--text-primary);
+            background: var(--bg-soft);
+        }
+        .btn--outline {
+            background: transparent;
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+        .btn--outline:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+        .btn--lg {
+            padding: 14px 36px;
+            font-size: 1.05rem;
+            min-height: 56px;
+        }
+        .btn--sm {
+            padding: 6px 16px;
+            font-size: 0.85rem;
+            min-height: 38px;
+        }
+        .btn--block {
+            width: 100%;
+            justify-content: center;
+        }
+        .btn--white {
+            background: #fff;
+            color: var(--accent);
+            border-color: #fff;
+        }
+        .btn--white:hover {
+            background: rgba(255, 255, 255, 0.92);
+            border-color: rgba(255, 255, 255, 0.92);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+        }
+
+        /* ===== GLASS ===== */
+        .glass {
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--bg-glass-border);
+        }
+
+        /* ===== SECTION ===== */
+        section {
+            padding: 80px 0;
+        }
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent);
+            background: var(--accent-soft);
+            padding: 4px 14px;
+            border-radius: 100px;
+            margin-bottom: 16px;
+        }
+        .section-head {
+            max-width: 640px;
+            margin: 0 auto 48px;
+            text-align: center;
+        }
+        .section-head .heading-lg {
+            margin-bottom: 14px;
+        }
+        .section-head .text-body {
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        /* ===== REVEAL ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 {
+            transition-delay: 0.08s;
+        }
+        .reveal-delay-2 {
+            transition-delay: 0.16s;
+        }
+        .reveal-delay-3 {
+            transition-delay: 0.24s;
+        }
+        .reveal-delay-4 {
+            transition-delay: 0.32s;
+        }
+
+        /* ============================================================
+           NAVBAR
+           ============================================================ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            height: var(--nav-height);
+            background: var(--bg-glass);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--bg-glass-border);
+            transition: background var(--transition), box-shadow var(--transition);
+        }
+        .navbar.scrolled {
+            box-shadow: var(--shadow-md);
+            background: var(--bg-glass);
+        }
+        [data-theme="dark"] .navbar.scrolled {
+            background: rgba(15, 23, 42, 0.85);
+        }
+
+        .navbar__inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: var(--nav-height);
+            gap: 16px;
+        }
+
+        .navbar__brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.02em;
+            flex-shrink: 0;
+            color: var(--text-primary);
+        }
+        .navbar__brand .brand-icon {
+            width: 34px;
+            height: 34px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .navbar__links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .navbar__links a {
+            color: var(--text-secondary);
+            transition: color var(--transition);
+            position: relative;
+        }
+        .navbar__links a:hover {
+            color: var(--text-primary);
+        }
+        .navbar__links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width var(--transition);
+        }
+        .navbar__links a:hover::after {
+            width: 100%;
+        }
+
+        .navbar__actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            background: var(--bg-soft);
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+            color: var(--text-secondary);
+            position: relative;
+        }
+        .theme-toggle:hover {
+            background: var(--border-light);
+            color: var(--text-primary);
+        }
+
+        /* ---- Theme icon SVGs inside toggle ---- */
+        .theme-icon-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            position: relative;
+        }
+        .theme-icon-wrap svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .theme-icon-sun {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+        .theme-icon-moon {
+            opacity: 0;
+            transform: scale(0.5) rotate(90deg);
+        }
+
+        [data-theme="dark"] .theme-icon-sun {
+            opacity: 0;
+            transform: scale(0.5) rotate(-90deg);
+        }
+        [data-theme="dark"] .theme-icon-moon {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            padding: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2.5px;
+            background: var(--text-primary);
+            border-radius: 100px;
+            transition: all var(--transition);
+            transform-origin: center;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .navbar__mobile {
+            display: none;
+            position: fixed;
+            top: var(--nav-height);
+            left: 0;
+            width: 100%;
+            height: calc(100vh - var(--nav-height));
+            background: var(--bg-surface);
+            padding: 32px 24px;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            border-top: 1px solid var(--border-light);
+            z-index: 999;
+        }
+        .navbar__mobile.open {
+            display: flex;
+        }
+        .navbar__mobile a {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-light);
+            transition: color var(--transition);
+        }
+        .navbar__mobile a:hover {
+            color: var(--text-primary);
+        }
+        .navbar__mobile .btn {
+            width: 100%;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        /* ============================================================
+           HERO
+           ============================================================ */
+        .hero {
+            padding: calc(var(--nav-height) + 40px) 0 60px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: var(--bg-body);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -20%;
+            width: 60%;
+            height: 80%;
+            background: radial-gradient(ellipse, var(--blue-100) 0%, transparent 70%);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .hero__grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 56px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        .hero__content .heading-xl {
+            margin-bottom: 20px;
+        }
+        .hero__content .heading-xl .highlight {
+            color: var(--accent);
+            position: relative;
+        }
+        .hero__content .text-body {
+            font-size: 1.15rem;
+            max-width: 480px;
+            margin-bottom: 32px;
+        }
+        .hero__ctas {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+        .hero__trust {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .hero__trust-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .hero__trust-item svg {
+            width: 18px;
+            height: 18px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        /* Hero Receipt Generator */
+        .hero-generator {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            padding: 28px 24px;
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-generator:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl), var(--shadow-glow);
+        }
+        .hero-generator::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        .gen-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .gen-header .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .gen-header .logo-area .logo {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.9rem;
+        }
+        .gen-header .logo-area .name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .gen-header .badge {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--accent);
+            background: var(--accent-soft);
+            padding: 2px 12px;
+            border-radius: 100px;
+        }
+
+        .gen-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .gen-field {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .gen-field label {
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+        }
+        .gen-field input,
+        .gen-field select {
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            transition: border var(--transition);
+            font-family: var(--font-sans);
+            width: 100%;
+        }
+        .gen-field input:focus,
+        .gen-field select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        .gen-field input::placeholder {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        .gen-items {
+            grid-column: 1 / -1;
+            margin-top: 4px;
+        }
+        .gen-items .items-header {
+            display: grid;
+            grid-template-columns: 2fr 0.8fr 0.8fr 0.8fr 0.4fr;
+            gap: 8px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+            padding: 4px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .gen-items .item-row {
+            display: grid;
+            grid-template-columns: 2fr 0.8fr 0.8fr 0.8fr 0.4fr;
+            gap: 8px;
+            padding: 5px 0;
+            border-bottom: 1px solid var(--border-light);
+            align-items: center;
+        }
+        .gen-items .item-row input {
+            padding: 5px 8px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-size: 0.75rem;
+            font-family: var(--font-sans);
+            width: 100%;
+        }
+        .gen-items .item-row input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .gen-items .item-row .item-total {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            text-align: right;
+            font-family: var(--font-mono);
+        }
+        .gen-items .item-row .remove-item {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            cursor: pointer;
+            text-align: center;
+            transition: color var(--transition);
+        }
+        .gen-items .item-row .remove-item:hover {
+            color: var(--text-primary);
+        }
+
+        .gen-totals {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 3px;
+            padding-top: 10px;
+            border-top: 2px solid var(--border-light);
+            margin-top: 4px;
+        }
+        .gen-totals .total-row {
+            display: flex;
+            justify-content: space-between;
+            width: 160px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        .gen-totals .total-row.grand {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-primary);
+            border-top: 1px solid var(--border-light);
+            padding-top: 5px;
+            margin-top: 2px;
+        }
+        .gen-totals .total-row .amount {
+            font-family: var(--font-mono);
+        }
+
+        .gen-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-light);
+        }
+        .gen-actions .btn {
+            flex: 1;
+            font-size: 0.75rem;
+            padding: 8px 12px;
+            min-height: 36px;
+        }
+
+        /* ============================================================
+           TRUST STRIP
+           ============================================================ */
+        .trust-strip {
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+            padding: 32px 0;
+        }
+        .trust-strip__grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+        }
+        .trust-strip__item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .trust-strip__item svg {
+            width: 24px;
+            height: 24px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        /* ============================================================
+           PRODUCT IN ACTION
+           ============================================================ */
+        .action-section {
+            background: var(--bg-body);
+        }
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-top: 16px;
+        }
+        .action-card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            padding: 32px 24px;
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+            text-align: center;
+            position: relative;
+        }
+        .action-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent);
+        }
+        .action-card .step-num {
+            font-size: 2.8rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            color: var(--accent);
+            opacity: 0.10;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        .action-card .action-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+            display: block;
+            color: var(--accent);
+        }
+        .action-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .action-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        .action-card .action-arrow {
+            display: none;
+        }
+
+        /* ============================================================
+           FEATURES
+           ============================================================ */
+        .features-section {
+            background: var(--bg-soft);
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .feature-card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            padding: 24px 20px;
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+        }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent);
+        }
+        .feature-card .feature-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+        .feature-card h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .feature-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* ============================================================
+           RECEIPT SHOWCASE
+           ============================================================ */
+        .receipt-showcase {
+            background: var(--bg-body);
+        }
+        .receipt-showcase__inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 56px;
+            align-items: center;
+        }
+        .receipt-showcase__content .heading-lg {
+            margin-bottom: 16px;
+        }
+        .receipt-showcase__content .text-body {
+            margin-bottom: 24px;
+        }
+
+        .receipt-preview-large {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            padding: 32px 28px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-lg);
+            max-width: 440px;
+            margin: 0 auto;
+            transition: all var(--transition);
+        }
+        .receipt-preview-large:hover {
+            box-shadow: var(--shadow-xl), var(--shadow-glow);
+            transform: translateY(-2px);
+        }
+        .receipt-preview-large .rp-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+        .receipt-preview-large .rp-brand .logo {
+            width: 44px;
+            height: 44px;
+            background: var(--accent);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .receipt-preview-large .rp-brand .info .name {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .receipt-preview-large .rp-brand .info .addr {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        .receipt-preview-large .rp-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border-light);
+            margin-bottom: 10px;
+        }
+        .receipt-preview-large .rp-customer {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            padding: 6px 12px;
+            background: var(--bg-soft);
+            border-radius: var(--radius-sm);
+        }
+        .receipt-preview-large .rp-items {
+            margin-bottom: 12px;
+        }
+        .receipt-preview-large .rp-items .item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            padding: 3px 0;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-light);
+        }
+        .receipt-preview-large .rp-items .item:last-child {
+            border-bottom: none;
+        }
+        .receipt-preview-large .rp-items .item .qty {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+        .receipt-preview-large .rp-totals {
+            border-top: 2px solid var(--border-light);
+            padding-top: 10px;
+        }
+        .receipt-preview-large .rp-totals .row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            padding: 2px 0;
+            color: var(--text-secondary);
+        }
+        .receipt-preview-large .rp-totals .row.grand {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-primary);
+            border-top: 1px solid var(--border-light);
+            padding-top: 6px;
+            margin-top: 2px;
+        }
+        .receipt-preview-large .rp-footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-light);
+        }
+        .receipt-preview-large .rp-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+        }
+        .receipt-preview-large .rp-actions .btn {
+            flex: 1;
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            min-height: 34px;
+        }
+
+        /* ============================================================
+           TEMPLATE SHOWCASE
+           ============================================================ */
+        .templates-section {
+            background: var(--bg-soft);
+        }
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+        .template-card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            padding: 20px 16px 24px;
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+            text-align: center;
+        }
+        .template-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent);
+        }
+        .template-card .tp-preview {
+            height: 120px;
+            background: var(--bg-soft);
+            border-radius: var(--radius-sm);
+            margin-bottom: 12px;
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        .template-card .tp-preview .tp-content {
+            width: 100%;
+            text-align: left;
+        }
+        .template-card .tp-preview .tp-content .line {
+            height: 4px;
+            background: var(--border-light);
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        .template-card .tp-preview .tp-content .line.short {
+            width: 50%;
+        }
+        .template-card .tp-preview .tp-content .line.med {
+            width: 75%;
+        }
+        .template-card .tp-preview .tp-content .line.accent {
+            background: var(--accent);
+            width: 40%;
+            height: 6px;
+        }
+        .template-card .tp-preview .tp-content .line.accent-light {
+            background: var(--blue-200);
+            width: 60%;
+            height: 5px;
+        }
+        .template-card .tp-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .template-card .tp-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .template-card .tp-badge {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--accent);
+            background: var(--accent-soft);
+            padding: 2px 12px;
+            border-radius: 100px;
+            margin-top: 6px;
+        }
+
+        /* ============================================================
+           HOW IT WORKS (4-STEP)
+           ============================================================ */
+        .how-section {
+            background: var(--bg-body);
+        }
+        .how-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            position: relative;
+            margin-top: 20px;
+        }
+        .how-grid::before {
+            content: '';
+            position: absolute;
+            top: 44px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: var(--blue-200);
+            z-index: 0;
+        }
+        .how-step {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .how-step .step-num {
+            width: 56px;
+            height: 56px;
+            border-radius: 100px;
+            background: var(--accent);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            font-family: var(--font-mono);
+            margin: 0 auto 14px;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+        .how-step h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .how-step p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* ============================================================
+           DASHBOARD SHOWCASE
+           ============================================================ */
+        .dash-section {
+            background: var(--bg-soft);
+        }
+        .dash-mockup {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-md);
+            max-width: 860px;
+            margin: 0 auto;
+        }
+        .dash-mockup .dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .dash-mockup .dash-header .title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dash-mockup .dash-header .title svg {
+            color: var(--accent);
+        }
+        .dash-mockup .dash-header .period {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .dash-mockup .dash-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .dash-mockup .dash-stats .stat {
+            background: var(--bg-soft);
+            border-radius: var(--radius-sm);
+            padding: 14px 12px;
+            text-align: center;
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+        }
+        .dash-mockup .dash-stats .stat:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-sm);
+        }
+        .dash-mockup .dash-stats .stat .num {
+            font-size: 1.3rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--text-primary);
+        }
+        .dash-mockup .dash-stats .stat .lbl {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .dash-mockup .dash-chart {
+            height: 100px;
+            background: var(--bg-soft);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            padding: 12px 10px;
+            border: 1px solid var(--border-light);
+        }
+        .dash-mockup .dash-chart .bar {
+            flex: 1;
+            background: var(--accent);
+            border-radius: 4px 4px 0 0;
+            min-height: 8px;
+            transition: height 0.8s ease;
+            opacity: 0.75;
+        }
+        .dash-mockup .dash-chart .bar:nth-child(1) {
+            height: 40%;
+        }
+        .dash-mockup .dash-chart .bar:nth-child(2) {
+            height: 65%;
+        }
+        .dash-mockup .dash-chart .bar:nth-child(3) {
+            height: 50%;
+        }
+        .dash-mockup .dash-chart .bar:nth-child(4) {
+            height: 80%;
+        }
+        .dash-mockup .dash-chart .bar:nth-child(5) {
+            height: 35%;
+        }
+        .dash-mockup .dash-chart .bar:nth-child(6) {
+            height: 60%;
+        }
+        .dash-mockup .dash-chart .bar:nth-child(7) {
+            height: 90%;
+        }
+        .dash-mockup .dash-chart .bar:nth-child(8) {
+            height: 45%;
+        }
+        .dash-mockup .dash-chart .bar:nth-child(9) {
+            height: 70%;
+        }
+        .dash-mockup .dash-chart .bar:nth-child(10) {
+            height: 55%;
+        }
+        .dash-mockup .dash-chart .bar:nth-child(11) {
+            height: 85%;
+        }
+        .dash-mockup .dash-chart .bar:nth-child(12) {
+            height: 30%;
+        }
+        .dash-mockup .dash-nav {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-light);
+            flex-wrap: wrap;
+        }
+        .dash-mockup .dash-nav .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding: 4px 12px;
+            border-radius: 100px;
+            border: 1px solid transparent;
+            transition: all var(--transition);
+            cursor: default;
+        }
+        .dash-mockup .dash-nav .nav-item.active {
+            color: var(--accent);
+            background: var(--accent-soft);
+            border-color: var(--accent);
+        }
+        .dash-mockup .dash-nav .nav-item svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ============================================================
+           CURRENCY SECTION
+           ============================================================ */
+        .currency-section {
+            background: var(--bg-body);
+        }
+        .currency-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+        .currency-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+        .currency-display .currency-tag {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            transition: all var(--transition);
+            min-width: 80px;
+            text-align: center;
+        }
+        .currency-display .currency-tag:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
+        }
+        .currency-display .currency-tag .sub {
+            display: block;
+            font-size: 0.6rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            font-family: var(--font-sans);
+        }
+
+        /* ============================================================
+           WHY RECEIPTLY
+           ============================================================ */
+        .why-section {
+            background: var(--bg-soft);
+        }
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .why-card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            padding: 24px 20px;
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+            text-align: center;
+        }
+        .why-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent);
+        }
+        .why-card .why-icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            display: block;
+            color: var(--accent);
+        }
+        .why-card h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .why-card p {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* ============================================================
+           BUILT FOR MODERN BUSINESSES (replaces testimonials)
+           ============================================================ */
+        .built-section {
+            background: var(--bg-body);
+        }
+        .built-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .built-card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            padding: 28px 20px;
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+            text-align: center;
+        }
+        .built-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent);
+        }
+        .built-card .built-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .built-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .built-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* ============================================================
+           PRICING
+           ============================================================ */
+        .pricing-section {
+            background: var(--bg-soft);
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .pricing-card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            padding: 28px 22px;
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+        }
+        .pricing-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-md);
+        }
+        .pricing-card--featured {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md), var(--shadow-glow);
+            position: relative;
+        }
+        .pricing-card--featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 16px;
+            border-radius: 100px;
+            letter-spacing: 0.04em;
+        }
+        .pricing-card .plan-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+        }
+        .pricing-card .price {
+            font-size: 2.4rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            margin: 8px 0 2px;
+            color: var(--text-primary);
+        }
+        .pricing-card .price small {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            font-family: var(--font-sans);
+        }
+        .pricing-card .period {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+        .pricing-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px;
+            flex: 1;
+            text-align: left;
+        }
+        .pricing-card ul li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .pricing-card ul li svg {
+            width: 16px;
+            height: 16px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+        .pricing-card .btn {
+            margin-top: auto;
+        }
+
+        /* ============================================================
+           FAQ
+           ============================================================ */
+        .faq-section {
+            background: var(--bg-body);
+        }
+        .faq-list {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border-light);
+            padding: 4px 0;
+        }
+        .faq-item summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 4px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            list-style: none;
+            gap: 16px;
+            transition: color var(--transition);
+        }
+        .faq-item summary::-webkit-details-marker {
+            display: none;
+        }
+        .faq-item summary::after {
+            content: '+';
+            font-size: 1.6rem;
+            font-weight: 300;
+            color: var(--text-muted);
+            transition: transform var(--transition);
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .faq-item[open] summary::after {
+            transform: rotate(45deg);
+        }
+        .faq-item .faq-answer {
+            padding: 0 4px 20px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .faq-item .faq-answer p {
+            margin: 0;
+        }
+
+        /* ============================================================
+           FINAL CTA
+           ============================================================ */
+        .cta-band {
+            background: var(--accent);
+            border-radius: var(--radius-lg);
+            padding: 64px 40px;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-band::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 60%;
+            height: 200%;
+            background: radial-gradient(ellipse, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .cta-band .heading-lg {
+            color: #fff;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .cta-band .text-body {
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 28px;
+            max-width: 480px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 1;
+        }
+        .cta-band__actions {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+        .footer {
+            padding: 60px 0 32px;
+            border-top: 1px solid var(--border-light);
+            background: var(--bg-surface);
+        }
+        .footer__grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+        .footer__brand .brand-icon {
+            width: 34px;
+            height: 34px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+        .footer__brand p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            max-width: 220px;
+        }
+        .footer__col h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            font-weight: 600;
+        }
+        .footer__col a {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            padding: 4px 0;
+            transition: color var(--transition);
+        }
+        .footer__col a:hover {
+            color: var(--text-primary);
+        }
+        .footer__bottom {
+            border-top: 1px solid var(--border-light);
+            padding-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 1024px) {
+            .hero__grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+            .hero__content .text-body {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .hero__ctas {
+                justify-content: center;
+            }
+            .hero__trust {
+                justify-content: center;
+            }
+            .hero-generator {
+                max-width: 560px;
+                margin: 0 auto;
+            }
+            .gen-body {
+                grid-template-columns: 1fr;
+            }
+            .gen-items .items-header {
+                grid-template-columns: 1.5fr 0.7fr 0.7fr 0.7fr 0.4fr;
+                font-size: 0.5rem;
+            }
+            .gen-items .item-row {
+                grid-template-columns: 1.5fr 0.7fr 0.7fr 0.7fr 0.4fr;
+            }
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .why-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .built-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .templates-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .action-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .trust-strip__grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+            }
+            .receipt-showcase__inner {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .receipt-preview-large {
+                max-width: 100%;
+            }
+            .currency-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .footer__grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+            .navbar__links {
+                display: none;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .how-grid::before {
+                display: none;
+            }
+            .how-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+            }
+            .dash-mockup .dash-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            .why-grid {
+                grid-template-columns: 1fr;
+            }
+            .built-grid {
+                grid-template-columns: 1fr;
+            }
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+            .trust-strip__grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .footer__grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .footer__bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+            .cta-band {
+                padding: 40px 20px;
+            }
+            .section-head {
+                margin-bottom: 32px;
+            }
+            section {
+                padding: 56px 0;
+            }
+            .hero {
+                padding-top: calc(var(--nav-height) + 24px);
+                min-height: auto;
+            }
+            .hero-generator {
+                padding: 16px 14px;
+            }
+            .gen-header .logo-area .name {
+                font-size: 0.8rem;
+            }
+            .gen-items .items-header {
+                grid-template-columns: 1.2fr 0.6fr 0.6fr 0.6fr 0.3fr;
+                font-size: 0.45rem;
+                gap: 4px;
+            }
+            .gen-items .item-row {
+                grid-template-columns: 1.2fr 0.6fr 0.6fr 0.6fr 0.3fr;
+                gap: 4px;
+            }
+            .gen-items .item-row input {
+                font-size: 0.65rem;
+                padding: 4px 6px;
+            }
+            .gen-totals .total-row {
+                width: 130px;
+                font-size: 0.7rem;
+            }
+            .gen-actions .btn {
+                font-size: 0.65rem;
+                padding: 6px 8px;
+                min-height: 32px;
+            }
+            .dash-mockup {
+                padding: 16px 14px;
+            }
+            .dash-mockup .dash-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+            .dash-mockup .dash-stats .stat .num {
+                font-size: 1rem;
+            }
+            .dash-mockup .dash-nav .nav-item {
+                font-size: 0.7rem;
+                padding: 2px 8px;
+            }
+            .navbar__brand span {
+                display: none;
+            }
+            .navbar__actions .btn--ghost {
+                display: none;
+            }
+            .how-grid {
+                grid-template-columns: 1fr;
+            }
+            .currency-display .currency-tag {
+                padding: 8px 14px;
+                font-size: 0.9rem;
+                min-width: 60px;
+            }
+            .receipt-preview-large {
+                padding: 20px 16px;
+            }
+            .hero__trust {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .gen-items .items-header {
+                grid-template-columns: 1fr 0.5fr 0.5fr 0.5fr 0.3fr;
+                font-size: 0.4rem;
+                gap: 3px;
+            }
+            .gen-items .item-row {
+                grid-template-columns: 1fr 0.5fr 0.5fr 0.5fr 0.3fr;
+                gap: 3px;
+            }
+            .gen-items .item-row input {
+                font-size: 0.6rem;
+                padding: 3px 4px;
+            }
+            .trust-strip__grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .trust-strip__item {
+                font-size: 0.7rem;
+                gap: 6px;
+            }
+            .trust-strip__item svg {
+                width: 18px;
+                height: 18px;
+            }
+        }
+
+        /* ============================================================
+           PRELOADER — PRISM SPINNER
+           ============================================================ */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-body);
+            transition: opacity 0.8s cubic-bezier(0.65, 0, 0.35, 1),
+                visibility 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+            will-change: opacity, visibility;
+            user-select: none;
+        }
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .prism-preloader {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .prism-preloader canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: 50%;
+        }
+        .prism-preloader .prism-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            user-select: none;
+            z-index: 2;
+            padding: 16px 24px;
+            border-radius: 50%;
+        }
+        .prism-preloader .prism-percent {
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text-primary);
+            font-variant-numeric: tabular-nums;
+            animation: prismFadeIn 1s ease 0.2s both;
+        }
+        .prism-preloader .prism-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-top: 4px;
+            animation: prismFadeIn 1s ease 0.4s both;
+        }
+        @keyframes prismFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        @media (max-width: 480px) {
+            .prism-preloader {
+                width: 200px;
+                height: 200px;
+            }
+            .prism-preloader .prism-percent {
+                font-size: 24px;
+            }
+            .prism-preloader .prism-label {
+                font-size: 9px;
+                letter-spacing: 2.5px;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #preloader {
+                transition: none !important;
+            }
+        }
+
+        /* ===== ICON UTILITY ===== */
+        .icon-svg {
+            display: inline-block;
+            flex-shrink: 0;
+            vertical-align: middle;
+        }
+        .icon-svg--sm {
+            width: 16px;
+            height: 16px;
+        }
+        .icon-svg--md {
+            width: 20px;
+            height: 20px;
+        }
+        .icon-svg--lg {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+
+    <script src="js/ui-popup.js">
+    </script>
+    <script src="js/user-scope.js">
+    </script>
+</head>
+
+<body>
+
+    <!-- ===== PRELOADER — PRISM SPINNER ===== -->
+    <div id="preloader" role="status" aria-label="Loading Receiptly">
+        <div class="prism-preloader">
+            <canvas id="prismCanvas"></canvas>
+            <div class="prism-center">
+                <div class="prism-percent" id="percentDisplay">0%</div>
+                <div class="prism-label">Receiptly</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    NAVIGATION
+    ============================================================ -->
+    <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+        <div class="container navbar__inner">
+            <a href="#" class="navbar__brand" aria-label="Receiptly home">
+                <span class="brand-icon">R</span>
+                <span>Receiptly</span>
+            </a>
+
+            <ul class="navbar__links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#templates">Templates</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+
+            <div class="navbar__actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <span class="theme-icon-wrap" id="themeIconWrap">
+                        <!-- Sun icon (visible in light mode) -->
+                        <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"/>
+                            <line x1="12" y1="1" x2="12" y2="3"/>
+                            <line x1="12" y1="21" x2="12" y2="23"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                            <line x1="1" y1="12" x2="3" y2="12"/>
+                            <line x1="21" y1="12" x2="23" y2="12"/>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                        </svg>
+                        <!-- Moon icon (visible in dark mode) -->
+                        <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                    </span>
+                </button>
+                <a href="login.html" class="btn btn--ghost btn--sm">Login</a>
+                <a href="register.html" class="btn btn--primary btn--sm">Get Started</a>
+                <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+
+        <div class="navbar__mobile" id="mobileMenu" role="navigation" aria-label="Mobile navigation">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#templates">Templates</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#faq">FAQ</a>
+            <a href="login.html" class="btn btn--secondary">Login</a>
+            <a href="register.html" class="btn btn--primary">Get Started</a>
+        </div>
+    </nav>
+
+    <!-- ============================================================
+    HERO
+    ============================================================ -->
+    <header class="hero" id="home">
+        <div class="container hero__grid">
+            <div class="hero__content reveal">
+                <div class="section-label">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                        <path d="M9.6 13.2L4.8 18l-1.4-1.4 4.8-4.8-5.2-1.2 13-13 1.2 5.2 4.8 4.8 1.4 1.4-4.8 4.8 4 4v6H16l-6.4-6.4z" />
+                    </svg>
+                    Receipt Generator
+                </div>
+                <h1 class="heading-xl">
+                    Create <span class="highlight">Professional Receipts</span> in Seconds.
+                </h1>
+                <p class="text-body">
+                    Receiptly makes it simple to create, customize, manage, download, and print professional
+                    receipts for your business.
+                </p>
+                <div class="hero__ctas">
+                    <a href="register.html" class="btn btn--primary btn--lg">Create Your First Receipt</a>
+                    <a href="#how-it-works" class="btn btn--secondary btn--lg">See How It Works</a>
+                </div>
+                <div class="hero__trust">
+                    <span class="hero__trust-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                        Fast &amp; Simple
+                    </span>
+                    <span class="hero__trust-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                        Professional Designs
+                    </span>
+                    <span class="hero__trust-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                        Auto-Calculations
+                    </span>
+                </div>
+            </div>
+
+            <div class="hero__visual reveal reveal-delay-1">
+                <div class="hero-generator" id="heroGenerator">
+                    <div class="gen-header">
+                        <div class="logo-area">
+                            <div class="logo">R</div>
+                            <span class="name">Receiptly</span>
+                        </div>
+                        <span class="badge">● Live Preview</span>
+                    </div>
+
+                    <div class="gen-body">
+                        <div class="gen-field">
+                            <label>Business</label>
+                            <input type="text" value="Receiptly Demo" placeholder="Your business name" />
+                        </div>
+                        <div class="gen-field">
+                            <label>Receipt #</label>
+                            <input type="text" value="#RC-2026-00482" placeholder="Receipt number" />
+                        </div>
+                        <div class="gen-field">
+                            <label>Customer</label>
+                            <input type="text" value="John Doe" placeholder="Customer name" />
+                        </div>
+                        <div class="gen-field">
+                            <label>Date</label>
+                            <input type="text" value="26 Aug 2026" placeholder="Date" />
+                        </div>
+
+                        <div class="gen-items">
+                            <div class="items-header">
+                                <span>Item</span>
+                                <span>Qty</span>
+                                <span>Price</span>
+                                <span>Total</span>
+                                <span></span>
+                            </div>
+                            <div class="item-row">
+                                <input type="text" value="Web Design" placeholder="Item name" />
+                                <input type="number" value="1" min="1" />
+                                <input type="number" value="150000" step="1000" />
+                                <span class="item-total">₦150,000</span>
+                                <span class="remove-item">✕</span>
+                            </div>
+                            <div class="item-row">
+                                <input type="text" value="Hosting" placeholder="Item name" />
+                                <input type="number" value="12" min="1" />
+                                <input type="number" value="2000" step="500" />
+                                <span class="item-total">₦24,000</span>
+                                <span class="remove-item">✕</span>
+                            </div>
+                            <div class="item-row">
+                                <input type="text" value="Maintenance" placeholder="Item name" />
+                                <input type="number" value="3" min="1" />
+                                <input type="number" value="15000" step="1000" />
+                                <span class="item-total">₦45,000</span>
+                                <span class="remove-item">✕</span>
+                            </div>
+                            <div style="margin-top:6px;font-size:0.75rem;color:var(--accent);cursor:pointer;font-weight:500;" id="addItemBtn">+ Add item</div>
+                        </div>
+
+                        <div class="gen-totals">
+                            <div class="total-row"><span>Subtotal</span><span class="amount">₦219,000</span></div>
+                            <div class="total-row"><span>Tax (7.5%)</span><span class="amount">₦16,425</span></div>
+                            <div class="total-row"><span>Discount</span><span class="amount">-₦5,000</span></div>
+                            <div class="total-row grand"><span>Total</span><span class="amount">₦230,425</span></div>
+                        </div>
+
+                        <div class="gen-actions">
+                            <a href="#" class="btn btn--secondary btn--sm">Preview</a>
+                            <a href="#" class="btn btn--primary btn--sm">Generate Receipt</a>
+                            <a href="#" class="btn btn--secondary btn--sm">⬇ PDF</a>
+                            <a href="#" class="btn btn--secondary btn--sm">🖨 Print</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================================
+    TRUST STRIP
+    ============================================================ -->
+    <section class="trust-strip" aria-label="Trust indicators">
+        <div class="container trust-strip__grid">
+            <div class="trust-strip__item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                Fast Receipt Generation
+            </div>
+            <div class="trust-strip__item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 8h6"/><path d="M9 12h4"/><path d="M9 16h6"/></svg>
+                Professional Designs
+            </div>
+            <div class="trust-strip__item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v16h16"/><path d="M8 16l4-4 4 4"/><path d="M8 8h8"/></svg>
+                Automatic Calculations
+            </div>
+            <div class="trust-strip__item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                Multiple Currencies
+            </div>
+            <div class="trust-strip__item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 21h12"/><path d="M6 15h12"/><path d="M6 18h12"/></svg>
+                Easy Download &amp; Print
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    PRODUCT IN ACTION
+    ============================================================ -->
+    <section class="action-section" id="features">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="section-label">Product in Action</span>
+                <h2 class="heading-lg">Everything You Need to Create Better Receipts</h2>
+                <p class="text-body">A seamless workflow from creation to download — designed for efficiency.</p>
+            </div>
+            <div class="action-grid">
+                <div class="action-card reveal reveal-delay-1">
+                    <div class="step-num">01</div>
+                    <span class="action-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 22v-4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M22 12h-4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                    </span>
+                    <h3>Create</h3>
+                    <p>Enter your business and customer information. Add products and services.</p>
+                </div>
+                <div class="action-card reveal reveal-delay-2">
+                    <div class="step-num">02</div>
+                    <span class="action-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><path d="M16 9l-4 4-2-2"/></svg>
+                    </span>
+                    <h3>Customize</h3>
+                    <p>Choose a template, add your logo, and apply tax or discount rules.</p>
+                </div>
+                <div class="action-card reveal reveal-delay-3">
+                    <div class="step-num">03</div>
+                    <span class="action-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10"/></svg>
+                    </span>
+                    <h3>Generate</h3>
+                    <p>Receiptly calculates subtotal, tax, discount, and total instantly.</p>
+                </div>
+                <div class="action-card reveal reveal-delay-4">
+                    <div class="step-num">04</div>
+                    <span class="action-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </span>
+                    <h3>Download</h3>
+                    <p>Export as PDF, print, or save to your receipt history for later.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    FEATURES
+    ============================================================ -->
+    <section class="features-section" id="features-grid">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="section-label">Features</span>
+                <h2 class="heading-lg">Built for Modern Receipt Management</h2>
+                <p class="text-body">Everything you need to create, organize, and manage professional receipts.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card reveal reveal-delay-1">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 8h6"/><path d="M9 12h4"/><path d="M9 16h6"/></svg>
+                    </div>
+                    <h3>Receipt Generator</h3>
+                    <p>Create detailed itemized receipts quickly with automatic calculations.</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-2">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <h3>Customer Management</h3>
+                    <p>Save and manage customer information for fast repeat receipts.</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-3">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                    </div>
+                    <h3>Expense Tracking</h3>
+                    <p>Record business expenses and see them weighed against your sales.</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-1">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 8h6"/><path d="M9 12h4"/><path d="M9 16h6"/></svg>
+                    </div>
+                    <h3>5 Receipt Styles</h3>
+                    <p>Normal, Classic, Modern, Compact, and Pro layouts to match your brand.</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-2">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    </div>
+                    <h3>Automatic Calculations</h3>
+                    <p>Subtotal, discount, tax, and total are computed instantly.</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-3">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 8h6"/><path d="M9 12h4"/><path d="M9 16h6"/></svg>
+                    </div>
+                    <h3>Business Profile</h3>
+                    <p>Keep your business information and logo ready for every receipt.</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-1">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                    </div>
+                    <h3>Receipt History</h3>
+                    <p>View and manage previously generated receipts with powerful search.</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-2">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+                    </div>
+                    <h3>Payment Tracking</h3>
+                    <p>Log amount paid per receipt and track balance due — paid, partially paid, or unpaid.</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-3">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                    </div>
+                    <h3>Analytics</h3>
+                    <p>Visual charts of sales, receipts, and customer trends over time.</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-1">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 17v-4M12 17v-7M16 17v-2"/></svg>
+                    </div>
+                    <h3>Reports</h3>
+                    <p>Break down receipt and sales activity by period, status, and customer.</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-2">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    </div>
+                    <h3>Multiple Currencies</h3>
+                    <p>Create receipts using the currency appropriate for your business.</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-3">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <h3>Free, Normal &amp; Pro Plans</h3>
+                    <p>Start free, then unlock customer and expense tools, analytics, and the Pro template as you grow.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    RECEIPT SHOWCASE
+    ============================================================ -->
+    <section class="receipt-showcase" id="receipt-showcase">
+        <div class="container receipt-showcase__inner">
+            <div class="receipt-showcase__content reveal">
+                <span class="section-label">Your Receipts</span>
+                <h2 class="heading-lg">Professional Receipts That Build Trust</h2>
+                <p class="text-body">
+                    Every receipt you create carries your business identity — logo, colors, and a clean layout
+                    that builds customer confidence.
+                </p>
+                <a href="register.html" class="btn btn--primary">Create a Receipt Like This</a>
+            </div>
+            <div class="reveal reveal-delay-1">
+                <div class="receipt-preview-large">
+                    <div class="rp-brand">
+                        <div class="logo">R</div>
+                        <div class="info">
+                            <div class="name">Receiptly Demo</div>
+                            <div class="addr">123 Business St, Lagos, NG</div>
+                        </div>
+                    </div>
+                    <div class="rp-meta">
+                        <span>#RC-2026-00482</span>
+                        <span>26 Aug 2026</span>
+                    </div>
+                    <div class="rp-customer">
+                        <strong>Customer:</strong> John Doe — john@example.com
+                    </div>
+                    <div class="rp-items">
+                        <div class="item"><span>Web Design <span class="qty">× 1</span></span><span>₦150,000</span></div>
+                        <div class="item"><span>Hosting <span class="qty">× 12</span></span><span>₦24,000</span></div>
+                        <div class="item"><span>Maintenance <span class="qty">× 3</span></span><span>₦45,000</span></div>
+                    </div>
+                    <div class="rp-totals">
+                        <div class="row"><span>Subtotal</span><span>₦219,000</span></div>
+                        <div class="row"><span>Tax (7.5%)</span><span>₦16,425</span></div>
+                        <div class="row"><span>Discount</span><span>-₦5,000</span></div>
+                        <div class="row grand"><span>Total</span><span>₦230,425</span></div>
+                    </div>
+                    <div class="rp-footer">Thank you for your business! ✦</div>
+                    <div class="rp-actions">
+                        <a href="#" class="btn btn--secondary btn--sm">⬇ PDF</a>
+                        <a href="#" class="btn btn--secondary btn--sm">🖨 Print</a>
+                        <a href="#" class="btn btn--primary btn--sm">Generate</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    TEMPLATE SHOWCASE
+    ============================================================ -->
+    <section class="templates-section" id="templates">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="section-label">Templates</span>
+                <h2 class="heading-lg">Receipts That Look Professional</h2>
+                <p class="text-body">Choose from a variety of polished receipt designs for your business.</p>
+            </div>
+            <div class="templates-grid">
+                <div class="template-card reveal reveal-delay-1">
+                    <div class="tp-preview">
+                        <div class="tp-content">
+                            <div class="line accent"></div>
+                            <div class="line med"></div>
+                            <div class="line short"></div>
+                            <div style="display:flex;justify-content:space-between;margin-top:8px;">
+                                <div class="line" style="width:30%;"></div>
+                                <div class="line" style="width:20%;"></div>
+                            </div>
+                            <div class="line" style="width:40%;margin-top:4px;"></div>
+                        </div>
+                    </div>
+                    <div class="tp-name">Normal</div>
+                    <div class="tp-desc">The default, all-purpose layout</div>
+                    <span class="tp-badge">Free</span>
+                </div>
+                <div class="template-card reveal reveal-delay-2">
+                    <div class="tp-preview">
+                        <div class="tp-content">
+                            <div class="line accent-light"></div>
+                            <div class="line med"></div>
+                            <div class="line short"></div>
+                            <div style="display:flex;justify-content:space-between;margin-top:8px;">
+                                <div class="line" style="width:30%;"></div>
+                                <div class="line" style="width:20%;"></div>
+                            </div>
+                            <div class="line" style="width:40%;margin-top:4px;"></div>
+                        </div>
+                    </div>
+                    <div class="tp-name">Classic</div>
+                    <div class="tp-desc">Timeless and professional</div>
+                    <span class="tp-badge">Free</span>
+                </div>
+                <div class="template-card reveal reveal-delay-3">
+                    <div class="tp-preview">
+                        <div class="tp-content">
+                            <div class="line" style="background:var(--blue-300);width:50%;height:6px;"></div>
+                            <div class="line med"></div>
+                            <div class="line short"></div>
+                            <div style="display:flex;justify-content:space-between;margin-top:8px;">
+                                <div class="line" style="width:30%;"></div>
+                                <div class="line" style="width:20%;"></div>
+                            </div>
+                            <div class="line" style="width:40%;margin-top:4px;"></div>
+                        </div>
+                    </div>
+                    <div class="tp-name">Modern</div>
+                    <div class="tp-desc">Clean, bold, and contemporary</div>
+                    <span class="tp-badge">Free</span>
+                </div>
+                <div class="template-card reveal reveal-delay-1">
+                    <div class="tp-preview">
+                        <div class="tp-content">
+                            <div class="line" style="background:var(--blue-600);width:40%;height:6px;"></div>
+                            <div class="line med"></div>
+                            <div class="line short"></div>
+                            <div style="display:flex;justify-content:space-between;margin-top:8px;">
+                                <div class="line" style="width:30%;"></div>
+                                <div class="line" style="width:20%;"></div>
+                            </div>
+                            <div class="line" style="width:40%;margin-top:4px;"></div>
+                        </div>
+                    </div>
+                    <div class="tp-name">Compact</div>
+                    <div class="tp-desc">Slim, receipt-printer style</div>
+                    <span class="tp-badge">Free</span>
+                </div>
+                <div class="template-card reveal reveal-delay-2">
+                    <div class="tp-preview">
+                        <div class="tp-content">
+                            <div class="line" style="background:var(--blue-800);width:45%;height:6px;"></div>
+                            <div class="line med"></div>
+                            <div class="line short"></div>
+                            <div style="display:flex;justify-content:space-between;margin-top:8px;">
+                                <div class="line" style="width:30%;"></div>
+                                <div class="line" style="width:20%;"></div>
+                            </div>
+                            <div class="line" style="width:40%;margin-top:4px;"></div>
+                        </div>
+                    </div>
+                    <div class="tp-name">Pro</div>
+                    <div class="tp-desc">Premium invoice-style layout</div>
+                    <span class="tp-badge">Pro plan</span>
+                </div>
+            </div>
+            <div style="text-align:center;margin-top:32px;">
+                <a href="register.html" class="btn btn--outline">Explore All Templates →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    HOW IT WORKS (4-STEP)
+    ============================================================ -->
+    <section class="how-section" id="how-it-works">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="section-label">How It Works</span>
+                <h2 class="heading-lg">Create a Receipt in 4 Simple Steps</h2>
+                <p class="text-body">From entering details to generating a professional receipt — it's that easy.</p>
+            </div>
+            <div class="how-grid">
+                <div class="how-step reveal reveal-delay-1">
+                    <div class="step-num">01</div>
+                    <h3>Create Your Receipt</h3>
+                    <p>Enter your business and customer information to get started.</p>
+                </div>
+                <div class="how-step reveal reveal-delay-2">
+                    <div class="step-num">02</div>
+                    <h3>Add Your Items</h3>
+                    <p>Add products, quantities, prices, discounts, and taxes.</p>
+                </div>
+                <div class="how-step reveal reveal-delay-3">
+                    <div class="step-num">03</div>
+                    <h3>Generate</h3>
+                    <p>Receiptly automatically calculates the final amount and generates the receipt.</p>
+                </div>
+                <div class="how-step reveal reveal-delay-4">
+                    <div class="step-num">04</div>
+                    <h3>Download or Print</h3>
+                    <p>Download, print, or use the generated receipt for your records.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    DASHBOARD SHOWCASE
+    ============================================================ -->
+    <section class="dash-section" id="dashboard">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="section-label">Dashboard</span>
+                <h2 class="heading-lg">Manage Your Receipts From One Simple Dashboard</h2>
+                <p class="text-body">Create, organize, and manage your business receipts without unnecessary complexity.</p>
+            </div>
+            <div class="dash-mockup reveal">
+                <div class="dash-header">
+                    <span class="title">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                        Dashboard
+                    </span>
+                    <span class="period">Last 30 days</span>
+                </div>
+                <div class="dash-stats">
+                    <div class="stat"><div class="num">₦458k</div><div class="lbl">Total Sales</div></div>
+                    <div class="stat"><div class="num">124</div><div class="lbl">Total Receipts</div></div>
+                    <div class="stat"><div class="num">48</div><div class="lbl">Total Customers</div></div>
+                    <div class="stat"><div class="num">₦96k</div><div class="lbl">Net Profit</div></div>
+                </div>
+                <div class="dash-chart">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <div class="dash-nav">
+                    <span class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Dashboard</span>
+                    <span class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg> Create Receipt</span>
+                    <span class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg> Receipts</span>
+                    <span class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Customers</span>
+                    <span class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg> Analytics</span>
+                    <span class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg> Payments</span>
+                    <span class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 17v-4M12 17v-7M16 17v-2"/></svg> Reports</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    CURRENCY SECTION
+    ============================================================ -->
+    <section class="currency-section" id="currency">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="section-label">Currencies</span>
+                <h2 class="heading-lg">Use the Currency Your Business Needs</h2>
+                <p class="text-body">Receiptly supports multiple currencies for businesses around the world.</p>
+            </div>
+            <div class="currency-grid">
+                <div class="reveal">
+                    <span class="section-label" style="margin-bottom:8px;">Supported</span>
+                    <h3 class="heading-md" style="margin-bottom:12px;">Multiple Currency Support</h3>
+                    <p class="text-body" style="margin-bottom:12px;">
+                        Whether you invoice in Naira, Dollars, Euros, or Pounds — Receiptly adapts to your
+                        business currency needs. Select your preferred currency and all totals update automatically.
+                    </p>
+                    <a href="register.html" class="btn btn--primary">View Currency Settings</a>
+                </div>
+                <div class="currency-display reveal reveal-delay-1">
+                    <div class="currency-tag">₦ <span class="sub">NGN</span></div>
+                    <div class="currency-tag">$ <span class="sub">USD</span></div>
+                    <div class="currency-tag">£ <span class="sub">GBP</span></div>
+                    <div class="currency-tag">€ <span class="sub">EUR</span></div>
+                    <div class="currency-tag">C$ <span class="sub">CAD</span></div>
+                    <div class="currency-tag">¥ <span class="sub">JPY</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    WHY RECEIPTLY
+    ============================================================ -->
+    <section class="why-section" id="why">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="section-label">Why Receiptly</span>
+                <h2 class="heading-lg">Why Businesses Choose Receiptly</h2>
+                <p class="text-body">Practical features designed to save time and create professional receipts.</p>
+            </div>
+            <div class="why-grid">
+                <div class="why-card reveal reveal-delay-1">
+                    <span class="why-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10"/></svg>
+                    </span>
+                    <h3>Simple and Fast</h3>
+                    <p>Create professional receipts in seconds with an intuitive interface.</p>
+                </div>
+                <div class="why-card reveal reveal-delay-2">
+                    <span class="why-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 22v-4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M22 12h-4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                    </span>
+                    <h3>Professional Designs</h3>
+                    <p>Choose from modern, clean receipt templates that build trust.</p>
+                </div>
+                <div class="why-card reveal reveal-delay-3">
+                    <span class="why-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    </span>
+                    <h3>Automatic Calculations</h3>
+                    <p>Subtotal, tax, discount, and total are computed instantly.</p>
+                </div>
+                <div class="why-card reveal reveal-delay-1">
+                    <span class="why-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                    </span>
+                    <h3>Organized History</h3>
+                    <p>Every receipt is saved and searchable for future reference.</p>
+                </div>
+                <div class="why-card reveal reveal-delay-2">
+                    <span class="why-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </span>
+                    <h3>Customer Management</h3>
+                    <p>Save customer details and view their payment and purchase history.</p>
+                </div>
+                <div class="why-card reveal reveal-delay-3">
+                    <span class="why-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    </span>
+                    <h3>Multiple Currency Support</h3>
+                    <p>Create receipts in the currency that fits your business.</p>
+                </div>
+                <div class="why-card reveal reveal-delay-1">
+                    <span class="why-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+                    </span>
+                    <h3>Mobile-Friendly</h3>
+                    <p>Create and manage receipts from any device, anywhere.</p>
+                </div>
+                <div class="why-card reveal reveal-delay-2">
+                    <span class="why-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 21h12"/><path d="M6 15h12"/><path d="M6 18h12"/></svg>
+                    </span>
+                    <h3>Easy Download &amp; Print</h3>
+                    <p>Export as PDF or print with a single click.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    BUILT FOR MODERN BUSINESSES (replaces testimonials)
+    ============================================================ -->
+    <section class="built-section" id="built-for">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="section-label">Built For</span>
+                <h2 class="heading-lg">Built for Modern Businesses</h2>
+                <p class="text-body">Receiptly helps businesses of all types create professional receipts and manage their operations.</p>
+            </div>
+            <div class="built-grid">
+                <div class="built-card reveal reveal-delay-1">
+                    <span class="built-icon">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                    </span>
+                    <h3>Small Business Owners</h3>
+                    <p>Create receipts quickly and keep your business records organized.</p>
+                </div>
+                <div class="built-card reveal reveal-delay-2">
+                    <span class="built-icon">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </span>
+                    <h3>Freelancers</h3>
+                    <p>Generate professional invoices and receipts for your clients.</p>
+                </div>
+                <div class="built-card reveal reveal-delay-3">
+                    <span class="built-icon">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                    </span>
+                    <h3>Retailers</h3>
+                    <p>Issue receipts to customers and track sales activity.</p>
+                </div>
+                <div class="built-card reveal reveal-delay-1">
+                    <span class="built-icon">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                    </span>
+                    <h3>Service Providers</h3>
+                    <p>Create itemized receipts for services delivered to clients.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    PRICING
+    ============================================================ -->
+    <section class="pricing-section" id="pricing">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="section-label">Pricing</span>
+                <h2 class="heading-lg">Choose the Plan That Fits Your Business</h2>
+                <p class="text-body">Start free, upgrade any time from Settings once you've created your account.</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card reveal reveal-delay-1">
+                    <div class="plan-name">Free</div>
+                    <div class="price">₦0 <small>/mo</small></div>
+                    <div class="period">For getting started</div>
+                    <ul>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Unlimited receipts</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Normal, Classic, Modern &amp; Compact styles</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> PDF download &amp; print</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Business profile &amp; multi-currency</li>
+                    </ul>
+                    <a href="register.html" class="btn btn--secondary btn--block">Create Free Account</a>
+                </div>
+
+                <div class="pricing-card pricing-card--featured reveal reveal-delay-2">
+                    <div class="plan-name">Normal</div>
+                    <div class="price">₦2,500 <small>/mo</small></div>
+                    <div class="period">Core receipt &amp; customer tools</div>
+                    <ul>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Everything in Free</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Customer management</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Expense tracking</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Payment tracking</li>
+                    </ul>
+                    <a href="register.html" class="btn btn--primary btn--block">Create Free Account</a>
+                </div>
+
+                <div class="pricing-card reveal reveal-delay-3">
+                    <div class="plan-name">Pro</div>
+                    <div class="price">₦6,000 <small>/mo</small></div>
+                    <div class="period">Analytics, templates &amp; priority support</div>
+                    <ul>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Everything in Normal</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Analytics dashboard</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Pro receipt template</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Priority support</li>
+                    </ul>
+                    <a href="register.html" class="btn btn--secondary btn--block">Create Free Account</a>
+                </div>
+            </div>
+            <p class="text-body" style="text-align:center;margin-top:20px;font-size:0.85rem;">Paid plans are activated from Settings → Billing via bank transfer or card, and confirmed by an admin.</p>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    FAQ
+    ============================================================ -->
+    <section class="faq-section" id="faq">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="section-label">FAQ</span>
+                <h2 class="heading-lg">Frequently Asked Questions</h2>
+                <p class="text-body">Everything you need to know about Receiptly.</p>
+            </div>
+            <div class="faq-list" id="faqList">
+                <details class="faq-item" open>
+                    <summary>What is Receiptly?</summary>
+                    <div class="faq-answer"><p>Receiptly is a platform for creating professional receipts, managing customers and expenses, tracking payments, and understanding your business performance — all from your browser.</p></div>
+                </details>
+                <details class="faq-item">
+                    <summary>How do I create a receipt?</summary>
+                    <div class="faq-answer"><p>Simply enter your business and customer information, add products with quantities and prices, and Receiptly will automatically calculate the subtotal, tax, discount, and total. Then generate, download, or print your receipt.</p></div>
+                </details>
+                <details class="faq-item">
+                    <summary>Can I add my business logo?</summary>
+                    <div class="faq-answer"><p>Yes. You can upload your business logo and it will appear on every receipt you create.</p></div>
+                </details>
+                <details class="faq-item">
+                    <summary>Can I customize my receipt?</summary>
+                    <div class="faq-answer"><p>Yes. You can customize your receipt with your business name, logo, colors, footer message, currency, tax rate, and more.</p></div>
+                </details>
+                <details class="faq-item">
+                    <summary>Can I download or print receipts?</summary>
+                    <div class="faq-answer"><p>Yes. Every receipt can be exported as a PDF or printed directly from your browser with a single click.</p></div>
+                </details>
+                <details class="faq-item">
+                    <summary>Does Receiptly support multiple currencies?</summary>
+                    <div class="faq-answer"><p>Yes. Receiptly supports Naira, US Dollars, Euros, Pounds, and more. You can select your preferred currency in settings.</p></div>
+                </details>
+                <details class="faq-item">
+                    <summary>Can I manage customers and expenses?</summary>
+                    <div class="faq-answer"><p>Yes. You can store customer details, view their payment history, and record business expenses to see them alongside your sales.</p></div>
+                </details>
+                <details class="faq-item">
+                    <summary>Can I access Receiptly on mobile?</summary>
+                    <div class="faq-answer"><p>Yes. Receiptly is fully responsive and works on phones, tablets, and desktops.</p></div>
+                </details>
+                <details class="faq-item">
+                    <summary>How do Receiptly subscription plans work?</summary>
+                    <div class="faq-answer"><p>Every account starts on the Free plan with unlimited receipts. The Normal plan adds customer management, expense tracking, and payment tracking; the Pro plan adds analytics and the Pro receipt template. You can request an upgrade any time from Settings → Billing, by bank transfer or card — an admin confirms the payment and activates the plan.</p></div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    FINAL CTA
+    ============================================================ -->
+    <section style="padding-bottom:80px;">
+        <div class="container">
+            <div class="cta-band reveal">
+                <h2 class="heading-lg">Ready to Create Professional Receipts?</h2>
+                <p class="text-body">Create your first professional receipt with Receiptly today.</p>
+                <div class="cta-band__actions">
+                    <a href="register.html" class="btn btn--white btn--lg">Get Started With Receiptly</a>
+                    <a href="#how-it-works" class="btn btn--secondary btn--lg" style="background:rgba(255,255,255,0.10);color:#fff;border-color:rgba(255,255,255,0.20);">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    FOOTER
+    ============================================================ -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer__grid">
+                <div class="footer__brand">
+                    <div class="brand-icon">R</div>
+                    <p>Professional receipt generation and business management — all from your browser.</p>
+                </div>
+                <div class="footer__col">
+                    <h4>Product</h4>
+                    <a href="#features">Features</a>
+                    <a href="#templates">Templates</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#how-it-works">How It Works</a>
+                </div>
+                <div class="footer__col">
+                    <h4>Company</h4>
+                    <a href="#">About</a>
+                    <a href="#contact">Contact</a>
+                    <a href="#">Help &amp; Support</a>
+                </div>
+                <div class="footer__col">
+                    <h4>Legal</h4>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Refund Policy</a>
+                </div>
+                <div class="footer__col">
+                    <h4>Account</h4>
+                    <a href="login.html">Login</a>
+                    <a href="register.html">Sign Up</a>
+                    <a href="admin-login.html">Admin</a>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                <span>© 2026 Receiptly. All rights reserved.</span>
+                <span>Built with ❤️ for small business owners.</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ---- DOM refs ----
+            const navbar = document.getElementById('navbar');
+            const hamburger = document.getElementById('hamburger');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const themeToggle = document.getElementById('themeToggle');
+            const revealElements = document.querySelectorAll('.reveal');
+
+            // ---- Theme ----
+            function getTheme() {
+                return document.documentElement.getAttribute('data-theme') || 'light';
+            }
+
+            function setTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('receiptpro-theme', theme);
+                // Icons are toggled via CSS — no need to update textContent
+            }
+
+            const savedTheme = localStorage.getItem('receiptpro-theme') || 'light';
+            setTheme(savedTheme);
+            themeToggle.addEventListener('click', function() {
+                const current = getTheme();
+                setTheme(current === 'light' ? 'dark' : 'light');
+            });
+
+            // ---- Mobile menu ----
+            hamburger.addEventListener('click', function() {
+                const isOpen = mobileMenu.classList.toggle('open');
+                hamburger.classList.toggle('active');
+                hamburger.setAttribute('aria-expanded', isOpen);
+                document.body.style.overflow = isOpen ? 'hidden' : '';
+            });
+            mobileMenu.querySelectorAll('a').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.remove('open');
+                    hamburger.classList.remove('active');
+                    hamburger.setAttribute('aria-expanded', 'false');
+                    document.body.style.overflow = '';
+                });
+            });
+
+            // ---- Navbar scroll ----
+            function handleScroll() {
+                navbar.classList.toggle('scrolled', window.scrollY > 20);
+            }
+            window.addEventListener('scroll', handleScroll, { passive: true });
+            handleScroll();
+
+            // ---- Scroll Reveal ----
+            function checkReveals() {
+                const windowHeight = window.innerHeight;
+                revealElements.forEach(function(el) {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < windowHeight - 120) {
+                        el.classList.add('visible');
+                    }
+                });
+            }
+            checkReveals();
+            window.addEventListener('scroll', checkReveals, { passive: true });
+            window.addEventListener('resize', checkReveals, { passive: true });
+
+            // ---- Smooth anchor scroll ----
+            document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+                anchor.addEventListener('click', function(e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        e.preventDefault();
+                        const top = target.getBoundingClientRect().top + window.scrollY - 80;
+                        window.scrollTo({ top: top, behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // ---- Keyboard ----
+            hamburger.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    hamburger.click();
+                }
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+                    mobileMenu.classList.remove('open');
+                    hamburger.classList.remove('active');
+                    hamburger.setAttribute('aria-expanded', 'false');
+                    document.body.style.overflow = '';
+                }
+            });
+
+            // ---- Live receipt generator ----
+            const addItemBtn = document.getElementById('addItemBtn');
+            if (addItemBtn) {
+                addItemBtn.addEventListener('click', function() {
+                    const container = this.closest('.gen-items');
+                    const template = container.querySelector('.item-row');
+                    if (template) {
+                        const clone = template.cloneNode(true);
+                        const inputs = clone.querySelectorAll('input');
+                        inputs.forEach(function(inp) {
+                            if (inp.type === 'text') inp.value = '';
+                            if (inp.type === 'number') inp.value = '1';
+                        });
+                        const totalSpan = clone.querySelector('.item-total');
+                        if (totalSpan) totalSpan.textContent = '₦0';
+                        const removeBtn = clone.querySelector('.remove-item');
+                        if (removeBtn) {
+                            removeBtn.addEventListener('click', function() {
+                                const row = this.closest('.item-row');
+                                if (row && container.querySelectorAll('.item-row').length > 1) {
+                                    row.remove();
+                                    updateGrandTotal();
+                                }
+                            });
+                        }
+                        container.insertBefore(clone, this);
+                        // Re-bind events
+                        const qty = clone.querySelector('input[type="number"]:first-of-type');
+                        const price = clone.querySelector('input[type="number"]:last-of-type');
+                        const total = clone.querySelector('.item-total');
+                        if (qty && price && total) {
+                            function upd() {
+                                const q = parseFloat(qty.value) || 0;
+                                const p = parseFloat(price.value) || 0;
+                                total.textContent = '₦' + (q * p).toLocaleString();
+                                updateGrandTotal();
+                            }
+                            qty.addEventListener('input', upd);
+                            price.addEventListener('input', upd);
+                            upd();
+                        }
+                        updateGrandTotal();
+                    }
+                });
+            }
+
+            // Remove item on click (existing)
+            document.querySelectorAll('.item-row .remove-item').forEach(function(el) {
+                el.addEventListener('click', function() {
+                    const row = this.closest('.item-row');
+                    const container = row.closest('.gen-items');
+                    if (row && container.querySelectorAll('.item-row').length > 1) {
+                        row.remove();
+                        updateGrandTotal();
+                    }
+                });
+            });
+
+            // Item total updates
+            function updateGrandTotal() {
+                const itemTotals = document.querySelectorAll('.item-total');
+                let subtotal = 0;
+                itemTotals.forEach(function(el) {
+                    const val = parseFloat(el.textContent.replace(/[₦,]/g, '')) || 0;
+                    subtotal += val;
+                });
+                const tax = subtotal * 0.075;
+                const discount = 5000;
+                const total = subtotal + tax - discount;
+                const totalRows = document.querySelectorAll('.gen-totals .total-row .amount');
+                if (totalRows.length >= 4) {
+                    totalRows[0].textContent = '₦' + subtotal.toLocaleString();
+                    totalRows[1].textContent = '₦' + tax.toLocaleString();
+                    totalRows[2].textContent = '-₦' + discount.toLocaleString();
+                    totalRows[3].textContent = '₦' + total.toLocaleString();
+                }
+                // Update the large receipt preview too
+                const previewTotals = document.querySelectorAll('.receipt-preview-large .rp-totals .row span:last-child');
+                if (previewTotals.length >= 4) {
+                    previewTotals[0].textContent = '₦' + subtotal.toLocaleString();
+                    previewTotals[1].textContent = '₦' + tax.toLocaleString();
+                    previewTotals[2].textContent = '-₦' + discount.toLocaleString();
+                    previewTotals[3].textContent = '₦' + total.toLocaleString();
+                }
+                // Update preview items
+                const previewItems = document.querySelectorAll('.receipt-preview-large .rp-items .item span:last-child');
+                const itemRows = document.querySelectorAll('.gen-items .item-row');
+                itemRows.forEach(function(row, idx) {
+                    const total = row.querySelector('.item-total');
+                    if (total && previewItems[idx]) {
+                        previewItems[idx].textContent = total.textContent;
+                    }
+                });
+            }
+
+            // Initial update
+            setTimeout(updateGrandTotal, 100);
+
+            // ---- Console ----
+            console.log('%c Receiptly ',
+                'background:#2563eb;color:#fff;font-weight:700;font-size:16px;padding:6px 14px;border-radius:4px;');
+            console.log('%c Professional Receipt Generator + Business Management', 'color:#4b5563;font-size:13px;');
+
+        })();
+
+        // ---- Preloader: Prism Spinner ----
+        (function prismPreloader() {
+            const preloader = document.getElementById('preloader');
+            const canvas = document.getElementById('prismCanvas');
+            const ctx = canvas.getContext('2d');
+            const percentDisplay = document.getElementById('percentDisplay');
+            const wrapper = canvas.closest('.prism-preloader');
+
+            const dpr = window.devicePixelRatio || 1;
+            const rect = wrapper.getBoundingClientRect();
+            const displayWidth = rect.width || 260;
+            const displayHeight = rect.height || 260;
+
+            canvas.width = displayWidth * dpr;
+            canvas.height = displayHeight * dpr;
+            canvas.style.width = displayWidth + 'px';
+            canvas.style.height = displayHeight + 'px';
+
+            const W = canvas.width;
+            const H = canvas.height;
+            const cx = W / 2;
+            const cy = H / 2;
+            const baseRadius = Math.min(W, H) * 0.36;
+
+            ctx.scale(dpr, dpr);
+
+            const DURATION = 6000;
+            const SIDES = 6;
+            const BEAM_COUNT = 12;
+
+            let startTime = null;
+            let frameId = null;
+            let finished = false;
+
+            function easeInOut(t) {
+                return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            }
+
+            function drawPolygon(cx, cy, radius, sides, rotation, strokeColor, lineWidth, shadowBlur) {
+                if (sides < 3) return;
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(rotation);
+                ctx.beginPath();
+                for (let i = 0; i < sides; i++) {
+                    const angle = (i / sides) * Math.PI * 2 - Math.PI / 2;
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                if (strokeColor) {
+                    ctx.strokeStyle = strokeColor;
+                    ctx.lineWidth = lineWidth || 3;
+                    ctx.shadowColor = 'rgba(37, 99, 235, 0.3)';
+                    ctx.shadowBlur = shadowBlur || 25;
+                    ctx.stroke();
+                }
+                ctx.restore();
+            }
+
+            function drawScene(p) {
+                const eased = easeInOut(Math.min(p, 1));
+                const angle = eased * Math.PI * 2;
+
+                ctx.clearRect(0, 0, W, H);
+
+                for (let i = 0; i < 6; i++) {
+                    const r = (i / 6) * baseRadius * 1.5;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(37,99,235,${0.03 + 0.02 * eased})`;
+                    ctx.lineWidth = 0.8;
+                    ctx.stroke();
+                }
+
+                const prismRadius = baseRadius * 0.85;
+                const rot = angle * 0.6;
+                // color shift: light blue -> deep blue
+                const mix = eased;
+                const r1 = 147,
+                    g1 = 197,
+                    b1 = 253; // blue-300
+                const r2 = 29,
+                    g2 = 78,
+                    b2 = 216; // blue-700
+                const r = Math.round(r1 + (r2 - r1) * mix);
+                const g = Math.round(g1 + (g2 - g1) * mix);
+                const b = Math.round(b1 + (b2 - b1) * mix);
+                const strokeColor = `rgb(${r}, ${g}, ${b})`;
+
+                drawPolygon(cx, cy, prismRadius, SIDES, rot, strokeColor, 5, 30);
+                drawPolygon(cx, cy, prismRadius * 0.7, SIDES, -rot * 0.8, strokeColor, 2.5, 14);
+
+                const beamLength = baseRadius * (0.6 + 0.3 * eased);
+                for (let i = 0; i < BEAM_COUNT; i++) {
+                    const beamAngle = (i / BEAM_COUNT) * Math.PI * 2 + angle * 0.3 + performance.now() / 5000;
+                    const x1 = cx + Math.cos(beamAngle) * 10;
+                    const y1 = cy + Math.sin(beamAngle) * 10;
+                    const x2 = cx + Math.cos(beamAngle) * beamLength;
+                    const y2 = cy + Math.sin(beamAngle) * beamLength;
+                    const alpha = 0.08 + 0.1 * (1 - Math.abs(Math.sin(beamAngle * 2 + eased * 2)));
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.strokeStyle = `rgba(37, 99, 235, ${alpha * (0.5 + 0.5 * eased)})`;
+                    ctx.lineWidth = 1.8;
+                    ctx.shadowColor = 'rgba(37, 99, 235, 0.1)';
+                    ctx.shadowBlur = 10;
+                    ctx.stroke();
+                }
+
+                const orbitRadius = prismRadius * 1.15;
+                for (let i = 0; i < 8; i++) {
+                    const t = (i / 8) * Math.PI * 2 + performance.now() / 2000 + angle;
+                    const x = cx + Math.cos(t) * orbitRadius;
+                    const y = cy + Math.sin(t) * orbitRadius;
+                    const size = 2 + 2 * (0.5 + 0.5 * Math.sin(t * 2));
+                    const alpha = 0.3 + 0.3 * (0.5 + 0.5 * Math.sin(t * 2 + eased));
+                    ctx.beginPath();
+                    ctx.arc(x, y, size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(37, 99, 235, ${alpha})`;
+                    ctx.shadowColor = 'rgba(37, 99, 235, 0.15)';
+                    ctx.shadowBlur = 8;
+                    ctx.fill();
+                }
+
+                const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, baseRadius * 0.25);
+                coreGrad.addColorStop(0, `rgba(37, 99, 235, ${0.15 + 0.2 * eased})`);
+                coreGrad.addColorStop(0.5, `rgba(37, 99, 235, ${0.05 + 0.1 * eased})`);
+                coreGrad.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = coreGrad;
+                ctx.beginPath();
+                ctx.arc(cx, cy, baseRadius * 0.25, 0, Math.PI * 2);
+                ctx.fill();
+
+                const percent = Math.round(eased * 100);
+                percentDisplay.textContent = percent + '%';
+            }
+
+            function finishLoading() {
+                if (finished) return;
+                finished = true;
+                if (frameId) cancelAnimationFrame(frameId);
+                drawScene(1);
+                percentDisplay.textContent = '100%';
+                preloader.classList.add('hidden');
+            }
+
+            function tick(timestamp) {
+                if (finished) return;
+                if (startTime === null) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / DURATION, 1);
+
+                drawScene(progress);
+
+                if (progress < 1) {
+                    frameId = requestAnimationFrame(tick);
+                } else {
+                    finishLoading();
+                }
+            }
+
+            frameId = requestAnimationFrame(tick);
+
+            // Safety net in case the tab is throttled or the load event should hasten completion
+            setTimeout(function() {
+                if (!finished) finishLoading();
+            }, DURATION + 1500);
+
+            window.addEventListener('beforeunload', function() {
+                if (frameId) cancelAnimationFrame(frameId);
+            });
+
+            function handleResize() {
+                if (startTime !== null && !finished) {
+                    const now = performance.now();
+                    const elapsed = now - startTime;
+                    const p = Math.min(elapsed / DURATION, 1);
+                    drawScene(p);
+                }
+            }
+            window.addEventListener('resize', handleResize);
+        })();
+    </script>
+
+</body>
+</html>

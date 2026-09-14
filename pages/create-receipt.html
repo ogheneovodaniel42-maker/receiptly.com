@@ -1,0 +1,3932 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Receipt — Receiptly</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+    href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap"
+    rel="stylesheet" />
+    <style>
+        /* ===== CSS VARIABLES & RESET ===== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --paper-raised: #ffffff;
+            --paper-sunken: #f8fafc;
+            --line: #e2e8f0;
+            --line-strong: #cbd5e1;
+            --ink: #0f172a;
+            --ink-soft: #475569;
+            --muted: #94a3b8;
+            --accent: #2563eb;
+            --accent-soft: #eff6ff;
+            --accent-glow: rgba(37, 99, 235, 0.15);
+            --accent-dark: #1d4ed8;
+            --green: #059669;
+            --red: #dc2626;
+            --red-soft: #fef2f2;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.04);
+            --sidebar-width: 260px;
+            --stamp-red: #dc2626;
+            --ledger-green: #059669;
+            --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        [data-theme="dark"] {
+            --paper-raised: #1d1a17;
+            --paper-sunken: #12100e;
+            --line: #2d2924;
+            --line-strong: #4a4540;
+            --ink: #f0ece6;
+            --ink-soft: #c5bfb7;
+            --muted: #8a8580;
+            --accent-soft: #1a2a44;
+            --accent-glow: rgba(74, 143, 245, 0.12);
+            --red-soft: #3d1a1a;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-sans);
+            background: var(--paper-sunken);
+            color: var(--ink);
+            transition: background var(--transition), color var(--transition);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font: inherit;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: inherit;
+        }
+
+        input,
+        select {
+            font: inherit;
+            color: inherit;
+        }
+
+        /* ===== APP LAYOUT ===== */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--paper-raised);
+            border-right: 1px solid var(--line);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            overflow-y: auto;
+            transition: transform 0.3s ease, background var(--transition), border-color var(--transition);
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 24px 20px 20px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.02em;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .sidebar-brand .brand-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--ink-soft);
+            transition: all var(--transition);
+            position: relative;
+        }
+
+        .sidebar-nav a .nav-icon {
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav a:hover {
+            background: var(--paper-sunken);
+            color: var(--ink);
+        }
+
+        .sidebar-nav a.active {
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .sidebar-nav a.active::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            border-radius: 0 4px 4px 0;
+            background: var(--accent);
+        }
+
+        .sidebar-footer {
+            padding: 16px 12px;
+            border-top: 1px solid var(--line);
+        }
+
+        .sidebar-footer a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--ink-soft);
+            transition: all var(--transition);
+        }
+
+        .sidebar-footer a .nav-icon {
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer a:hover {
+            background: var(--paper-sunken);
+            color: var(--stamp-red);
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--line-strong);
+            border-radius: 100px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== HEADER ===== */
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 24px 14px 0;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 1px solid var(--line);
+            background: var(--paper-sunken);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            transition: background var(--transition), border-color var(--transition);
+            min-height: 60px;
+        }
+
+        .dash-header__left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            padding: 6px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: background var(--transition);
+        }
+
+        .hamburger:hover {
+            background: var(--paper-raised);
+        }
+
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2.5px;
+            background: var(--ink);
+            border-radius: 100px;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(6.5px) rotate(45deg);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-6.5px) rotate(-45deg);
+        }
+
+        .dash-header__greeting {
+            font-size: 2.1rem;
+            font-weight: bolder;
+            margin-left: 20px;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            line-height: 1.2;
+        }
+
+        .dash-header__greeting .highlight {
+            color: var(--accent);
+        }
+
+        .dash-header__sub {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .dash-header__sub .business-name {
+            font-weight: 600;
+            color: var(--ink-soft);
+        }
+
+        .dash-header__right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+
+        .dash-header__date {
+            font-size: 0.8rem;
+            color: #0f172a;
+            background: var(--paper-raised);
+            padding: 4px 12px;
+            border-radius: 100px;
+            border: 1px solid var(--line);
+            white-space: nowrap;
+        }
+
+        .dash-header__notif {
+            width: 36px;
+            height: 36px;
+            border-radius: 100px;
+            background: var(--paper-raised);
+            border: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            transition: all var(--transition);
+            position: relative;
+            color: var(--ink-soft);
+        }
+
+        .dash-header__notif:hover {
+            border-color: var(--line-strong);
+            background: var(--paper-sunken);
+        }
+
+        .dash-header__notif .dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 7px;
+            height: 7px;
+            border-radius: 100px;
+            background: var(--red);
+        }
+
+        .dash-header__theme-toggle {
+            width: 36px;
+            height: 36px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            background: var(--paper-raised);
+            border: 1px solid var(--line);
+            transition: all var(--transition);
+            color: var(--ink-soft);
+        }
+
+        .dash-header__theme-toggle:hover {
+            background: var(--paper-sunken);
+            border-color: var(--line-strong);
+            color: var(--ink);
+        }
+
+        .dash-header__avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 100px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            border: 2px solid transparent;
+            flex-shrink: 0;
+        }
+
+        .dash-header__avatar:hover {
+            border-color: var(--accent);
+            transform: scale(1.04);
+        }
+
+        /* ===== OVERLAY ===== */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+        }
+
+        .sidebar-overlay.open {
+            display: block;
+        }
+
+        /* ===== MAIN CONTENT WRAPPER ===== */
+        #appLayout {
+            max-width: 1360px;
+            margin: 0 auto;
+            padding: 0 24px 40px;
+            width: 100%;
+        }
+
+        /* ===== PAGE HEADER ===== */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .page-header h1 {
+            font-size: clamp(1.3rem, 2vw, 1.6rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .page-header p {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        /* ===== BUILDER GRID – FIXED RESPONSIVE ===== */
+        .builder-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            width: 100%;
+            margin: 0 auto;
+            align-items: start;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--paper-raised);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: all var(--transition);
+        }
+
+        .card:hover {
+            border-color: var(--line-strong);
+        }
+
+        .card__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px 10px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .card__header h3 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card__body {
+            padding: 16px 18px 18px;
+        }
+
+        /* ===== FORM FIELDS ===== */
+        .field {
+            margin-bottom: 14px;
+        }
+
+        .field label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.78rem;
+            margin-bottom: 4px;
+            color: var(--ink-soft);
+        }
+
+        .field .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--paper-sunken);
+            border: 1.5px solid var(--line);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition);
+        }
+
+        .field .input-wrapper:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+            background: var(--paper-raised);
+        }
+
+        .field .input-wrapper .input-icon {
+            padding: 0 0 0 12px;
+            color: var(--muted);
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .field .input-wrapper input,
+        .field .input-wrapper select {
+            flex: 1;
+            padding: 8px 12px;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 0.88rem;
+            min-height: 40px;
+            width: 100%;
+            color: var(--ink);
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .field .input-wrapper select {
+            cursor: pointer;
+            padding-right: 32px;
+        }
+
+        .field .input-wrapper .select-arrow {
+            position: absolute;
+            right: 12px;
+            color: var(--muted);
+            pointer-events: none;
+            font-size: 0.65rem;
+        }
+
+        .field .input-wrapper input::placeholder {
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        .field .error-msg {
+            font-size: 0.72rem;
+            color: var(--red);
+            margin-top: 3px;
+            display: none;
+        }
+
+        .field.has-error .input-wrapper {
+            border-color: var(--red);
+            background: var(--red-soft);
+        }
+
+        .field.has-error .input-wrapper:focus-within {
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+        }
+
+        .field.has-error .error-msg {
+            display: block;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        /* ===== ITEM FORM ROW ===== */
+        .item-form-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .item-form-row .field {
+            margin-bottom: 0;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            transition: all var(--transition);
+            border: 1.5px solid transparent;
+            text-align: center;
+            white-space: nowrap;
+            min-height: 44px;
+            position: relative;
+        }
+
+        .btn--primary {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .btn--primary:hover:not(:disabled) {
+            background: var(--accent-dark);
+            border-color: var(--accent-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+
+        .btn--accent {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .btn--accent:hover:not(:disabled) {
+            background: var(--accent-dark);
+            border-color: var(--accent-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+
+        .btn--ghost {
+            background: transparent;
+            color: var(--ink-soft);
+            border-color: transparent;
+        }
+
+        .btn--ghost:hover {
+            color: var(--ink);
+            background: var(--paper-sunken);
+        }
+
+        .btn--lg {
+            padding: 12px 32px;
+            font-size: 0.95rem;
+            min-height: 50px;
+        }
+
+        .btn--sm {
+            padding: 4px 14px;
+            font-size: 0.75rem;
+            min-height: 32px;
+        }
+
+        .flex {
+            display: flex;
+        }
+        .flex.gap-12 {
+            gap: 12px;
+        }
+        .flex.gap-8 {
+            gap: 8px;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mt-16 {
+            margin-top: 16px;
+        }
+        .mb-16 {
+            margin-bottom: 16px;
+        }
+        .mb-24 {
+            margin-bottom: 24px;
+        }
+
+        /* ===== PREVIEW ===== */
+        .preview-sticky {
+            margin-top: 0;
+            position: sticky;
+            top: 80px;
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .receipt-paper {
+            background: var(--paper-raised);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 28px 24px;
+            font-family: "Courier New", monospace;
+            font-size: 13px;
+            color: var(--ink);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition);
+            min-height: 300px;
+            line-height: 1.6;
+            max-width: 100% !important;
+            width: 100%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+        }
+
+        .receipt-paper .receipt-logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+            border-bottom: 2px dashed var(--line);
+            padding-bottom: 12px;
+        }
+
+        .receipt-paper .receipt-logo .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .receipt-paper .receipt-logo .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .receipt-paper .receipt-logo .logo-text .business-name {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--ink);
+            font-family: var(--font-sans);
+        }
+
+        .receipt-paper .receipt-logo .logo-text .business-address {
+            font-size: 11px;
+            color: var(--muted);
+            font-family: var(--font-sans);
+        }
+
+        .receipt-paper .receipt-details {
+            margin: 8px 0 12px;
+        }
+
+        .receipt-paper .receipt-details .detail-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            padding: 2px 0;
+            color: var(--ink-soft);
+        }
+
+        .receipt-paper .receipt-details .detail-row .label {
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .receipt-paper .receipt-divider {
+            border: none;
+            border-top: 1px dashed var(--line);
+            margin: 10px 0;
+        }
+
+        .receipt-paper .receipt-items {
+            margin: 8px 0;
+        }
+
+        .receipt-paper .receipt-items .item-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12.5px;
+            padding: 2px 0;
+            color: var(--ink-soft);
+            gap: 8px;
+        }
+
+        .receipt-paper .receipt-items .item-line .item-name {
+            flex: 1;
+        }
+
+        .receipt-paper .receipt-items .item-line .item-qty {
+            margin: 0 8px;
+            color: var(--muted);
+            flex-shrink: 0;
+        }
+
+        .receipt-paper .receipt-items .item-line .item-total {
+            font-weight: 500;
+            color: var(--ink);
+            flex-shrink: 0;
+        }
+
+        .receipt-paper .receipt-totals {
+            border-top: 1px solid var(--line);
+            margin-top: 8px;
+            padding-top: 8px;
+        }
+
+        .receipt-paper .receipt-totals .totals-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 0;
+            font-size: 12.5px;
+            color: var(--ink-soft);
+        }
+
+        .receipt-paper .receipt-totals .totals-row.grand {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--ink);
+            border-top: 1px solid var(--line);
+            margin-top: 4px;
+            padding-top: 8px;
+        }
+
+        .receipt-paper .receipt-payment {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--line);
+        }
+
+        .receipt-paper .receipt-payment .payment-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--muted);
+            padding: 1px 0;
+        }
+
+        .receipt-paper .receipt-payment .payment-row .label {
+            color: var(--ink-soft);
+        }
+
+        .receipt-paper .receipt-footer {
+            text-align: center;
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 14px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--line);
+        }
+
+        .receipt-paper .empty-preview {
+            text-align: center;
+            padding: 40px 10px;
+            color: var(--muted);
+        }
+
+        .receipt-paper .empty-preview .empty-icon {
+            font-size: 2.4rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .receipt-paper .empty-preview p {
+            font-size: 0.85rem;
+        }
+
+        /* ===== TABLE ===== */
+        .table-wrap {
+            overflow-x: auto;
+            margin-top: 4px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+        }
+
+        .data-table thead th {
+            text-align: left;
+            padding: 8px 6px;
+            font-weight: 600;
+            color: var(--muted);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .data-table tbody td {
+            padding: 8px 6px;
+            border-bottom: 1px solid var(--line);
+            color: var(--ink-soft);
+            vertical-align: middle;
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table .remove-btn {
+            color: var(--stamp-red);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: color var(--transition);
+            background: none;
+            border: none;
+            padding: 2px 8px;
+        }
+
+        .data-table .remove-btn:hover {
+            color: var(--red);
+            transform: scale(1.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 24px 10px;
+            color: var(--muted);
+        }
+
+        .empty-state .empty-icon {
+            font-size: 1.8rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .empty-state p {
+            font-size: 0.82rem;
+        }
+
+        /* ===== PAYMENT METHOD ===== */
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border: 1.5px solid var(--line);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition);
+            background: var(--paper-sunken);
+        }
+
+        .payment-option:has(input:checked) {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+        }
+
+        .payment-option input[type="radio"] {
+            accent-color: var(--accent);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .payment-option span {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        /* ===== TEMPLATE PICKER ===== */
+        #templateButtons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .tpl-btn {
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: 2px solid var(--line);
+            color: var(--ink-soft);
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: transparent;
+        }
+
+        .tpl-btn:hover {
+            border-color: var(--accent);
+            color: var(--ink);
+        }
+
+        .tpl-btn.active {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        #templatePreview {
+            color: #172033;
+            width: 100%;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            font: 13px "Inter", Arial, sans-serif;
+            border-radius: 8px;
+            margin: 0 auto;
+            background: var(--paper-raised);
+            border: 1px solid var(--line);
+            overflow-x: auto;
+        }
+
+        .rp-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 14px;
+        }
+        .rp-head small {
+            color: var(--accent);
+            font-weight: 800;
+        }
+        .rp-line {
+            height: 1px;
+            background: #ddd;
+            margin: 14px 0;
+        }
+        .rp-row,
+        .rp-total {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 8px 0;
+        }
+        .rp-row span:first-child {
+            color: #6b7280;
+        }
+        .rp-total {
+            font-size: 15px;
+            border-top: 2px solid var(--accent);
+            padding-top: 10px;
+        }
+        .rp-total b {
+            color: var(--accent);
+        }
+        .rp-thanks {
+            display: block;
+            text-align: center;
+            color: #777;
+            margin-top: 18px;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .modal-overlay.is-visible {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--paper-raised);
+            border-radius: var(--radius-lg);
+            max-width: 420px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px 32px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--line);
+        }
+
+        .modal__title {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .modal__actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--line);
+            flex-wrap: wrap;
+        }
+
+        /* ===== TOAST ===== */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 380px;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .toast-container .toast {
+            pointer-events: auto;
+            background: var(--paper-raised);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: slideInRight 0.4s ease;
+            transition: all var(--transition);
+        }
+
+        .toast-container .toast--success {
+            border-left: 4px solid var(--green);
+        }
+
+        .toast-container .toast--error {
+            border-left: 4px solid var(--red);
+        }
+
+        .toast-container .toast__icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .toast-container .toast__content {
+            flex: 1;
+        }
+
+        .toast-container .toast__title {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .toast-container .toast__message {
+            font-size: 0.8rem;
+            color: var(--ink-soft);
+        }
+
+        .toast-container .toast__close {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 0 4px;
+            transition: color var(--transition);
+        }
+
+        .toast-container .toast__close:hover {
+            color: var(--ink);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* ============================================================
+                   RESPONSIVE – FIXED MEDIA QUERIES
+                   ============================================================ */
+
+        /* Tablets & smaller laptops */
+        @media (max-width: 1024px) {
+            .builder-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .preview-sticky {
+                position: static;
+                margin-top: 20px;
+            }
+
+            #appLayout {
+                padding: 0 16px 32px;
+            }
+
+            .dash-header {
+                padding: 10px 16px 10px 0;
+            }
+
+            .receipt-paper {
+                padding: 22px 18px;
+                font-size: 12px;
+            }
+
+            .card__body {
+                padding: 14px 16px 16px;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                transform: translateX(-100%);
+                box-shadow: var(--shadow-lg);
+                z-index: 1000;
+                width: 280px;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .dash-header {
+                padding: 8px 0 8px 0;
+                flex-wrap: wrap;
+            }
+
+            .dash-header__right {
+                gap: 6px;
+            }
+
+            .dash-header__date {
+                display: none;
+            }
+
+            .dash-header__notif,
+            .dash-header__theme-toggle,
+            .dash-header__avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
+            }
+
+            .sidebar-overlay.open {
+                display: block;
+            }
+
+            .item-form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .item-form-row .field:first-child {
+                grid-column: 1 / -1;
+            }
+
+            .item-form-row .btn {
+                grid-column: 1 / -1;
+            }
+
+            .input-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            #appLayout {
+                padding: 0 8px 24px;
+            }
+
+            .receipt-paper {
+                padding: 16px 12px;
+                font-size: 11px;
+                border-radius: var(--radius-sm);
+            }
+
+            .receipt-paper .receipt-logo .logo-text .business-name {
+                font-size: 15px;
+            }
+
+            .receipt-paper .receipt-logo .logo-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+
+            .receipt-paper .receipt-items .item-line {
+                font-size: 11px;
+            }
+
+            .receipt-paper .receipt-totals .totals-row {
+                font-size: 11px;
+            }
+
+            .receipt-paper .receipt-totals .totals-row.grand {
+                font-size: 14px;
+            }
+
+            .card__body {
+                padding: 12px 14px 14px;
+            }
+
+            .card__header {
+                padding: 10px 14px 8px;
+            }
+
+            .card__header h3 {
+                font-size: 0.78rem;
+            }
+
+            .btn {
+                font-size: 0.8rem;
+                padding: 6px 16px;
+                min-height: 38px;
+            }
+
+            .btn--lg {
+                padding: 10px 24px;
+                font-size: 0.85rem;
+                min-height: 44px;
+            }
+
+            .flex.gap-12 {
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .dash-header__sub {
+                display: none;
+            }
+
+            .dash-header__greeting {
+                font-size: 0.85rem;
+                margin-left: 0;
+            }
+
+            .dash-header__left {
+                gap: 8px;
+            }
+
+            #templatePreview {
+                padding: 14px 12px;
+                font-size: 11px;
+            }
+
+            .tpl-btn {
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+
+            #templateButtons {
+                gap: 6px;
+            }
+
+            .builder-grid {
+                gap: 16px;
+            }
+        }
+
+        /* Small phones */
+        @media (max-width: 480px) {
+            .item-form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .item-form-row .field:first-child {
+                grid-column: 1;
+            }
+
+            .item-form-row .btn {
+                grid-column: 1;
+            }
+
+            .receipt-paper {
+                padding: 12px 8px;
+                font-size: 10px;
+                border-radius: 6px;
+            }
+
+            .receipt-paper .receipt-logo .logo-text .business-name {
+                font-size: 13px;
+            }
+
+            .receipt-paper .receipt-logo .logo-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 0.85rem;
+            }
+
+            .receipt-paper .receipt-items .item-line {
+                font-size: 10px;
+                padding: 1px 0;
+            }
+
+            .receipt-paper .receipt-totals .totals-row {
+                font-size: 10px;
+                padding: 1px 0;
+            }
+
+            .receipt-paper .receipt-totals .totals-row.grand {
+                font-size: 12px;
+            }
+
+            .receipt-paper .receipt-details .detail-row {
+                font-size: 10px;
+            }
+
+            .receipt-paper .receipt-payment .payment-row {
+                font-size: 10px;
+            }
+
+            .receipt-paper .receipt-footer {
+                font-size: 9px;
+            }
+
+            .page-header h1 {
+                font-size: 0.95rem;
+            }
+
+            .flex.gap-12 {
+                flex-direction: column;
+            }
+
+            .flex.gap-12 .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .dash-header__avatar {
+                width: 36px;
+                height: 36px;
+                font-size: 0.7rem;
+            }
+
+            .modal {
+                padding: 20px 18px;
+            }
+
+            .modal__actions {
+                flex-direction: column;
+            }
+
+            .modal__actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        .msg-nav-badge {
+            margin-left: auto;
+            background: #dc2626;
+            color: #fff;
+            font-size: .68rem;
+            font-weight: 800;
+            border-radius: 999px;
+            padding: 1px 6px;
+            min-width: 18px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        /* ===== PRISM PRELOADER ===== */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0b1628;
+            transition: opacity 0.9s cubic-bezier(0.65, 0, 0.35, 1),
+                visibility 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+            will-change: opacity, visibility;
+            user-select: none;
+            padding: 1.5rem;
+        }
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .prism-loader {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .prism-loader canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: 50%;
+        }
+        .prism-loader .prism-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            user-select: none;
+            z-index: 2;
+            background: radial-gradient(circle at center, rgba(11, 22, 40, 0.7) 0%, transparent 60%);
+            padding: 20px 30px;
+            border-radius: 50%;
+        }
+        .prism-loader .prism-percentage {
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #e8edf5;
+            opacity: 0.95;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+            animation: prismFadeIn 1s ease 0.2s both;
+        }
+        .prism-loader .prism-label {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 3.5px;
+            text-transform: uppercase;
+            color: rgba(212, 175, 55, 0.5);
+            margin-top: 4px;
+            animation: prismFadeIn 1s ease 0.4s both;
+        }
+        @keyframes prismFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        @media (max-width: 480px) {
+            .prism-loader {
+                width: 260px;
+                height: 260px;
+            }
+            .prism-loader .prism-percentage {
+                font-size: 28px;
+            }
+            .prism-loader .prism-label {
+                font-size: 9px;
+                letter-spacing: 2.5px;
+            }
+        }
+
+        /* ──────────── PAYMENT ANIMATIONS ────────────── */
+
+        /* ===== OVERLAY BASE ===== */
+        .payment-anim-overlay,
+        .pod-anim-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            padding: 20px;
+        }
+        .payment-anim-overlay:not(.hidden),
+        .pod-anim-overlay:not(.hidden) {
+            display: flex;
+        }
+        .payment-anim-overlay.hidden,
+        .pod-anim-overlay.hidden {
+            display: none;
+        }
+
+        /* ===== INSTANT PAYMENT CARD ===== */
+        .payment-anim-card {
+            background: var(--paper-raised);
+            border-radius: var(--radius-lg);
+            max-width: 460px;
+            width: 100%;
+            padding: 28px 28px 20px;
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--line);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-anim-cardface {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            border-radius: var(--radius-md);
+            padding: 22px 24px 18px;
+            min-height: 190px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        .payment-anim-cardface::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 180%;
+            height: 180%;
+            background: radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.06) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .payment-anim-cardface.is-success {
+            background: linear-gradient(135deg, #065f46, #047857, #059669);
+        }
+
+        .payment-anim-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            z-index: 2;
+        }
+        .payment-anim-chip {
+            width: 42px;
+            height: 32px;
+            background: linear-gradient(135deg, #fcd34d, #f59e0b);
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+        }
+        .payment-anim-brand {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 14px;
+            border-radius: 100px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .payment-anim-number {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            font-family: "Courier New", monospace;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin: 10px 0 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .payment-anim-bottom {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+            position: relative;
+            z-index: 2;
+            letter-spacing: 0.3px;
+        }
+        .payment-anim-bottom>div {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+        .payment-anim-bottom>div span {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── Processing overlay ── */
+        .payment-anim-processing {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            z-index: 5;
+        }
+        .payment-anim-processing.is-active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .payment-anim-ring {
+            position: relative;
+            width: 72px;
+            height: 72px;
+        }
+        .payment-anim-ring svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+        .pa-bg-circle {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.12);
+            stroke-width: 5;
+        }
+        .pa-progress-circle {
+            fill: none;
+            stroke: #60a5fa;
+            stroke-width: 5;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.4s ease;
+            stroke-dasharray: 188.5;
+            stroke-dashoffset: 188.5;
+        }
+        .pa-progress-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .pa-status {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            margin-top: 2px;
+            letter-spacing: 0.3px;
+        }
+        .pa-sub {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* ── Success overlay ── */
+        .payment-anim-success {
+            position: absolute;
+            inset: 0;
+            background: rgba(5, 150, 105, 0.85);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+            z-index: 6;
+        }
+        .payment-anim-success.is-active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .pa-check {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: #fff;
+            font-weight: 700;
+            animation: paCheckPop 0.5s ease 0.1s both;
+            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3);
+            margin-bottom: 4px;
+        }
+        @keyframes paCheckPop {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.15);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .pa-success-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.3px;
+        }
+        .pa-success-sub {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* ── Footer ── */
+        .payment-anim-footer {
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 1px solid var(--line);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .pa-footer-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--ink-soft);
+        }
+        .pa-footer-row .pa-footer-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+        .pa-footer-row .pa-footer-status .pa-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: inline-block;
+            animation: paDotPulse 1.2s ease-in-out infinite;
+        }
+        .pa-footer-row .pa-footer-status .pa-dot.done {
+            background: var(--green);
+            animation: none;
+        }
+        @keyframes paDotPulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(0.7);
+            }
+        }
+
+        .pa-amount-row .pa-amount {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--ink);
+        }
+
+        /* ===== PAY ON DELIVERY CARD ===== */
+        .pod-anim-card {
+            background: var(--paper-raised);
+            border-radius: var(--radius-lg);
+            max-width: 440px;
+            width: 100%;
+            padding: 28px 28px 20px;
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--line);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pod-anim-paper {
+            background: var(--paper-sunken);
+            border-radius: var(--radius-md);
+            padding: 24px 20px 20px;
+            border: 2px dashed var(--line-strong);
+            position: relative;
+            min-height: 170px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.4s ease;
+        }
+        .pod-anim-paper.is-stamped {
+            border-color: var(--green);
+            background: var(--accent-soft);
+        }
+
+        .pod-anim-road {
+            width: 100%;
+            height: 60px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 6px;
+            background: repeating-linear-gradient(90deg, var(--line) 0px, var(--line) 16px, transparent 16px, transparent 28px);
+            background-size: 28px 100%;
+            background-position: 0 0;
+            animation: roadMove 0.6s linear infinite;
+            margin-bottom: 4px;
+        }
+        @keyframes roadMove {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 28px 0;
+            }
+        }
+
+        .pod-anim-truck {
+            position: absolute;
+            left: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--ink);
+            transition: left 1.8s cubic-bezier(0.22, 1, 0.36, 1);
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .pod-anim-truck.is-driving {
+            left: calc(100% - 50px);
+        }
+        .pod-anim-truck svg {
+            width: 44px;
+            height: 44px;
+            stroke: var(--ink);
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.08));
+        }
+
+        .pod-anim-stampzone {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 4px 0 2px;
+        }
+        .pod-anim-stamp {
+            background: var(--stamp-red);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 6px 22px;
+            border-radius: 6px;
+            transform: rotate(-4deg) scale(0.85);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 16px rgba(220, 38, 38, 0.25);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            line-height: 1.2;
+        }
+        .pod-anim-stamp.is-visible {
+            transform: rotate(-4deg) scale(1);
+            opacity: 1;
+        }
+
+        .pod-anim-status {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--ink);
+            text-align: center;
+            margin-top: 6px;
+            min-height: 28px;
+            transition: color 0.3s ease;
+        }
+        .pod-anim-status.is-ready {
+            color: var(--green);
+        }
+
+        /* ── POD footer ── */
+        .pod-anim-card .payment-anim-footer {
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 1px solid var(--line);
+        }
+        .pod-anim-card .pa-footer-row .pa-footer-status {
+            color: var(--green);
+        }
+        .pod-anim-card .pa-amount-row .pa-amount {
+            color: var(--ink);
+        }
+
+        /* ── Responsive tweaks ── */
+        @media (max-width: 480px) {
+            .payment-anim-card,
+            .pod-anim-card {
+                padding: 18px 16px 16px;
+            }
+            .payment-anim-cardface {
+                padding: 16px 16px 14px;
+                min-height: 150px;
+            }
+            .payment-anim-number {
+                font-size: 17px;
+                letter-spacing: 2px;
+            }
+            .payment-anim-chip {
+                width: 32px;
+                height: 24px;
+            }
+            .payment-anim-brand {
+                font-size: 12px;
+                padding: 1px 10px;
+            }
+            .pa-status {
+                font-size: 13px;
+            }
+            .pa-check {
+                width: 44px;
+                height: 44px;
+                font-size: 24px;
+            }
+            .pa-success-title {
+                font-size: 17px;
+            }
+            .pa-amount-row .pa-amount {
+                font-size: 15px;
+            }
+            .pod-anim-truck svg {
+                width: 32px;
+                height: 32px;
+            }
+            .pod-anim-road {
+                height: 44px;
+            }
+            .pod-anim-stamp {
+                font-size: 11px;
+                padding: 4px 16px;
+            }
+        }
+        /* ─── receipt-gen overlay (minimal) ─── */
+        .receipt-gen-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            padding: 20px;
+        }
+        .receipt-gen-overlay:not(.hidden) {
+            display: flex;
+        }
+        .receipt-gen-overlay.hidden {
+            display: none;
+        }
+        .receipt-gen-popup {
+            background: var(--paper-raised);
+            border-radius: var(--radius-lg);
+            max-width: 360px;
+            width: 100%;
+            padding: 36px 32px 30px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--line);
+        }
+        .receipt-gen-spinner {
+            margin: 0 auto 18px;
+            width: 52px;
+            height: 52px;
+            position: relative;
+        }
+        .receipt-gen-spinner-circle {
+            width: 52px;
+            height: 52px;
+            border: 4px solid var(--line);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .receipt-gen-text h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .receipt-gen-text p {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+        .receipt-gen-dots {
+            display: inline-flex;
+            gap: 3px;
+            margin-left: 2px;
+        }
+        .receipt-gen-dot {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--muted);
+            animation: dotBounce 1.2s ease-in-out infinite;
+        }
+        .receipt-gen-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .receipt-gen-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes dotBounce {
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.4;
+            }
+            30% {
+                transform: translateY(-6px);
+                opacity: 1;
+            }
+        }
+    </style>
+    <script src="../js/ui-popup.js">
+    </script>
+    <script src="../js/user-scope.js">
+    </script>
+    <script src="../js/plan-access.js">
+    </script>
+    <script src="../js/storage.js">
+    </script>
+    <script src="../js/currency.js">
+    </script>
+</head>
+
+<body>
+    <script>
+        (function() {
+            if (typeof Scope !== "undefined" && !Scope.currentUserId()) {
+                window.location.href = "../login.html";
+            }
+        })();
+    </script>
+
+    <div class="toast-container" id="toastContainer" role="status" aria-live="polite"></div>
+
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand"><span class="brand-icon">R</span><span>Receiptly</span></div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                            <path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z" />
+                        </svg></span> Dashboard</a>
+                <a href="create-receipt.html" class="active"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54h3.58l-4.08 5.25L8 11.29h-3.58L10 6.25z" />
+                        </svg></span> New Receipt</a>
+                <a href="receipts.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-8-6z" />
+                        </svg></span> Receipts</a>
+                <a href="customers.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                        </svg></span> Customers</a>
+                <a href="analytics.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                            <path d="M16 6l2.29 2.29-4.71 4.71-4-4L2 16.59 3.41 18 9 12.41l4 4 6-6V6z" />
+                        </svg></span> Analytics</a>
+                <a href="expenses.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                            <path d="M16 18l2.29-2.29-4.71-4.71-4 4L2 7.41 3.41 6 9 11.59l4-4 6 6V6h2v12z" />
+                        </svg></span> Expenses</a>
+                <a href="verify-receipt.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                        </svg></span> Verify</a>
+                <a href="payments.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="5" width="20" height="14" rx="2" />
+                            <path d="M2 10h20" />
+                        </svg></span> Payments</a>
+                <a href="reports.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <path d="M14 2v6h6M8 17v-4M12 17v-7M16 17v-2" />
+                        </svg></span> Reports</a>
+                <a href="audit-log.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12a9 9 0 1 0 3-6.7" />
+                            <path d="M3 4v6h6M12 7v5l3 2" />
+                        </svg></span> Audit Log</a>
+                <a href="messages.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></span> Messages<span class="msg-nav-badge" id="msgNavBadge" style="display:none;">0</span></a><a href="settings.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.62l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.48.1.62l2.03 1.58c-.05.3-.07.62-.07.94 0 .33.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.62l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.47.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.48-.1-.62l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
+                        </svg></span> Settings</a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="../login.html" id="logoutLink"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                            <path d="M19 19V5c0-1.1-.9-2-2-2H7c-1.1 0-2 .9-2 2v14H3v2h18v-2h-2zM9 7h6v5H9V7z" />
+                        </svg></span> Logout</a>
+            </div>
+        </aside>
+
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <main class="main-content">
+            <!-- HEADER -->
+            <header class="dash-header">
+                <div class="dash-header__left">
+                    <button class="hamburger" id="hamburger" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+                    <div>
+                        <div class="dash-header__greeting" id="greeting">Create <span class="highlight">Receipt</span></div>
+                        <div class="dash-header__sub"><span class="business-name" id="businessName" style="margin-left:20px;font-size:1rem;">Your Business</span> <span style="color:#0f172a;font-size:0.7rem;font-weight:bold;">— fill in the details below</span></div>
+                    </div>
+                </div>
+                <div class="dash-header__right">
+                    <span class="dash-header__date" id="currentDate">Loading...</span>
+                    <button class="dash-header__notif" aria-label="Notifications" id="notifBtn">
+                        <svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
+                        </svg>
+                        <span class="dot" id="notifDot" style="display:none"></span>
+                    </button>
+                    <button class="dash-header__theme-toggle" id="themeToggle" aria-label="Toggle theme"><span id="themeIcon">☀️</span></button>
+                    <div class="dash-header__avatar" id="avatar" aria-label="User menu" tabindex="0">
+                        <img id="avatarLogo" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;" />
+                        <span id="avatarInitials">U</span>
+                    </div>
+                </div>
+            </header>
+
+            <div id="appLayout" style="margin-top:50px;">
+
+                <!-- ===== TEMPLATE PICKER ===== -->
+                <div class="card mb-24" style="grid-column:1/-1;">
+                    <div class="card__header">
+                        <h3>Receipt Template</h3>
+                    </div>
+                    <div class="card__body">
+                        <label style="display:block;font-weight:600;margin-bottom:10px">Choose a template</label>
+                        <div id="templateButtons">
+                            <button class="tpl-btn active" data-template="pro">Pro</button>
+                            <button class="tpl-btn" data-template="classic">Classic</button>
+                            <button class="tpl-btn" data-template="modern">Modern</button>
+                            <button class="tpl-btn" data-template="normal">Normal</button>
+                            <button class="tpl-btn" data-template="compact">Compact</button>
+                        </div>
+                        <div id="templatePreview"></div>
+                        <input type="hidden" id="selectedTemplate" value="pro" />
+                    </div>
+                </div>
+
+                <form id="receiptForm" class="builder-grid" onsubmit="return false;">
+                    <!-- ===== LEFT COLUMN ===== -->
+                    <div>
+                        <!-- Customer Card -->
+                        <div class="card mb-24">
+                            <div class="card__header">
+                                <h3><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                    </svg> Customer</h3>
+                            </div>
+                            <div class="card__body">
+                                <div class="field">
+                                    <label for="existingCustomer">For Regular Customer</label>
+                                    <div class="input-wrapper">
+                                        <select id="existingCustomer" aria-label="Select existing customer">
+                                            <option value="">— Select Regular Customer —</option>
+                                        </select>
+                                        <span class="select-arrow">▼</span>
+                                    </div>
+                                </div>
+                                <div class="input-row">
+                                    <div class="field" style="margin-bottom:0" id="custNameField">
+                                        <label for="custName">Customer name</label>
+                                        <div class="input-wrapper"><span class="input-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                                </svg></span><input id="custName" placeholder="Full name" autocomplete="name" /></div>
+                                        <div class="error-msg">Enter a customer name.</div>
+                                    </div>
+                                    <div class="field" style="margin-bottom:0" id="custPhoneField">
+                                        <label for="custPhone">Phone</label>
+                                        <div class="input-wrapper"><span class="input-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                                                    <path d="M17 2H7c-1.1 0-1.99.9-1.99 2v16c0 1.1.89 2 1.99 2h10c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-5 18c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm5-3H7V4h10v13z" />
+                                                </svg></span><input id="custPhone" placeholder="Phone number" autocomplete="tel" /></div>
+                                        <div class="error-msg">Enter a valid phone number.</div>
+                                    </div>
+                                </div>
+                                <div class="input-row mt-16">
+                                    <div class="field" style="margin-bottom:0" id="custEmailField">
+                                        <label for="custEmail">Email</label>
+                                        <div class="input-wrapper"><span class="input-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                                                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                                                </svg></span><input id="custEmail" type="email" placeholder="Email address" autocomplete="email" /></div>
+                                        <div class="error-msg">Enter a valid email address.</div>
+                                    </div>
+                                    <div class="field" style="margin-bottom:0" id="custAddressField">
+                                        <label for="custAddress">Address</label>
+                                        <div class="input-wrapper"><span class="input-icon">📍</span><input id="custAddress" placeholder="Address" autocomplete="street-address" /></div>
+                                        <div class="error-msg">Enter an address.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Items Card -->
+                        <div class="card mb-24">
+                            <div class="card__header">
+                                <h3><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                                    </svg> Items</h3>
+                            </div>
+                            <div class="card__body">
+                                <div class="item-form-row mb-16" id="itemForm">
+                                    <div class="field" style="margin-bottom:0" id="itemNameField">
+                                        <label for="itemName">Item name</label>
+                                        <div class="input-wrapper"><span class="input-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-8-6z" />
+                                                </svg></span><input id="itemName" placeholder="e.g. Sourdough loaf" /></div>
+                                        <div class="error-msg">Enter an item name.</div>
+                                    </div>
+                                    <div class="field" style="margin-bottom:0" id="itemQtyField">
+                                        <label for="itemQty">Qty</label>
+                                        <div class="input-wrapper"><input id="itemQty" type="number" min="1" step="1" value="1" /></div>
+                                        <div class="error-msg">Must be greater than zero.</div>
+                                    </div>
+                                    <div class="field" style="margin-bottom:0" id="itemPriceField">
+                                        <label for="itemPrice">Unit price</label>
+                                        <div class="input-wrapper"><span class="input-icon">₦</span><input id="itemPrice" type="number" min="0" step="0.01" placeholder="0.00" /></div>
+                                        <div class="error-msg">Must be greater than zero.</div>
+                                    </div>
+                                    <button type="button" id="addItemBtn" class="btn btn--primary" style="height:44px;flex-shrink:0">Add</button>
+                                </div>
+                                <div id="itemsEmpty" class="empty-state"><span class="empty-icon">📭</span>
+                                    <p>No items added yet. Add your first item above.</p>
+                                </div>
+                                <div id="itemsTableWrap" class="table-wrap" style="display:none">
+                                    <table class="data-table items-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th style="text-align:center">Qty</th>
+                                                <th style="text-align:right">Unit Price</th>
+                                                <th style="text-align:right">Line Total</th>
+                                                <th style="text-align:center"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="itemsTableBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tax & Discount -->
+                        <div class="card mb-24">
+                            <div class="card__header">
+                                <h3><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z" />
+                                    </svg> Tax &amp; Discount</h3>
+                            </div>
+                            <div class="card__body">
+                                <div class="input-row">
+                                    <div class="field" style="margin-bottom:0"><label for="taxRate">Tax rate (%)</label>
+                                        <div class="input-wrapper"><input id="taxRate" type="number" min="0" step="0.1" value="0" /></div>
+                                    </div>
+                                    <div class="field" style="margin-bottom:0">
+                                        <label for="discountValue">Discount</label>
+                                        <div style="display:flex;gap:8px">
+                                            <div class="input-wrapper" style="flex:1"><input id="discountValue" type="number" min="0" step="0.01" value="0" /></div>
+                                            <div class="input-wrapper" style="max-width:110px;flex-shrink:0"><select id="discountType">
+                                                    <option value="fixed">Amount</option>
+                                                    <option value="percent">Percent</option>
+                                                </select><span class="select-arrow">▼</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div class="card mb-24">
+                            <div class="card__header">
+                                <h3><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                                        <path d="M20 4H4c-1.11 0-1.99.9-1.99 2L2 18c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" />
+                                    </svg> Payment Method</h3>
+                            </div>
+                            <div class="card__body">
+                                <div class="flex gap-12" style="flex-wrap:wrap">
+                                    <label class="payment-option" style="flex:1;min-width:160px"><input type="radio" name="paymentMethod" id="payInstant" value="instant" checked /><span>⚡ Instant Payment</span></label>
+                                    <label class="payment-option" style="flex:1;min-width:160px"><input type="radio" name="paymentMethod" id="payOnDelivery" value="pod" /><span>📦 Pay on Delivery</span></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment -->
+                        <div class="card mb-24">
+                            <div class="card__header">
+                                <h3><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54h3.58l-4.08 5.25L8 11.29h-3.58L10 6.25z" />
+                                    </svg> Payment</h3>
+                            </div>
+                            <div class="card__body">
+                                <div class="field" style="margin-bottom:0">
+                                    <label for="amountPaid">Amount paid by customer</label>
+                                    <div class="input-wrapper"><input id="amountPaid" type="number" min="0" step="0.01" value="0" placeholder="0.00" /></div>
+                                    <p id="balanceHint" class="text-muted" style="font-size:0.78rem;margin-top:6px">Leave as 0 if nothing has been paid yet.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div style="display:flex;gap:12px;flex-wrap:wrap">
+                            <button type="button" id="generateReceiptBtn" class="btn btn--accent btn--lg" style="flex:1;min-width:160px">
+                                <svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54h3.58l-4.08 5.25L8 11.29h-3.58L10 6.25z" />
+                                </svg>
+                                Generate Receipt
+                            </button>
+                            <button type="button" id="resetReceiptBtn2" class="btn btn--ghost" style="min-height:50px">Clear All</button>
+                        </div>
+                    </div>
+
+                    <!-- ===== RIGHT COLUMN: LIVE PREVIEW ===== -->
+                    <div class="preview-sticky">
+                        <div class="section-title"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-8-6z" />
+                            </svg> Live Preview</div>
+                        <div id="receiptPreview" class="receipt-paper">
+                            <div class="empty-preview">
+                                <span class="empty-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54h3.58l-4.08 5.25L8 11.29h-3.58L10 6.25z" />
+                                    </svg></span>
+                                <p>Your receipt preview will appear here<br />as you add items.</p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- CARD DETAILS MODAL -->
+            <div class="modal-overlay" id="cardModalOverlay">
+                <div class="modal" role="dialog" aria-modal="true">
+                    <div class="flex-between mb-16">
+                        <h3 class="modal__title">Enter Card Details</h3><button class="icon-btn" id="closeCardModal" type="button" aria-label="Close">✕</button>
+                    </div>
+                    <div class="field" id="cardNameField"><label for="cardName">Name on card</label>
+                        <div class="input-wrapper"><input id="cardName" placeholder="Full name on card" autocomplete="cc-name" /></div>
+                        <div class="error-msg">Enter the name on the card.</div>
+                    </div>
+                    <div class="field" id="cardNumberField"><label for="cardNumberInput">Card number</label>
+                        <div class="input-wrapper"><input id="cardNumberInput" placeholder="1234 5678 9012 3456" maxlength="19" autocomplete="cc-number" inputmode="numeric" /></div>
+                        <div class="error-msg">Enter a valid card number.</div>
+                    </div>
+                    <div class="field" id="cardTypeField"><label for="cardTypeSelect">Card type</label>
+                        <div class="input-wrapper"><span class="input-icon">▣</span><select id="cardTypeSelect" aria-label="Card type">
+                                <option value="">— Select card type —</option>
+                                <option value="Visa">Visa</option>
+                                <option value="Mastercard">Mastercard</option>
+                                <option value="Verve">Verve</option>
+                                <option value="American Express">American Express</option>
+                                <option value="Discover">Discover</option>
+                                <option value="Other">Other</option>
+                            </select><span class="select-arrow">▼</span></div>
+                        <div class="error-msg">Select the card type.</div>
+                    </div>
+                    <div class="input-row">
+                        <div class="field" style="margin-bottom:0" id="cardExpiryField"><label for="cardExpiry">Expiry</label>
+                            <div class="input-wrapper"><input id="cardExpiry" placeholder="MM/YY" maxlength="5" autocomplete="cc-exp" /></div>
+                            <div class="error-msg">Enter expiry as MM/YY.</div>
+                        </div>
+                        <div class="field" style="margin-bottom:0" id="cardCvvField"><label for="cardCvv">CVV</label>
+                            <div class="input-wrapper"><input id="cardCvv" placeholder="123" maxlength="4" autocomplete="cc-csc" inputmode="numeric" /></div>
+                            <div class="error-msg">Enter a valid CVV.</div>
+                        </div>
+                    </div>
+                    <div class="modal__actions">
+                        <button class="btn btn--outline" id="cancelCardModal" type="button">Cancel</button>
+                        <button type="button" id="confirmCardBtn" class="btn btn--accent btn--lg" style="flex:1;min-width:160px">
+                            <svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54h3.58l-4.08 5.25L8 11.29h-3.58L10 6.25z" />
+                            </svg>
+                            <span id="generateBtnLabel">Charge Card & Generate Receipt</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ===== RECEIPT GENERATION ANIMATION ===== -->
+    <div class="receipt-gen-overlay hidden" id="receiptGenOverlay">
+        <div class="receipt-gen-popup">
+            <div class="receipt-gen-spinner">
+                <div class="receipt-gen-spinner-circle"></div>
+            </div>
+            <div class="receipt-gen-text">
+                <h3>Generating Receipt</h3>
+                <p>Processing your data<span class="receipt-gen-dots"><span class="receipt-gen-dot"></span><span class="receipt-gen-dot"></span><span class="receipt-gen-dot"></span></span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== INSTANT PAYMENT ANIMATION ===== -->
+    <div class="payment-anim-overlay hidden" id="paymentAnimOverlay">
+        <div class="payment-anim-card">
+            <div class="payment-anim-cardface" id="paymentAnimCardface">
+                <div class="payment-anim-top">
+                    <div class="payment-anim-chip"></div>
+                    <div class="payment-anim-brand" id="paymentAnimBrand">Card</div>
+                </div>
+                <div class="payment-anim-number" id="paymentAnimNumber">•••• •••• •••• ••••</div>
+                <div class="payment-anim-bottom">
+                    <div>Cardholder<span id="paymentAnimHolder">—</span></div>
+                    <div>Expires<span id="paymentAnimExpiry">—</span></div>
+                </div>
+
+                <div class="payment-anim-processing" id="paymentAnimProcessing">
+                    <div class="payment-anim-ring">
+                        <svg viewBox="0 0 72 72">
+                            <circle class="pa-bg-circle" cx="36" cy="36" r="30" />
+                            <circle class="pa-progress-circle" id="paymentAnimProgressCircle" cx="36" cy="36" r="30" />
+                        </svg>
+                        <div class="pa-progress-text" id="paymentAnimProgressText">0%</div>
+                    </div>
+                    <div class="pa-status" id="paymentAnimStatus">Authorizing</div>
+                    <div class="pa-sub" id="paymentAnimSub">Verifying card details</div>
+                </div>
+
+                <div class="payment-anim-success" id="paymentAnimSuccess">
+                    <div class="pa-check">✓</div>
+                    <div class="pa-success-title">Payment Approved</div>
+                    <div class="pa-success-sub">Your receipt is on its way…</div>
+                </div>
+            </div>
+
+            <div class="payment-anim-footer">
+                <div class="pa-footer-row">
+                    <span>Status</span>
+                    <span class="pa-footer-status"><span id="paymentAnimStatusLabel">Processing…</span><span class="pa-dot" id="paymentAnimDot"></span></span>
+                </div>
+                <div class="pa-footer-row pa-amount-row">
+                    <span>Amount charged</span>
+                    <span class="pa-amount" id="paymentAnimAmount">$0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PAY ON DELIVERY ANIMATION ===== -->
+    <div class="pod-anim-overlay hidden" id="podAnimOverlay">
+        <div class="pod-anim-card">
+            <div class="pod-anim-paper">
+                <div class="pod-anim-road">
+                    <div class="pod-anim-truck" id="podAnimTruck" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="1" y="7" width="12" height="8" rx="1"></rect>
+                            <path d="M13 10h4l3 3v2h-7z"></path>
+                            <circle cx="6" cy="17.5" r="1.6"></circle>
+                            <circle cx="17.5" cy="17.5" r="1.6"></circle>
+                        </svg>
+                    </div>
+                </div>
+                <div class="pod-anim-stampzone">
+                    <div class="pod-anim-stamp" id="podAnimStamp">ORDER<br />CONFIRMED</div>
+                </div>
+                <div class="pod-anim-status" id="podAnimStatus">Preparing your receipt…</div>
+            </div>
+
+            <div class="payment-anim-footer">
+                <div class="pa-footer-row">
+                    <span>Payment method</span>
+                    <span class="pa-footer-status">Pay on Delivery</span>
+                </div>
+                <div class="pa-footer-row pa-amount-row">
+                    <span>Balance due on delivery</span>
+                    <span class="pa-amount" id="podAnimAmount">$0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PRISM PRELOADER ===== -->
+    <div id="preloader" role="status" aria-label="Loading">
+        <div class="prism-loader" id="prismLoader">
+            <canvas id="prismCanvas"></canvas>
+            <div class="prism-center">
+                <div class="prism-percentage" id="percentDisplay">0%</div>
+                <div class="prism-label">Loading</div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        (function prismPreloader() {
+            'use strict';
+
+            const preloader = document.getElementById('preloader');
+            const wrap = document.getElementById('prismLoader');
+            const canvas = document.getElementById('prismCanvas');
+            const percentDisplay = document.getElementById('percentDisplay');
+            if (!preloader || !wrap || !canvas || !percentDisplay) return;
+            const ctx = canvas.getContext('2d');
+
+            // ── Sizing (Retina ready) ──
+            const dpr = window.devicePixelRatio || 1;
+            const rect = wrap.getBoundingClientRect();
+            const displayWidth = rect.width || 320;
+            const displayHeight = rect.height || 320;
+
+            canvas.width = displayWidth * dpr;
+            canvas.height = displayHeight * dpr;
+            canvas.style.width = displayWidth + 'px';
+            canvas.style.height = displayHeight + 'px';
+
+            const W = canvas.width;
+            const H = canvas.height;
+            const cx = W / 2;
+            const cy = H / 2;
+            const baseRadius = Math.min(W, H) * 0.36;
+
+            ctx.scale(dpr, dpr);
+
+            // ── Config ──
+            const DURATION = 5000; // 5 seconds
+            const SIDES = 6; // hexagon
+            const BEAM_COUNT = 12;
+
+            let startTime = null;
+            let frameId = null;
+            let finished = false;
+
+            function easeInOut(t) {
+                return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            }
+
+            function drawPolygon(cx, cy, radius, sides, rotation, strokeColor, lineWidth, shadowBlur) {
+                if (sides < 3) return;
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(rotation);
+                ctx.beginPath();
+                for (let i = 0; i < sides; i++) {
+                    const angle = (i / sides) * Math.PI * 2 - Math.PI / 2;
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                if (strokeColor) {
+                    ctx.strokeStyle = strokeColor;
+                    ctx.lineWidth = lineWidth || 3;
+                    ctx.shadowColor = 'rgba(212, 175, 55, 0.3)';
+                    ctx.shadowBlur = shadowBlur || 25;
+                    ctx.stroke();
+                }
+                ctx.restore();
+            }
+
+            function drawScene(p) {
+                const eased = easeInOut(Math.min(p, 1));
+                const angle = eased * Math.PI * 2;
+
+                ctx.clearRect(0, 0, W, H);
+
+                for (let i = 0; i < 6; i++) {
+                    const r = (i / 6) * baseRadius * 1.5;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(255,255,255,${0.02 + 0.01 * eased})`;
+                    ctx.lineWidth = 0.8;
+                    ctx.stroke();
+                }
+
+                const prismRadius = baseRadius * 0.85;
+                const rot = angle * 0.6;
+                const mix = eased;
+                const r1 = 10,
+                    g1 = 26,
+                    b1 = 58;
+                const r2 = 212,
+                    g2 = 175,
+                    b2 = 55;
+                const r = Math.round(r1 + (r2 - r1) * mix);
+                const g = Math.round(g1 + (g2 - g1) * mix);
+                const b = Math.round(b1 + (b2 - b1) * mix);
+                const strokeColor = `rgb(${r}, ${g}, ${b})`;
+
+                drawPolygon(cx, cy, prismRadius, SIDES, rot, strokeColor, 5, 35);
+                drawPolygon(cx, cy, prismRadius * 0.7, SIDES, -rot * 0.8, strokeColor, 2.5, 15);
+
+                const beamLength = baseRadius * (0.6 + 0.3 * eased);
+                for (let i = 0; i < BEAM_COUNT; i++) {
+                    const beamAngle = (i / BEAM_COUNT) * Math.PI * 2 + angle * 0.3 + performance.now() / 5000;
+                    const x1 = cx + Math.cos(beamAngle) * 10;
+                    const y1 = cy + Math.sin(beamAngle) * 10;
+                    const x2 = cx + Math.cos(beamAngle) * beamLength;
+                    const y2 = cy + Math.sin(beamAngle) * beamLength;
+                    const alpha = 0.08 + 0.1 * (1 - Math.abs(Math.sin(beamAngle * 2 + eased * 2)));
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.strokeStyle = `rgba(212, 175, 55, ${alpha * (0.5 + 0.5 * eased)})`;
+                    ctx.lineWidth = 1.8;
+                    ctx.shadowColor = 'rgba(212, 175, 55, 0.1)';
+                    ctx.shadowBlur = 12;
+                    ctx.stroke();
+                }
+
+                const orbitRadius = prismRadius * 1.15;
+                for (let i = 0; i < 8; i++) {
+                    const t = (i / 8) * Math.PI * 2 + performance.now() / 2000 + angle;
+                    const x = cx + Math.cos(t) * orbitRadius;
+                    const y = cy + Math.sin(t) * orbitRadius;
+                    const size = 2 + 2 * (0.5 + 0.5 * Math.sin(t * 2));
+                    const alpha = 0.3 + 0.3 * (0.5 + 0.5 * Math.sin(t * 2 + eased));
+                    ctx.beginPath();
+                    ctx.arc(x, y, size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(212, 175, 55, ${alpha})`;
+                    ctx.shadowColor = 'rgba(212, 175, 55, 0.15)';
+                    ctx.shadowBlur = 8;
+                    ctx.fill();
+                }
+
+                const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, baseRadius * 0.25);
+                coreGrad.addColorStop(0, `rgba(212, 175, 55, ${0.15 + 0.2 * eased})`);
+                coreGrad.addColorStop(0.5, `rgba(212, 175, 55, ${0.05 + 0.1 * eased})`);
+                coreGrad.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = coreGrad;
+                ctx.beginPath();
+                ctx.arc(cx, cy, baseRadius * 0.25, 0, Math.PI * 2);
+                ctx.fill();
+
+                const percent = Math.round(eased * 100);
+                percentDisplay.textContent = percent + '%';
+            }
+
+            function finishLoading() {
+                if (finished) return;
+                finished = true;
+                if (frameId) cancelAnimationFrame(frameId);
+                drawScene(1);
+                percentDisplay.textContent = '100%';
+                setTimeout(() => {
+                    preloader.classList.add('hidden');
+                    document.dispatchEvent(new CustomEvent('preloader:complete', { detail: { duration: DURATION } }));
+                }, 200);
+            }
+
+            function tick(timestamp) {
+                if (finished) return;
+                if (startTime === null) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / DURATION, 1);
+
+                drawScene(progress);
+
+                if (progress < 1) {
+                    frameId = requestAnimationFrame(tick);
+                } else {
+                    finishLoading();
+                }
+            }
+
+            window.__printerPreloader = {
+                finish: finishLoading,
+                getProgress: () => (finished ? 100 : Math.round(easeInOut(Math.min((performance.now() - (startTime ||
+                    performance.now())) / DURATION, 1)) * 100)),
+                setProgress: () => {},
+            };
+
+            frameId = requestAnimationFrame(tick);
+
+            window.addEventListener('beforeunload', () => {
+                if (frameId) cancelAnimationFrame(frameId);
+            });
+
+            function handleResize() {
+                if (startTime !== null && !finished) {
+                    const now = performance.now();
+                    const elapsed = now - startTime;
+                    const p = Math.min(elapsed / DURATION, 1);
+                    drawScene(p);
+                }
+            }
+            window.addEventListener('resize', handleResize);
+        })();
+    </script>
+    <!-- ============================================================
+    JAVASCRIPT — ALL RENDERERS + MAIN APP
+    ============================================================ -->
+    <script src="../js/pro-invoice.js">
+    </script>
+    <script src="../js/classic-receipt.js">
+    </script>
+    <script src="../js/modern-receipt.js">
+    </script>
+    <script src="../js/normal-receipt.js">
+    </script>
+    <script src="../js/compact-receipt.js">
+    </script>
+    <script>
+        // ============================================================
+        // NOTE: PRO INVOICE / CLASSIC / MODERN / NORMAL / COMPACT
+        // renderers are loaded from js/*-receipt.js above (single
+        // shared implementation, same as pages/receipts.html) so the
+        // preview here always matches what Open/Edit/Print shows.
+        // ============================================================
+
+        // ============================================================
+        // MAIN APPLICATION
+        // ============================================================
+        (function() {
+            "use strict";
+
+            // ─── SIDEBAR ──────────────────────────────────────────────
+            var hamburger = document.getElementById("hamburger");
+            var sidebar = document.getElementById("sidebar");
+            var overlay = document.getElementById("sidebarOverlay");
+
+            function toggleSidebar() {
+                var isOpen = sidebar.classList.toggle("open");
+                hamburger.classList.toggle("active");
+                if (overlay) overlay.classList.toggle("open");
+                document.body.style.overflow = isOpen ? "hidden" : "";
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove("open");
+                hamburger.classList.remove("active");
+                if (overlay) overlay.classList.remove("open");
+                document.body.style.overflow = "";
+            }
+            if (hamburger) hamburger.addEventListener("click", toggleSidebar);
+            if (overlay) overlay.addEventListener("click", closeSidebar);
+            document.querySelectorAll(".sidebar-nav a, .sidebar-footer a").forEach(function(link) {
+                link.addEventListener("click", function() {
+                    if (window.innerWidth <= 768) closeSidebar();
+                });
+            });
+            document.addEventListener("keydown", function(e) {
+                if (e.key === "Escape" && sidebar.classList.contains("open")) closeSidebar();
+            });
+
+            // ─── THEME ───────────────────────────────────────────────
+            function getTheme() { return document.documentElement.getAttribute("data-theme") || "light"; }
+
+            function setTheme(theme) {
+                document.documentElement.setAttribute("data-theme", theme);
+                var icon = document.getElementById("themeIcon");
+                if (icon) icon.textContent = theme === "dark" ? "🌙" : "☀️";
+                localStorage.setItem("receiptpro-theme", theme);
+            }
+            var savedTheme = localStorage.getItem("receiptpro-theme") || "light";
+            setTheme(savedTheme);
+            var themeToggle = document.getElementById("themeToggle");
+            if (themeToggle) {
+                themeToggle.addEventListener("click", function() { setTheme(getTheme() === "light" ? "dark" : "light"); });
+            }
+
+            // ─── HEADER ──────────────────────────────────────────────
+            function updateHeader() {
+                // Scope (js/user-scope.js) is the single source of truth for the
+                // current session and user; it is loaded on every page.
+                var session = Scope.getSession();
+                var user = Scope.currentUser();
+                var profile = null;
+                try { var pKey = Scope.key("receiptly_profile"); var p =
+                        localStorage.getItem(pKey); if (p) profile = JSON.parse(p); } catch (e) {}
+                var avatarEl = document.getElementById("avatarInitials");
+                var avatarLogoEl = document.getElementById("avatarLogo");
+                if (avatarEl) {
+                    var name = user ? user.fullName || user.name || user.email || "User" : "User";
+                    var parts = name.split(" ");
+                    var initials = parts[0] ? parts[0][0] : "U";
+                    if (parts.length > 1) initials += parts[1][0] || "";
+                    avatarEl.textContent = initials.toUpperCase();
+                }
+                if (avatarLogoEl) {
+                    if (profile && profile.logo) {
+                        avatarLogoEl.src = profile.logo;
+                        avatarLogoEl.style.display = "block";
+                        if (avatarEl) avatarEl.style.display = "none";
+                    } else {
+                        avatarLogoEl.style.display = "none";
+                        if (avatarEl) avatarEl.style.display = "";
+                    }
+                }
+                var businessNameEl = document.getElementById("businessName");
+                if (businessNameEl) {
+                    var biz = profile && profile.businessName ? profile.businessName : user && user.businessName ? user
+                        .businessName : "your business";
+                    businessNameEl.textContent = biz;
+                }
+                var dateEl = document.getElementById("currentDate");
+                if (dateEl) {
+                    var now = new Date();
+                    dateEl.textContent = now.toLocaleDateString("en-US", { weekday: "short", year: "numeric", month: "short",
+                        day: "numeric" });
+                }
+            }
+            updateHeader();
+
+            // ─── BUSINESS PROFILE ────────────────────────────────────
+            function getBusinessProfile() {
+                try { var pKey = Scope.key("receiptly_profile"); var p =
+                        localStorage.getItem(pKey); return p ? JSON.parse(p) : {}; } catch (e) { return {}; }
+            }
+
+            // ─── TOAST ───────────────────────────────────────────────
+            var toastContainer = document.getElementById("toastContainer");
+
+            function showToast(title, message, type) {
+                type = type || "success";
+                var toast = document.createElement("div");
+                toast.className = "toast toast--" + type;
+                toast.setAttribute("role", "alert");
+                var icon = type === "success" ?
+                    '<svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>' :
+                    type === "error" ?
+                    '<svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>' :
+                    "ℹ️";
+                toast.innerHTML = '<span class="toast__icon">' + icon +
+                    '</span><div class="toast__content"><div class="toast__title">' + title +
+                    '</div><div class="toast__message">' + message +
+                    '</div></div><button class="toast__close" aria-label="Dismiss notification">&times;</button>';
+                toastContainer.appendChild(toast);
+                toast.querySelector(".toast__close").addEventListener("click", function() { toast.remove(); });
+                setTimeout(function() {
+                    if (toast.parentNode) { toast.style.opacity = "0";
+                        toast.style.transform = "translateX(20px)";
+                        setTimeout(function() { toast.remove(); }, 300); }
+                }, 5000);
+            }
+
+            // ─── DOM REFS ─────────────────────────────────────────────
+            var existingCustomerSelect = document.getElementById("existingCustomer");
+            var custName = document.getElementById("custName");
+            var custPhone = document.getElementById("custPhone");
+            var custEmail = document.getElementById("custEmail");
+            var custAddress = document.getElementById("custAddress");
+            var itemName = document.getElementById("itemName");
+            var itemQty = document.getElementById("itemQty");
+            var itemPrice = document.getElementById("itemPrice");
+            var addItemBtn = document.getElementById("addItemBtn");
+            var itemsEmpty = document.getElementById("itemsEmpty");
+            var itemsTableWrap = document.getElementById("itemsTableWrap");
+            var itemsTableBody = document.getElementById("itemsTableBody");
+            var taxRate = document.getElementById("taxRate");
+            var discountValue = document.getElementById("discountValue");
+            var discountType = document.getElementById("discountType");
+            var amountPaidInput = document.getElementById("amountPaid");
+            var balanceHint = document.getElementById("balanceHint");
+            var generateBtn = document.getElementById("generateReceiptBtn");
+            var resetBtn2 = document.getElementById("resetReceiptBtn2");
+            var receiptPreview = document.getElementById("receiptPreview");
+            var payInstant = document.getElementById("payInstant");
+            var payOnDelivery = document.getElementById("payOnDelivery");
+            var generateBtnLabel = document.getElementById("generateBtnLabel");
+            var receiptGenOverlay = document.getElementById("receiptGenOverlay");
+            var paymentAnimOverlay = document.getElementById("paymentAnimOverlay");
+            var paymentAnimCardface = document.getElementById("paymentAnimCardface");
+            var paymentAnimBrand = document.getElementById("paymentAnimBrand");
+            var paymentAnimNumber = document.getElementById("paymentAnimNumber");
+            var paymentAnimHolder = document.getElementById("paymentAnimHolder");
+            var paymentAnimExpiry = document.getElementById("paymentAnimExpiry");
+            var paymentAnimProgressCircle = document.getElementById("paymentAnimProgressCircle");
+            var paymentAnimProgressText = document.getElementById("paymentAnimProgressText");
+            var paymentAnimStatus = document.getElementById("paymentAnimStatus");
+            var paymentAnimSub = document.getElementById("paymentAnimSub");
+            var paymentAnimStatusLabel = document.getElementById("paymentAnimStatusLabel");
+            var paymentAnimAmount = document.getElementById("paymentAnimAmount");
+            var podAnimOverlay = document.getElementById("podAnimOverlay");
+            var podAnimTruck = document.getElementById("podAnimTruck");
+            var podAnimStamp = document.getElementById("podAnimStamp");
+            var podAnimStatus = document.getElementById("podAnimStatus");
+            var podAnimAmount = document.getElementById("podAnimAmount");
+            var cardModalOverlay = document.getElementById("cardModalOverlay");
+            var cardName = document.getElementById("cardName");
+            var cardNumberInput = document.getElementById("cardNumberInput");
+            var cardExpiry = document.getElementById("cardExpiry");
+            var cardCvv = document.getElementById("cardCvv");
+            var cardTypeSelect = document.getElementById("cardTypeSelect");
+            var cardTypeField = document.getElementById("cardTypeField");
+            var closeCardModal = document.getElementById("closeCardModal");
+            var cancelCardModal = document.getElementById("cancelCardModal");
+            var confirmCardBtn = document.getElementById("confirmCardBtn");
+
+            var items = [];
+            var selectedCustomerId = null;
+
+            // ─── TEMPLATE SELECTOR ────────────────────────────────────
+            var selectedTemplate = "pro";
+            var templateButtons = document.querySelectorAll("#templateButtons .tpl-btn");
+            var templatePreview = document.getElementById("templatePreview");
+
+            function canUseTemplate(tpl) {
+                if (tpl !== "pro") return true;
+                return (typeof PlanAccess === "undefined") || PlanAccess.can("template:pro");
+            }
+
+            // If Pro is locked, fallback to Classic on load
+            if (!canUseTemplate(selectedTemplate)) {
+                var fallbackBtn = document.querySelector('#templateButtons .tpl-btn[data-template="classic"]');
+                if (fallbackBtn) { fallbackBtn.click(); }
+            }
+
+            templateButtons.forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    var tpl = this.dataset.template;
+                    if (!canUseTemplate(tpl)) {
+                        if (typeof PlanAccess !== "undefined") { PlanAccess.showUpgradeToast("template:pro"); }
+                        return;
+                    }
+                    templateButtons.forEach(function(b) { b.classList.remove("active"); });
+                    this.classList.add("active");
+                    selectedTemplate = tpl;
+                    document.getElementById("selectedTemplate").value = selectedTemplate;
+                    updatePreview();
+                    updateTemplatePreview();
+                });
+            });
+
+            function updateTemplatePreview() {
+                var data = {
+                    companyName: "Sample Business",
+                    addressLine1: "123 Sample St",
+                    addressLine2: "Sample City, ST 12345",
+                    items: [
+                        { name: "Product A", qty: 2, price: 25.00 },
+                        { name: "Product B", qty: 1, price: 75.00 },
+                        { name: "Product C", qty: 3, price: 20.00 }
+                    ],
+                    total: 215.00,
+                    customerName: "John Doe",
+                    customerAddress: "456 Customer Ave",
+                    date: "11-04-2025",
+                    receiptNumber: "0000457",
+                    subtotal: 215.00,
+                    tax: 10.75,
+                    taxAmount: 10.75,
+                    totalAmount: 225.75,
+                    amountPaid: 225.75,
+                    change: 0,
+                    discount: 0,
+                    paymentMethod: "Card",
+                    cashier: "Daniel",
+                    time: "10:45 AM"
+                };
+
+                var html = "";
+                if (selectedTemplate === "pro" && typeof ProInvoice !== "undefined") {
+                    html = ProInvoice.render(data, { size: "thumb" });
+                } else if (selectedTemplate === "classic" && typeof ClassicReceipt !== "undefined") {
+                    html = ClassicReceipt.render({
+                        companyName: data.companyName,
+                        logoUrl: "",
+                        customerName: data.customerName,
+                        customerAddressLines: [data.customerAddress],
+                        invoiceNumber: data.receiptNumber,
+                        invoiceDate: data.date,
+                        items: data.items.map(function(it) { return { description: it.name, price: it.price, qty: it
+                                .qty, total: it.qty * it.price }; }),
+                        paymentMethod: "Card",
+                        subtotal: data.subtotal,
+                        taxAmount: data.taxAmount,
+                        totalAmount: data.totalAmount,
+                        terms: "Payment due within 14 days",
+                        contactEmail: "info@example.com",
+                        contactWebsite: "www.example.com",
+                        status: "paid",
+                        amountPaid: data.amountPaid,
+                        balanceDue: 0
+                    }, { size: "thumb" });
+                } else if (selectedTemplate === "modern" && typeof ModernReceipt !== "undefined") {
+                    html = ModernReceipt.render({
+                        companyName: data.companyName,
+                        logoUrl: "",
+                        customerName: data.customerName,
+                        customerAddress: data.customerAddress,
+                        invoiceNumber: data.receiptNumber,
+                        date: data.date,
+                        items: data.items.map(function(it) { return { name: it.name, qty: it.qty, price: it.price }; }),
+                        subtotal: data.subtotal,
+                        tax: 5,
+                        taxAmount: data.taxAmount,
+                        totalAmount: data.totalAmount,
+                        paymentMethod: "Card",
+                        terms: "Payment due within 30 days",
+                        contactEmail: "info@example.com",
+                        contactWebsite: "www.example.com",
+                        status: "paid",
+                        amountPaid: data.amountPaid,
+                        balanceDue: 0
+                    }, { size: "thumb" });
+                } else if (selectedTemplate === "normal" && typeof NormalReceipt !== "undefined") {
+                    html = NormalReceipt.render({
+                        companyName: data.companyName,
+                        receiptNumber: data.receiptNumber,
+                        cashier: "Daniel",
+                        date: data.date,
+                        paymentMethod: "Cash",
+                        time: data.time || "10:45 AM",
+                        customer: data.customerName,
+                        items: data.items.map(function(it) { return { name: it.name, qty: it.qty, unitPrice: it.price,
+                                total: it.qty * it.price }; }),
+                        subtotal: data.subtotal,
+                        discount: 0,
+                        tax: data.taxAmount,
+                        totalAmount: data.totalAmount,
+                        amountPaid: data.amountPaid,
+                        change: 0,
+                        balanceDue: 0,
+                        status: "paid",
+                        footerMessage: "Thank you for shopping!"
+                    }, { size: "thumb" });
+                } else if (selectedTemplate === "compact" && typeof CompactReceipt !== "undefined") {
+                    html = CompactReceipt.render({
+                        companyName: data.companyName,
+                        addressLine1: "123 Sample St",
+                        addressLine2: "Sample City",
+                        shoppingCenter: "SHOPPING CENTER",
+                        date: data.date,
+                        time: data.time || "10:45AM",
+                        items: data.items.map(function(it) { return { name: it.name, qty: it.qty, price: it.price }; }),
+                        total: data.total,
+                        vat: data.taxAmount,
+                        cardNumber: "************* 7211",
+                        approvalStatus: "APPROVED",
+                        invoiceNumber: data.receiptNumber,
+                        authNumber: "192107",
+                        status: "paid",
+                        amountPaid: data.amountPaid,
+                        balanceDue: 0,
+                        refundPolicy: "Receipts are required for all refunds\nRefunds must be made within 30 days"
+                    }, { size: "thumb" });
+                } else {
+                    html = '<div style="padding:20px;text-align:center;color:#999;">Select a template to preview</div>';
+                }
+                templatePreview.innerHTML = html;
+            }
+
+            // ─── CUSTOMERS ────────────────────────────────────────────
+            function loadCustomers() {
+                var customers = [];
+                try { var cKey = Scope.key("receiptly_customers");
+                    var data = localStorage.getItem(cKey); if (data) customers = JSON.parse(data); } catch (e) {}
+                return customers;
+            }
+
+            function populateCustomerDropdown() {
+                var customers = loadCustomers();
+                existingCustomerSelect.innerHTML = '<option value="">— New customer —</option>';
+                customers.forEach(function(c) {
+                    var opt = document.createElement("option");
+                    opt.value = c.id || c.email || c.name;
+                    opt.textContent = c.name || c.email || "Unnamed";
+                    existingCustomerSelect.appendChild(opt);
+                });
+            }
+            populateCustomerDropdown();
+
+            existingCustomerSelect.addEventListener("change", function() {
+                var val = this.value;
+                if (!val) { custName.value = "";
+                    custPhone.value = "";
+                    custEmail.value = "";
+                    custAddress.value = "";
+                    selectedCustomerId = null; return; }
+                var customers = loadCustomers();
+                var customer = customers.find(function(c) { return (c.id || c.email || c.name) === val; });
+                if (customer) {
+                    custName.value = customer.name || "";
+                    custPhone.value = customer.phone || "";
+                    custEmail.value = customer.email || "";
+                    custAddress.value = customer.address || "";
+                    selectedCustomerId = customer.id || customer.email;
+                }
+            });
+
+            // ─── ITEMS ────────────────────────────────────────────────
+            function escapeHTML(str) { if (!str) return ""; return String(str).replace(/[&<>"]/g, function(m) { if (m ===
+                        "&") return "&amp;"; if (m === "<") return "&lt;"; if (m === ">") return "&gt;"; if (m === '"') return
+                        "&quot;"; return m; }); }
+
+            function money(val) { return "₦" + Number(val || 0).toFixed(2); }
+
+            function renderItems() {
+                if (items.length === 0) { itemsEmpty.style.display = "block";
+                    itemsTableWrap.style.display = "none"; return; }
+                itemsEmpty.style.display = "none";
+                itemsTableWrap.style.display = "block";
+                var html = "";
+                var subtotal = 0;
+                items.forEach(function(item, index) {
+                    var lineTotal = (item.qty || 1) * (item.price || 0);
+                    subtotal += lineTotal;
+                    html += '<tr><td>' + escapeHTML(item.name) + '</td><td style="text-align:center;">' + item.qty +
+                        '</td><td style="text-align:right;">₦' + Number(item.price).toFixed(2) +
+                        '</td><td style="text-align:right;font-weight:600;">₦' + lineTotal.toFixed(2) +
+                        '</td><td style="text-align:center;"><button class="remove-btn" data-index="' + index +
+                        '">✕</button></td></tr>';
+                });
+                itemsTableBody.innerHTML = html;
+                itemsTableBody.querySelectorAll(".remove-btn").forEach(function(btn) {
+                    btn.addEventListener("click", function() {
+                        var idx = parseInt(this.dataset.index, 10);
+                        items.splice(idx, 1);
+                        renderItems();
+                        updatePreview();
+                    });
+                });
+                updatePreview();
+            }
+
+            function addItem() {
+                var name = itemName.value.trim();
+                var qty = parseInt(itemQty.value, 10) || 1;
+                var price = parseFloat(itemPrice.value) || 0;
+                var valid = true;
+                document.getElementById("itemNameField").classList.remove("has-error");
+                document.getElementById("itemQtyField").classList.remove("has-error");
+                document.getElementById("itemPriceField").classList.remove("has-error");
+                if (!name) { document.getElementById("itemNameField").classList.add("has-error");
+                    valid = false; }
+                if (qty <= 0) { document.getElementById("itemQtyField").classList.add("has-error");
+                    valid = false; }
+                if (price < 0) { document.getElementById("itemPriceField").classList.add("has-error");
+                    valid = false; }
+                if (!valid) { showToast("Please fill in all fields correctly", "Item validation failed", "error"); return; }
+                items.push({ name: name, qty: qty, price: price });
+                renderItems();
+                itemName.value = "";
+                itemQty.value = "1";
+                itemPrice.value = "";
+                itemName.focus();
+                showToast("Item added", name + " added to receipt.", "success");
+            }
+            addItemBtn.addEventListener("click", addItem);
+            [itemName, itemQty, itemPrice].forEach(function(field) {
+                field.addEventListener("keydown", function(e) { if (e.key === "Enter") { e.preventDefault();
+                        addItem(); } });
+            });
+
+            // ─── PAYMENT METHOD ──────────────────────────────────────
+            function getPaymentMethod() { return payOnDelivery.checked ? "pod" : "instant"; }
+
+            function updateGenerateButtonLabel() {
+                generateBtnLabel.textContent = getPaymentMethod() === "instant" ? "Charge Card & Generate Receipt" :
+                    "Generate Receipt (Pay on Delivery)";
+            }
+            [payInstant, payOnDelivery].forEach(function(el) { el.addEventListener("change", updateGenerateButtonLabel); });
+            updateGenerateButtonLabel();
+
+            // ─── CARD MODAL ───────────────────────────────────────────
+            function openCardModal() {
+                cardName.value = "";
+                cardNumberInput.value = "";
+                cardTypeSelect.value = "";
+                cardExpiry.value = "";
+                cardCvv.value = "";
+                document.querySelectorAll("#cardModalOverlay .field").forEach(function(f) { f.classList.remove(
+                    "has-error"); });
+                cardModalOverlay.classList.add("is-visible");
+                cardName.focus();
+            }
+
+            function closeCardModalFn() { cardModalOverlay.classList.remove("is-visible"); }
+            closeCardModal.addEventListener("click", closeCardModalFn);
+            cancelCardModal.addEventListener("click", closeCardModalFn);
+            cardModalOverlay.addEventListener("click", function(e) { if (e.target.id === "cardModalOverlay")
+                closeCardModalFn(); });
+            cardNumberInput.addEventListener("input", function() { var digits = this.value.replace(/\D/g, "").slice(0,
+                    16); this.value = digits.replace(/(.{4})/g, "$1 ").trim(); });
+            cardExpiry.addEventListener("input", function() { var digits = this.value.replace(/\D/g, "").slice(0, 4);
+                this.value = digits.length >= 3 ? digits.slice(0, 2) + "/" + digits.slice(2) : digits; });
+            cardCvv.addEventListener("input", function() { this.value = this.value.replace(/\D/g, "").slice(0, 4); });
+
+            function validateCardModal() {
+                var valid = true;
+                document.querySelectorAll("#cardModalOverlay .field").forEach(function(f) { f.classList.remove(
+                    "has-error"); });
+                var digitsOnly = cardNumberInput.value.replace(/\s/g, "");
+                if (!cardName.value.trim()) { document.getElementById("cardNameField").classList.add("has-error");
+                    valid = false; }
+                if (digitsOnly.length < 13 || digitsOnly.length > 16) { document.getElementById("cardNumberField")
+                        .classList.add("has-error");
+                    valid = false; }
+                if (!cardTypeSelect.value) { cardTypeField.classList.add("has-error");
+                    valid = false; }
+                if (!/^\d{2}\/\d{2}$/.test(cardExpiry.value)) { document.getElementById("cardExpiryField").classList.add(
+                        "has-error");
+                    valid = false; }
+                if (cardCvv.value.length < 3) { document.getElementById("cardCvvField").classList.add("has-error");
+                    valid = false; }
+                return valid;
+            }
+
+            confirmCardBtn.addEventListener("click", function() {
+                if (!validateCardModal()) { showToast("Check card details", "Please fix the highlighted fields.",
+                        "error"); return; }
+                var digitsOnly = cardNumberInput.value.replace(/\s/g, "");
+                var cardInfo = { cardHolder: cardName.value.trim(), cardLast4: digitsOnly.slice(-4), cardType: cardTypeSelect
+                        .value, cardExpiry: cardExpiry.value };
+                closeCardModalFn();
+                confirmCardBtn.disabled = true;
+                confirmCardBtn.classList.add("is-loading");
+                confirmCardBtn.innerHTML = '<span class="button-spinner"></span><span>Processing…</span>';
+
+                // Work out the amount actually being charged right now
+                var subtotalNow = items.reduce(function(sum, item) { return sum + (item.qty || 1) * (item.price || 0); }, 0);
+                var taxNow = parseFloat(taxRate.value) || 0;
+                var discValNow = parseFloat(discountValue.value) || 0;
+                var discTypeNow = discountType.value;
+                var discountAmountNow = discTypeNow === "percent" ? (subtotalNow * discValNow) / 100 : discValNow;
+                var taxAmountNow = (subtotalNow - discountAmountNow) * (taxNow / 100);
+                var totalNow = subtotalNow - discountAmountNow + taxAmountNow;
+                var amountPaidNow = Math.max(0, parseFloat(amountPaidInput.value) || 0);
+                var chargeAmount = amountPaidNow > 0 ? Math.min(totalNow, amountPaidNow) : totalNow;
+
+                // Show the 5s card-charge animation, then generate the receipt
+                showPaymentAnimation(chargeAmount, cardInfo, function() {
+                    try {
+                        var generated = generateReceipt(cardInfo);
+                        if (!generated) { return; }
+                        showToast("Payment successful ✓", "Receipt generated and saved.", "success");
+                    } catch (error) {
+                        showToast("Payment failed", "The receipt could not be generated. Please try again.",
+                            "error");
+                        console.error(error);
+                    } finally {
+                        hidePaymentAnimation();
+                        confirmCardBtn.disabled = false;
+                        confirmCardBtn.classList.remove("is-loading");
+                        confirmCardBtn.innerHTML =
+                            '<svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14h14v-2H5V5h14v4h2V5c0-1.1-.9-2-2-2zm-6.59 11.59L10.83 13l-1.42 1.41 3 3L19.41 10.4 18 9l-5.59 5.59z"/></svg><span id="generateBtnLabel">Charge Card & Generate Receipt</span>';
+                    }
+                });
+            });
+
+            // ─── UPDATE PREVIEW ──────────────────────────────────────
+            function updatePreview() {
+                var customerName = custName.value.trim() || "Customer";
+                var subtotal = items.reduce(function(sum, item) { return sum + (item.qty || 1) * (item.price || 0); }, 0);
+                var tax = parseFloat(taxRate.value) || 0;
+                var discVal = parseFloat(discountValue.value) || 0;
+                var discType = discountType.value;
+                var discountAmount = discType === "percent" ? (subtotal * discVal) / 100 : discVal;
+                var taxAmount = (subtotal - discountAmount) * (tax / 100);
+                var total = subtotal - discountAmount + taxAmount;
+                var amountPaid = Math.min(total, Math.max(0, parseFloat(amountPaidInput.value) || 0));
+                var balanceDue = Math.max(0, total - amountPaid);
+                var changeDue = Math.max(0, amountPaid - total);
+                var paymentStatus = balanceDue > 0 ? (amountPaid > 0 ? "partial" : "unpaid") : "paid";
+                if (balanceHint) {
+                    if (total <= 0) { balanceHint.textContent = "Leave as 0 if nothing has been paid yet."; } else if (
+                        balanceDue > 0) { balanceHint.textContent = "Customer will owe " + money(balanceDue) +
+                            " after this receipt."; } else if (changeDue > 0) { balanceHint.textContent = "Overpaid by " +
+                            money(changeDue) + "."; } else { balanceHint.textContent = "Fully paid — no balance owing."; }
+                }
+                var receiptNum = "RC-" + String(Date.now()).slice(-6);
+                var now = new Date();
+                var dateStr = now.toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", year: "numeric" });
+                var timeStr = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
+                var profile = getBusinessProfile();
+                var bizName = profile.businessName || "Your Business";
+                var bizAddress = profile.address || "";
+                var bizContact = [profile.phone, profile.email].filter(Boolean).join(" · ");
+                var logoHtml = profile.logo ?
+                    '<img src="' + profile.logo + '" alt="" style="width:44px;height:44px;object-fit:cover;border-radius:10px;">' :
+                    '<div class="logo-icon">' + escapeHTML(bizName.charAt(0).toUpperCase() || "R") + '</div>';
+
+                var template = selectedTemplate;
+
+                if (template === "pro" && typeof ProInvoice !== "undefined") {
+                    receiptPreview.innerHTML = ProInvoice.render({
+                        currency: (typeof Currency !== "undefined" ? Currency.getSymbol(profile.currency) : profile
+                            .currency) || "₦",
+                        currencyCode: profile.currency || "NGN",
+                        companyName: bizName,
+                        addressLine1: bizAddress,
+                        phone: profile.phone || "",
+                        specialization: profile.specialization || "",
+                        logoUrl: profile.logo || "",
+                        customerName: customerName,
+                        customerAddress: custAddress.value.trim() || [custPhone.value.trim(), custEmail.value.trim()]
+                            .filter(Boolean).join(" · "),
+                        items: items.map(function(it) { return { name: it.name, qty: it.qty || 1, price: it.price ||
+                                0 }; }),
+                        total: total,
+                        date: dateStr + " " + timeStr,
+                        status: paymentStatus,
+                        amountPaid: amountPaid,
+                        balanceDue: balanceDue
+                    }, { size: "full" });
+                    return;
+                }
+
+                if (template === "classic" && typeof ClassicReceipt !== "undefined") {
+                    receiptPreview.innerHTML = ClassicReceipt.render({
+                        accent: "#16665c",
+                        currency: (typeof Currency !== "undefined" ? Currency.getSymbol(profile.currency) : profile
+                            .currency) || "€",
+                        companyName: bizName,
+                        logoUrl: profile.logo || "",
+                        customerName: customerName,
+                        customerAddressLines: [custAddress.value.trim(), [custPhone.value.trim(), custEmail.value
+                                .trim()
+                            ].filter(Boolean).join(" · ")
+                        ].filter(Boolean),
+                        invoiceNumber: receiptNum,
+                        invoiceDate: dateStr,
+                        items: items.map(function(it) { return { description: it.name, price: it.price || 0,
+                                qty: it.qty || 1, total: (it.qty || 1) * (it.price || 0) }; }),
+                        paymentMethod: getPaymentMethod() === "pod" ? "Pay on Delivery" : "Instant Payment",
+                        paymentDetail: bizAddress,
+                        subtotal: subtotal,
+                        taxAmount: taxAmount,
+                        totalAmount: total,
+                        terms: "Payment is due within 14 days. Thank you for your business!",
+                        contactEmail: profile.email || "",
+                        contactWebsite: profile.website || "",
+                        status: paymentStatus,
+                        amountPaid: amountPaid,
+                        balanceDue: balanceDue
+                    }, { size: "full" });
+                    return;
+                }
+
+                if (template === "modern" && typeof ModernReceipt !== "undefined") {
+                    receiptPreview.innerHTML = ModernReceipt.render({
+                        accent: "#703a75",
+                        currency: (typeof Currency !== "undefined" ? Currency.getSymbol(profile.currency) : profile
+                            .currency) || "$",
+                        companyName: bizName,
+                        logoUrl: profile.logo || "",
+                        customerName: customerName,
+                        customerAddress: custAddress.value.trim() || [custPhone.value.trim(), custEmail.value.trim()]
+                            .filter(Boolean).join(" · "),
+                        invoiceNumber: receiptNum,
+                        date: dateStr,
+                        items: items.map(function(it) { return { name: it.name, qty: it.qty || 1, price: it.price ||
+                                0 }; }),
+                        subtotal: subtotal,
+                        tax: tax,
+                        taxAmount: taxAmount,
+                        totalAmount: total,
+                        paymentMethod: getPaymentMethod() === "pod" ? "Pay on Delivery" : "Instant Payment",
+                        terms: "Payment due within 30 days",
+                        contactEmail: profile.email || "",
+                        contactWebsite: profile.website || "",
+                        status: paymentStatus,
+                        amountPaid: amountPaid,
+                        balanceDue: balanceDue
+                    }, { size: "full" });
+                    return;
+                }
+
+                if (template === "normal" && typeof NormalReceipt !== "undefined") {
+                    receiptPreview.innerHTML = NormalReceipt.render({
+                        currency: (typeof Currency !== "undefined" ? Currency.getSymbol(profile.currency) : profile
+                            .currency) || "₦",
+                        companyName: bizName,
+                        logoUrl: profile.logo || "",
+                        receiptNumber: receiptNum,
+                        cashier: profile.cashier || "Daniel",
+                        date: dateStr,
+                        paymentMethod: getPaymentMethod() === "pod" ? "Pay on Delivery" : "Instant Payment",
+                        time: timeStr,
+                        customer: customerName,
+                        items: items.map(function(it) { return { name: it.name, qty: it.qty || 1, unitPrice: it
+                                .price || 0, total: (it.qty || 1) * (it.price || 0) }; }),
+                        subtotal: subtotal,
+                        discount: discountAmount,
+                        tax: taxAmount,
+                        totalAmount: total,
+                        amountPaid: amountPaid,
+                        change: changeDue,
+                        balanceDue: balanceDue,
+                        status: paymentStatus,
+                        footerMessage: "Thank you for shopping with us!"
+                    }, { size: "full" });
+                    return;
+                }
+
+                if (template === "compact" && typeof CompactReceipt !== "undefined") {
+                    receiptPreview.innerHTML = CompactReceipt.render({
+                        currency: (typeof Currency !== "undefined" ? Currency.getSymbol(profile.currency) : profile
+                            .currency) || "$",
+                        companyName: bizName,
+                        logoUrl: profile.logo || "",
+                        addressLine1: bizAddress || "123 Sample St",
+                        addressLine2: profile.city || "Sample City",
+                        shoppingCenter: "SHOPPING CENTER",
+                        date: dateStr,
+                        time: timeStr,
+                        items: items.map(function(it) { return { name: it.name, qty: it.qty || 1, price: it.price ||
+                                0 }; }),
+                        total: total,
+                        vat: taxAmount,
+                        cardNumber: getPaymentMethod() === "pod" ? "" : "•••• •••• •••• ••••",
+                        invoiceNumber: receiptNum,
+                        authNumber: "192107",
+                        status: paymentStatus,
+                        amountPaid: amountPaid,
+                        balanceDue: balanceDue,
+                        refundPolicy: "Receipts are required for all refunds\nRefunds must be made within 30 days"
+                    }, { size: "full" });
+                    return;
+                }
+
+                // ── FALLBACK ──
+                var html = '<div class="receipt-logo">' + logoHtml + '<div class="logo-text"><div class="business-name">' +
+                    escapeHTML(bizName) + '</div>' + (bizAddress ? '<div class="business-address">' + escapeHTML(
+                        bizAddress) + '</div>' : "") + (bizContact ? '<div class="operator">' + escapeHTML(bizContact) +
+                    '</div>' : "") +
+                    '</div></div><div class="receipt-details"><div class="detail-row"><span class="label">Receipt #:</span><span>' +
+                    receiptNum +
+                    '</span></div><div class="detail-row"><span class="label">Date:</span><span>' + dateStr + ' ' +
+                    timeStr +
+                    '</span></div><div class="detail-row"><span class="label">Customer:</span><span>' + escapeHTML(
+                        customerName) +
+                    '</span></div>' + (custPhone.value ? '<div class="detail-row"><span class="label">Phone:</span><span>' +
+                        escapeHTML(custPhone.value) + '</span></div>' : "") + (custEmail.value ?
+                    '<div class="detail-row"><span class="label">Email:</span><span>' + escapeHTML(custEmail.value) +
+                    '</span></div>' : "") + (custAddress.value ?
+                    '<div class="detail-row"><span class="label">Address:</span><span>' + escapeHTML(custAddress.value) +
+                    '</span></div>' : "") +
+                    '</div><hr class="receipt-divider" /><div class="receipt-items">';
+                if (items.length === 0) {
+                    html +=
+                        '<div class="empty-preview" style="padding:10px 0;"><span class="empty-icon" style="font-size:1.6rem;"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54h3.58l-4.08 5.25L8 11.29h-3.58L10 6.25z"/></svg></span><p style="font-size:0.8rem;">No items added yet.</p></div>';
+                } else {
+                    items.forEach(function(item) { var lineTotal = (item.qty || 1) * (item.price || 0);
+                        html += '<div class="item-line"><span class="item-name">' + escapeHTML(item.name) +
+                            '</span><span class="item-qty">× ' + item.qty +
+                            '</span><span class="item-total">₦' + lineTotal.toFixed(2) + '</span></div>'; });
+                }
+                html +=
+                    '</div><div class="receipt-totals"><div class="totals-row"><span>Subtotal</span><span>₦' + subtotal
+                    .toFixed(2) +
+                    '</span></div>' + (discountAmount > 0 ? '<div class="totals-row"><span>Discount</span><span>-₦' +
+                        discountAmount.toFixed(2) + '</span></div>' : "") + (tax > 0 ?
+                    '<div class="totals-row"><span>Tax (' + tax + '%)</span><span>₦' + taxAmount.toFixed(2) +
+                    '</span></div>' : "") +
+                    '<div class="totals-row grand"><span>Total</span><span>₦' + total.toFixed(2) +
+                    '</span></div></div><hr class="receipt-divider" /><div class="receipt-payment"><div class="payment-row"><span class="label">Amount paid</span><span>' +
+                    money(amountPaid) +
+                    '</span></div>' + (balanceDue > 0 ?
+                    '<div class="payment-row"><span class="label">Balance owing</span><span style="color:#d92d20;font-weight:700;">' +
+                    money(balanceDue) + '</span></div>' : "") + (changeDue > 0 ?
+                    '<div class="payment-row"><span class="label">Change due</span><span>' + money(changeDue) +
+                    '</span></div>' : "") +
+                    '<div class="payment-row"><span class="label">Status</span><span style="color:' + (balanceDue > 0 ?
+                        "#d92d20" : "var(--ledger-green)") + ';font-weight:600;">' + (balanceDue > 0 ? (amountPaid >
+                        0 ? "PARTIALLY PAID" : "UNPAID") : "PAID IN FULL") +
+                    '</span></div></div><div class="receipt-footer">' + dateStr + ' ' + timeStr + ' &bull; Receipt #: ' +
+                    receiptNum + ' &bull; Thank you!</div>';
+                receiptPreview.innerHTML = html;
+            }
+
+            // ─── GENERATE RECEIPT ─────────────────────────────────────
+            function generateReceipt(cardInfo) {
+                if (selectedTemplate === "pro" && typeof PlanAccess !== "undefined" && !PlanAccess.can("template:pro")) {
+                    PlanAccess.showUpgradeToast("template:pro");
+                    return false;
+                }
+                var name = custName.value.trim();
+                if (!name) { document.getElementById("custNameField").classList.add("has-error");
+                    showToast("Missing customer", "Please enter a customer name.", "error"); return false; }
+                if (items.length === 0) { showToast("No items", "Please add at least one item to the receipt.",
+                        "error"); return false; }
+                var subtotal = items.reduce(function(sum, item) { return sum + (item.qty || 1) * (item.price || 0); }, 0);
+                var tax = parseFloat(taxRate.value) || 0;
+                var discVal = parseFloat(discountValue.value) || 0;
+                var discType = discountType.value;
+                var discountAmount = discType === "percent" ? (subtotal * discVal) / 100 : discVal;
+                var taxAmount = (subtotal - discountAmount) * (tax / 100);
+                var total = subtotal - discountAmount + taxAmount;
+                var amountPaid = Math.max(0, parseFloat(amountPaidInput.value) || 0);
+                var balanceDue = Math.max(0, total - amountPaid);
+                var paymentStatus = balanceDue > 0 ? (amountPaid > 0 ? "partial" : "unpaid") : "paid";
+                var profile = getBusinessProfile();
+                var receipt = {
+                    id: "rc_" + Date.now(),
+                    userId: (typeof Scope !== "undefined") ? Scope.currentUserId() : null,
+                    customerId: selectedCustomerId || null,
+                    receiptNumber: "RC-" + String(Date.now()).slice(-6),
+                    businessName: profile.businessName || "Your Business",
+                    businessAddress: profile.address || "",
+                    businessPhone: profile.phone || "",
+                    businessEmail: profile.email || "",
+                    businessLogo: profile.logo || "",
+                    customerName: name,
+                    customerPhone: custPhone.value.trim() || "",
+                    customerEmail: custEmail.value.trim() || "",
+                    customerAddress: custAddress.value.trim() || "",
+                    items: items.map(function(item) { return { name: item.name, qty: item.qty, price: item.price }; }),
+                    subtotal: subtotal,
+                    discount: discountAmount,
+                    discountType: discType,
+                    taxRate: tax,
+                    taxAmount: taxAmount,
+                    total: total,
+                    amountPaid: amountPaid,
+                    balanceDue: balanceDue,
+                    paymentStatus: paymentStatus,
+                    templateId: selectedTemplate,
+                    templateName: selectedTemplate.charAt(0).toUpperCase() + selectedTemplate.slice(1),
+                    createdAt: new Date().toISOString(),
+                    status: paymentStatus,
+                    paymentMethod: getPaymentMethod(),
+                    cardHolder: cardInfo ? cardInfo.cardHolder : "",
+                    cardNumber: cardInfo ? "**** **** **** " + cardInfo.cardLast4 : "",
+                    cardType: cardInfo ? cardInfo.cardType : "",
+                    cardExpiry: cardInfo ? cardInfo.cardExpiry : ""
+                };
+                // Snapshot fingerprint at issue time — pages/verify-receipt.html
+                // compares against this to flag receipts edited after issue.
+                // See the comment above DB.computeReceiptFingerprint in
+                // js/storage.js for what this can and can't guarantee.
+                if (typeof DB !== "undefined" && DB.computeReceiptFingerprint) {
+                    receipt.integrityHash = DB.computeReceiptFingerprint(receipt);
+                }
+                var receiptsKey = Scope.key("receiptly_receipts");
+                var receipts = [];
+                try { var rData = localStorage.getItem(receiptsKey); if (rData) receipts = JSON.parse(rData); } catch (e) {}
+                receipts.push(receipt);
+                try { localStorage.setItem(receiptsKey, JSON.stringify(receipts)); } catch (storageError) {
+                    console.error(storageError);
+                    if (storageError && (storageError.name === "QuotaExceededError" || storageError.code === 22)) {
+                        showToast("Storage is full",
+                            "Your device storage is full. Delete some old receipts or remove your business logo in Settings, then try again.",
+                            "error");
+                    } else {
+                        showToast("Could not save receipt", "Something went wrong saving this receipt. Please try again.",
+                            "error");
+                    }
+                    return false;
+                }
+                if (!selectedCustomerId && name) {
+                    var customers = loadCustomers();
+                    var existing = customers.find(function(c) { return c.name === name || c.email === custEmail.value
+                            .trim(); });
+                    if (!existing) {
+                        customers.push({ id: "cust_" + Date.now(), userId: Scope.currentUserId(), name: name, phone: custPhone.value.trim() || "",
+                            email: custEmail.value.trim() || "", address: custAddress.value.trim() || "",
+                            createdAt: new Date().toISOString() });
+                        try { var cKey2 = Scope.key("receiptly_customers");
+                            localStorage.setItem(cKey2, JSON.stringify(customers));
+                            populateCustomerDropdown(); } catch (custStorageError) { console.error(
+                            custStorageError); }
+                    }
+                }
+                showToast("Receipt created!", "Receipt " + receipt.receiptNumber + " saved successfully.", "success");
+                resetForm();
+                receiptPreview.innerHTML =
+                    '<div class="receipt-logo"><div class="logo-icon">✓</div><div class="logo-text"><div class="business-name" style="color:var(--ledger-green);">Receipt Generated</div><div class="business-address">' +
+                    receipt.receiptNumber +
+                    '</div></div></div><div style="text-align:center;padding:20px 0;color:var(--ink-soft);"><p style="font-size:1.4rem;font-weight:700;color:var(--ink);">' +
+                    money(total) +
+                    '</p><p style="font-size:0.85rem;">Total for ' + escapeHTML(name) +
+                    '</p>' + (receipt.balanceDue > 0 ?
+                        '<p style="font-size:0.85rem;color:#d92d20;font-weight:600;margin-top:6px;">Paid ' + money(
+                            receipt.amountPaid) + ' · Owing ' + money(receipt.balanceDue) + '</p>' :
+                        '<p style="font-size:0.85rem;color:var(--ledger-green);font-weight:600;margin-top:6px;">Paid in full</p>'
+                        ) +
+                    '</div><div class="receipt-footer">Receipt saved. <a href="receipts.html" style="color:var(--accent);font-weight:600;">View all receipts →</a></div>';
+                return true;
+            }
+
+            // ─── RESET ─────────────────────────────────────────────────
+            function resetForm() {
+                items = [];
+                renderItems();
+                custName.value = "";
+                custPhone.value = "";
+                custEmail.value = "";
+                custAddress.value = "";
+                taxRate.value = "0";
+                discountValue.value = "0";
+                discountType.value = "fixed";
+                amountPaidInput.value = "0";
+                if (balanceHint) balanceHint.textContent = "Leave as 0 if nothing has been paid yet.";
+                selectedCustomerId = null;
+                existingCustomerSelect.value = "";
+                document.querySelectorAll(".field").forEach(function(f) { f.classList.remove("has-error"); });
+                receiptPreview.innerHTML =
+                    '<div class="empty-preview"><span class="empty-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54h3.58l-4.08 5.25L8 11.29h-3.58L10 6.25z"/></svg></span><p>Your receipt preview will appear here<br />as you add items.</p></div>';
+            }
+
+            // ─── RECEIPT GENERATION ANIMATION ─────────────────────────
+            function showReceiptGenAnimation() {
+                if (receiptGenOverlay) {
+                    receiptGenOverlay.classList.remove("hidden");
+                }
+            }
+
+            function hideReceiptGenAnimation() {
+                if (receiptGenOverlay) {
+                    receiptGenOverlay.classList.add("hidden");
+                }
+            }
+
+            // ─── INSTANT PAYMENT ANIMATION (card charge → receipt) ─────
+            var PAYMENT_ANIM_DURATION = 5000; // total time overlay is shown, in ms
+            var paymentAnimTimers = [];
+
+            function clearPaymentAnimTimers() {
+                paymentAnimTimers.forEach(function(t) { clearTimeout(t); });
+                paymentAnimTimers = [];
+            }
+
+            function showPaymentAnimation(amount, cardInfo, onComplete) {
+                if (!paymentAnimOverlay) { if (onComplete) onComplete(); return; }
+                clearPaymentAnimTimers();
+
+                // Populate card + amount details
+                paymentAnimBrand.textContent = (cardInfo && cardInfo.cardType) ? cardInfo.cardType : "Card";
+                paymentAnimNumber.textContent = "•••• •••• •••• " + ((cardInfo && cardInfo.cardLast4) ? cardInfo.cardLast4 :
+                    "••••");
+                paymentAnimHolder.textContent = (cardInfo && cardInfo.cardHolder) ? cardInfo.cardHolder : "—";
+                paymentAnimExpiry.textContent = (cardInfo && cardInfo.cardExpiry) ? cardInfo.cardExpiry : "—";
+                paymentAnimAmount.textContent = money(amount);
+
+                // Reset visual state
+                paymentAnimCardface.classList.remove("is-success");
+                var circumference = 2 * Math.PI * 30;
+                paymentAnimProgressCircle.style.strokeDashoffset = circumference;
+                paymentAnimProgressText.textContent = "0%";
+                paymentAnimStatusLabel.textContent = "Processing…";
+
+                paymentAnimOverlay.classList.remove("hidden");
+
+                var steps = [
+                    { progress: 25, status: "Authorizing", sub: "Verifying card details" },
+                    { progress: 55, status: "Processing", sub: "Contacting your bank" },
+                    { progress: 80, status: "Finalizing", sub: "Completing transaction" },
+                    { progress: 100, status: "Approved!", sub: "Payment successful" }
+                ];
+                var stepInterval = PAYMENT_ANIM_DURATION / (steps.length + 1); // leave the last slot for the success hold
+
+                steps.forEach(function(step, i) {
+                    var t = window.setTimeout(function() {
+                        var offset = circumference - (step.progress / 100) * circumference;
+                        paymentAnimProgressCircle.style.strokeDashoffset = offset;
+                        paymentAnimProgressText.textContent = step.progress + "%";
+                        paymentAnimStatus.textContent = step.status;
+                        paymentAnimSub.textContent = step.sub;
+                        if (step.progress === 100) {
+                            paymentAnimStatusLabel.textContent = "Completed";
+                            paymentAnimCardface.classList.add("is-success");
+                        }
+                    }, i * stepInterval);
+                    paymentAnimTimers.push(t);
+                });
+
+                var doneTimer = window.setTimeout(function() {
+                    if (onComplete) onComplete();
+                }, PAYMENT_ANIM_DURATION);
+                paymentAnimTimers.push(doneTimer);
+            }
+
+            function hidePaymentAnimation() {
+                clearPaymentAnimTimers();
+                if (paymentAnimOverlay) {
+                    paymentAnimOverlay.classList.add("hidden");
+                }
+            }
+
+            // ─── PAY ON DELIVERY ANIMATION (truck + stamp) ──────────────
+            var POD_ANIM_DURATION = 3400; // total time overlay is shown, in ms
+            var podAnimTimers = [];
+
+            function clearPodAnimTimers() {
+                podAnimTimers.forEach(function(t) { clearTimeout(t); });
+                podAnimTimers = [];
+            }
+
+            function showPodAnimation(balanceDue, onComplete) {
+                if (!podAnimOverlay) { if (onComplete) onComplete(); return; }
+                clearPodAnimTimers();
+
+                podAnimAmount.textContent = money(balanceDue);
+                podAnimStatus.textContent = "Preparing your receipt…";
+                podAnimOverlay.classList.remove("hidden");
+                podAnimOverlay.classList.remove("is-stamped");
+                podAnimTruck.classList.remove("is-driving");
+
+                // Force reflow so the truck always restarts from the left
+                void podAnimTruck.offsetWidth;
+
+                var t1 = window.setTimeout(function() {
+                    podAnimTruck.classList.add("is-driving");
+                }, 60);
+                podAnimTimers.push(t1);
+
+                var t2 = window.setTimeout(function() {
+                    podAnimStatus.textContent = "Marking order for delivery…";
+                }, 900);
+                podAnimTimers.push(t2);
+
+                var t3 = window.setTimeout(function() {
+                    podAnimOverlay.classList.add("is-stamped");
+                    podAnimStatus.textContent = "Receipt ready — pay on delivery";
+                }, 1800);
+                podAnimTimers.push(t3);
+
+                var doneTimer = window.setTimeout(function() {
+                    if (onComplete) onComplete();
+                }, POD_ANIM_DURATION);
+                podAnimTimers.push(doneTimer);
+            }
+
+            function hidePodAnimation() {
+                clearPodAnimTimers();
+                if (podAnimOverlay) {
+                    podAnimOverlay.classList.add("hidden");
+                }
+            }
+
+            // ─── EVENT LISTENERS ─────────────────────────────────────
+            generateBtn.addEventListener("click", function() {
+                if (getPaymentMethod() === "instant") {
+                    openCardModal();
+                } else {
+                    try {
+                        var subtotalPod = items.reduce(function(sum, item) { return sum + (item.qty || 1) * (item
+                                .price || 0); }, 0);
+                        var taxPod = parseFloat(taxRate.value) || 0;
+                        var discValPod = parseFloat(discountValue.value) || 0;
+                        var discTypePod = discountType.value;
+                        var discountAmountPod = discTypePod === "percent" ? (subtotalPod * discValPod) / 100 :
+                            discValPod;
+                        var taxAmountPod = (subtotalPod - discountAmountPod) * (taxPod / 100);
+                        var totalPod = subtotalPod - discountAmountPod + taxAmountPod;
+                        var amountPaidPod = Math.max(0, parseFloat(amountPaidInput.value) || 0);
+                        var balanceDuePod = Math.max(0, totalPod - amountPaidPod);
+
+                        showPodAnimation(balanceDuePod, function() {
+                            try {
+                                generateReceipt();
+                            } catch (error) {
+                                console.error(error);
+                                showToast("Could not generate receipt", "Something went wrong. Please try again.",
+                                    "error");
+                            } finally {
+                                hidePodAnimation();
+                            }
+                        });
+                    } catch (error) {
+                        console.error(error);
+                        hidePodAnimation();
+                        showToast("Could not generate receipt", "Something went wrong. Please try again.",
+                        "error");
+                    }
+                }
+            });
+            if (resetBtn2) resetBtn2.addEventListener("click", resetForm);
+            [custName, custPhone, custEmail, custAddress, taxRate, discountValue, discountType, amountPaidInput].forEach(
+                function(el) {
+                    el.addEventListener("input", updatePreview);
+                    el.addEventListener("change", updatePreview);
+                });
+
+            // ─── INIT ──────────────────────────────────────────────────
+            renderItems();
+            updateTemplatePreview();
+
+            window.addEventListener("storage", function(e) { if (e.key && e.key.indexOf("receiptly_customers") === 0) {
+                    populateCustomerDropdown(); } });
+            console.log(
+            "%c Receiptly ", "background:#1f6fe0;color:#fff;font-weight:700;font-size:16px;padding:6px 14px;border-radius:4px;");
+            console.log("%c Professional Receipts + Small Business Management", "color:#4a4540;font-size:13px;");
+        })();
+    </script>
+
+    <!-- ===== LOGOUT ===== -->
+    <script>
+        (function() {
+            var logoutLink = document.getElementById("logoutLink");
+            if (!logoutLink) return;
+            logoutLink.addEventListener("click", function(e) {
+                e.preventDefault();
+                // Scope (js/user-scope.js) is the single source of truth for
+                // session storage.
+                Scope.clearSession();
+                window.location.href = "../login.html";
+            });
+        })();
+
+        // ===== PRELOADER =====
+
+    </script>
+</body>
+
+</html>

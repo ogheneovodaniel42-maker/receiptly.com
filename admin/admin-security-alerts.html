@@ -1,0 +1,2054 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Security Alerts — Receiptly Owner</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&display=swap" rel="stylesheet" />
+
+    <nav class="sidebar-nav">
+            <div class="nav-label">Main</div>
+            <a class="nav-item" href="admin-dashboard.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a class="nav-item" href="admin-analytics.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M4 20l16-16"/></svg>
+                Analytics
+            </a>
+
+            <div class="nav-label">Management</div>
+            <a class="nav-item" href="admin-users.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Users
+            </a>
+
+            <div class="nav-label">Finance</div>
+            <a class="nav-item" href="admin-payments.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                Payments
+            </a>
+
+            <div class="nav-label">Content</div>
+            <a class="nav-item" href="admin-templates.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+                Templates
+            </a>
+            <a class="nav-item" href="admin-announcements.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                Announcements
+            </a>
+
+            <div class="nav-label">Communication</div>
+            <a class="nav-item" href="admin-support.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Support
+            </a>
+            <a class="nav-item" href="admin-messages.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Messages
+                <span id="msgNavBadge" style="margin-left:auto;background:#dc2626;color:#fff;font-size:0.65rem;font-weight:800;border-radius:999px;padding:1px 6px;min-width:16px;text-align:center;display:none;">0</span>
+            </a>
+            <a class="nav-item" href="admin-reports.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Reports
+            </a>
+
+            <div class="nav-label">Administration</div>
+            <a class="nav-item" href="admin-settings.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Settings
+            </a>
+            <a class="nav-item" href="admin-roles.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Roles
+            </a>
+            <a class="nav-item" href="admin-permissions.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Permissions
+            </a>
+            <a class="nav-item" href="admin-sessions.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Sessions
+            </a>
+            <a class="nav-item  active" href="admin-security.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Security
+            </a>
+            <a class="nav-item" href="company-profile.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Company Profile
+            </a>
+
+        </nav>
+</head>
+<body>
+
+    <!-- ════════════════════════════════════════════════════════════
+    SIDEBAR
+    ════════════════════════════════════════════════════════════ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <span class="brand-icon">R</span>
+            <div class="brand-text">
+                Receipt<span class="accent">ly</span>
+                <span class="brand-sub">Owner Panel</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-label">Main</div>
+            <a class="nav-item" href="admin-dashboard.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a class="nav-item" href="admin-analytics.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M4 20l16-16"/></svg>
+                Analytics
+            </a>
+
+            <div class="nav-label">Management</div>
+            <a class="nav-item" href="admin-users.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Users
+            </a>
+            <div class="nav-label">Finance</div>
+            <a class="nav-item" href="admin-payments.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                Payments
+            </a>
+            <div class="nav-label">Content</div>
+            <a class="nav-item" href="admin-templates.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+                Templates
+            </a>
+            <a class="nav-item" href="admin-announcements.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                Announcements
+            </a>
+
+            <div class="nav-label">Communication</div>
+            <a class="nav-item" href="admin-support.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Support
+            </a>
+            <a class="nav-item" href="admin-messages.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Messages
+                <span id="msgNavBadge" style="margin-left:auto;background:#dc2626;color:#fff;font-size:0.65rem;font-weight:800;border-radius:999px;padding:1px 6px;min-width:16px;text-align:center;display:none;">0</span>
+            </a>
+            <a class="nav-item" href="admin-reports.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Reports
+            </a>
+
+            <div class="nav-label">Administration</div>
+            <a class="nav-item" href="admin-settings.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Settings
+            </a>
+            <a class="nav-item" href="admin-roles.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Roles &amp; Permissions
+            </a>
+            <a class="nav-item" href="admin-permissions.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Permissions
+            </a>
+            <a class="nav-item" href="admin-sessions.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Sessions
+            </a>
+            <a class="nav-item" href="admin-security.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Security
+            </a>
+            <a class="nav-item active" href="admin-security-alerts.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Security Alerts
+            </a>
+            <a class="nav-item" href="company-profile.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Company Profile
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="nav-item logout" id="logoutBtn">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+                Logout
+            </button>
+        </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    MAIN CONTENT
+    ════════════════════════════════════════════════════════════ -->
+    <div class="main" id="mainContent">
+        <!-- TOP HEADER -->
+        <header class="top-header">
+            <div class="top-header__left">
+                <button class="hamburger" id="hamburger" aria-label="Toggle sidebar">
+                    <span></span><span></span><span></span>
+                </button>
+                <div class="top-header__title">
+                    Security Alerts
+                    <span class="sub">Admin / Security / Alerts</span>
+                </div>
+            </div>
+
+            <div class="top-header__right">
+                <button class="header-btn" id="themeToggleBtn" aria-label="Toggle theme">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                </button>
+
+                <div class="header-profile" id="profileBtn">
+                    <div class="avatar" id="headerAvatar">A</div>
+                    <div class="profile-info">
+                        <span class="name" id="headerName">Admin</span>
+                        <span class="role">Super Admin</span>
+                    </div>
+                    <span class="chevron">▾</span>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <button class="drop-item" data-page="account-profile.html">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            My Account
+                        </button>
+                        <button class="drop-item" data-page="admin-security.html">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            Security
+                        </button>
+                        <button class="drop-item" data-page="admin-security-alerts.html">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            Security Alerts
+                        </button>
+                        <div class="divider"></div>
+                        <button class="drop-item logout" id="dropdownLogout">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- PAGE CONTENT -->
+        <div class="page-content" id="pageContent">
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1>Security Alerts</h1>
+                    <p>Review, investigate, and manage security alerts generated by administrator activity.</p>
+                </div>
+                <div class="action-bar">
+                    <div class="alert-count" id="alertCount">
+                        <span class="dot" id="alertDot"></span>
+                        <span id="alertCountText">0 alerts</span>
+                    </div>
+                    <button class="btn btn--outline" id="markAllReadBtn">✅ Mark All Read</button>
+                    <button class="btn btn--outline" id="exportBtn">📤 Export Alerts</button>
+                    <button class="btn btn--outline" id="settingsBtn">⚙️ Alert Settings</button>
+                </div>
+            </div>
+
+            <!-- ─── STATS ──────────────────────────────────────────── -->
+            <div class="stats-grid" id="statsGrid">
+                <!-- populated by JS -->
+            </div>
+
+            <!-- ─── STATUS BANNER ───────────────────────────────────── -->
+            <div class="status-banner" id="statusBanner">
+                <div class="banner-content">
+                    <span class="banner-icon" id="bannerIcon">🛡️</span>
+                    <span id="bannerText">Loading security status...</span>
+                </div>
+                <div class="banner-actions">
+                    <button class="btn-sm" id="bannerActionBtn">View Details</button>
+                </div>
+            </div>
+
+            <!-- ─── BULK TOOLBAR ───────────────────────────────────── -->
+            <div class="bulk-toolbar" id="bulkToolbar">
+                <span class="bulk-info" id="bulkInfo">0 alerts selected</span>
+                <div class="bulk-actions">
+                    <button class="btn-sm" id="bulkMarkRead">Mark Read</button>
+                    <button class="btn-sm" id="bulkMarkUnread">Mark Unread</button>
+                    <button class="btn-sm success" id="bulkResolve">Resolve</button>
+                    <button class="btn-sm" id="bulkDismiss">Dismiss</button>
+                    <button class="btn-sm" id="bulkClear">Clear Selection</button>
+                </div>
+            </div>
+
+            <!-- ─── TOOLBAR ────────────────────────────────────────── -->
+            <div class="toolbar" id="toolbar">
+                <div class="search-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="searchInput" placeholder="Search alerts..." />
+                    <button class="clear-search" id="clearSearch">&times;</button>
+                </div>
+
+                <div class="filter-group">
+                    <div class="select-wrap">
+                        <select id="severityFilter">
+                            <option value="all">All Severity</option>
+                            <option value="critical">Critical</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+
+                    <div class="select-wrap">
+                        <select id="statusFilter">
+                            <option value="all">All Status</option>
+                            <option value="unread">Unread</option>
+                            <option value="read">Read</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="dismissed">Dismissed</option>
+                        </select>
+                    </div>
+
+                    <div class="select-wrap">
+                        <select id="typeFilter">
+                            <option value="all">All Types</option>
+                            <option value="suspicious_login">Suspicious Login</option>
+                            <option value="failed_login">Failed Login</option>
+                            <option value="new_admin">New Administrator</option>
+                            <option value="role_change">Role Change</option>
+                            <option value="permission_change">Permission Change</option>
+                            <option value="password_change">Password Change</option>
+                            <option value="session_activity">Session Activity</option>
+                            <option value="security_change">Security Setting Change</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="select-wrap">
+                        <select id="sortFilter">
+                            <option value="newest">Newest</option>
+                            <option value="oldest">Oldest</option>
+                            <option value="highest">Highest Severity</option>
+                            <option value="lowest">Lowest Severity</option>
+                        </select>
+                    </div>
+
+                    <div class="date-range">
+                        <input type="date" id="dateFrom" />
+                        <span class="date-sep">—</span>
+                        <input type="date" id="dateTo" />
+                    </div>
+                </div>
+
+                <div class="action-btns">
+                    <button class="btn-icon" id="searchBtn" title="Search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </button>
+                    <button class="btn-icon" id="resetBtn" title="Reset Filters">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ─── TABLE ──────────────────────────────────────────── -->
+            <div class="table-panel" id="tablePanel">
+                <div class="table-wrap">
+                    <table class="alert-table" id="alertTable">
+                        <thead>
+                            <tr>
+                                <th style="width:36px;text-align:center;">
+                                    <input type="checkbox" id="selectAll" />
+                                </th>
+                                <th data-sort="severity">Severity <span class="sort-icon">↕</span></th>
+                                <th data-sort="title">Alert <span class="sort-icon">↕</span></th>
+                                <th data-sort="administrator">Administrator <span class="sort-icon">↕</span></th>
+                                <th data-sort="source">Source <span class="sort-icon">↕</span></th>
+                                <th data-sort="createdAt">Date &amp; Time <span class="sort-icon">↕</span></th>
+                                <th data-sort="status">Status <span class="sort-icon">↕</span></th>
+                                <th style="text-align:right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- populated by JS -->
+                        </tbody>
+                    </table>
+                    <div class="table-empty" id="emptyState" style="display:none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        <p id="emptyTitle">No security alerts found</p>
+                        <div class="sub" id="emptySub">No security alerts match your current filters.</div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination-wrap" id="paginationWrap">
+                    <span class="info" id="paginationInfo">Showing 0–0 of 0</span>
+                    <div class="controls">
+                        <select id="perPageSelect">
+                            <option value="10">10</option>
+                            <option value="25" selected>25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <div class="pagination-btns" id="paginationBtns"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ─── SECURITY NOTICE ─────────────────────────────────── -->
+            <div class="security-notice">
+                <div class="notice-title">Frontend Security Notice</div>
+                <div class="notice-text">
+                    These alerts are generated from security events available to the Receiptly frontend. Real-time threat detection, server-side intrusion monitoring, IP reputation analysis, remote session termination, and advanced fraud detection require backend security infrastructure.
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    TOAST HOST
+    ════════════════════════════════════════════════════════════ -->
+    <div class="toast-host" id="toastHost"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    MODALS
+    ════════════════════════════════════════════════════════════ -->
+    <!-- Confirm Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal" style="max-width:460px;">
+            <button class="modal-close" data-action="close-confirm">&times;</button>
+            <div class="modal-icon" id="confirmIcon">⚠️</div>
+            <h3 class="modal-title" id="confirmTitle">Are you sure?</h3>
+            <p class="modal-msg" id="confirmMsg"></p>
+            <div class="modal-actions">
+                <button class="btn btn--outline" data-action="cancel-confirm">Cancel</button>
+                <button class="btn btn--danger" id="confirmOkBtn" data-action="ok-confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Details Modal -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal">
+            <button class="modal-close" data-action="close-detail">&times;</button>
+            <div class="modal-icon modal-icon--info" id="detailIcon">📋</div>
+            <h3 class="modal-title" id="detailTitle">Security Alert</h3>
+            <p class="modal-msg" id="detailSub"></p>
+            <div class="alert-detail-grid" id="detailGrid">
+                <!-- populated by JS -->
+            </div>
+            <div class="alert-timeline" id="detailTimeline">
+                <!-- populated by JS -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn--outline" data-action="close-detail">Close</button>
+                <button class="btn btn--success" id="detailResolveBtn" style="display:none;">Resolve</button>
+                <button class="btn btn--warning" id="detailDismissBtn" style="display:none;">Dismiss</button>
+                <button class="btn btn--primary" id="detailReadBtn" style="display:none;">Mark Read</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <button class="modal-close" data-action="close-settings">&times;</button>
+            <div class="modal-icon modal-icon--info">⚙️</div>
+            <h3 class="modal-title">Alert Settings</h3>
+            <p class="modal-msg">Configure which security events generate alerts.</p>
+
+            <div class="settings-grid-modal" id="settingsGrid">
+                <!-- populated by JS -->
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn--outline" data-action="close-settings">Cancel</button>
+                <button class="btn btn--primary" id="settingsSaveBtn">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unsaved Changes Modal -->
+    <div class="modal-overlay" id="unsavedModal">
+        <div class="modal">
+            <button class="modal-close" data-action="close-unsaved">&times;</button>
+            <div class="modal-icon modal-icon--warning">💡</div>
+            <h3 class="modal-title">Unsaved Changes</h3>
+            <p class="modal-msg">You have unsaved settings changes. Are you sure you want to leave?</p>
+            <div class="modal-actions">
+                <button class="btn btn--outline" data-action="stay">Stay</button>
+                <button class="btn btn--danger" id="leaveBtn" data-action="leave">Leave</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    SCRIPTS
+    ════════════════════════════════════════════════════════════ -->
+    <script src="../js/security.js"></script>
+    <script src="../js/sessions.js"></script>
+    <script src="../js/roles.js"></script>
+    <script src="../js/admin-auth.js">
+    </script>
+    <script src="../js/ui-popup.js"></script>
+    <script src="../js/storage.js"></script>
+    <script>
+        (function() {
+            "use strict";
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  1. AUTH GUARD
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            if (typeof AdminAuth === "undefined") {
+                window.location.href = "../admin-login.html";
+                return;
+            }
+            var admin = AdminAuth.requireAdmin ? AdminAuth.requireAdmin("admin-login.html") : null;
+            if (!admin) {
+                var session = AdminAuth.getSession ? AdminAuth.getSession() : null;
+                if (!session) {
+                    window.location.href = "../admin-login.html";
+                    return;
+                }
+                admin = session;
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  2. HELPERS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var ACCOUNT_ID = admin.id || admin.email || "default_account";
+
+            function getStorageKey() {
+                return "receiptly_security_alerts_" + ACCOUNT_ID;
+            }
+
+            function getSettingsKey() {
+                return "receiptly_alert_settings_" + ACCOUNT_ID;
+            }
+
+            function getDefaultAlertSettings() {
+                return {
+                    enabled: true,
+                    types: {
+                        suspicious_login: true,
+                        failed_login: true,
+                        new_admin: true,
+                        role_change: true,
+                        permission_change: true,
+                        password_change: true,
+                        session_activity: true,
+                        security_change: true,
+                        other: true
+                    },
+                    criticalEnabled: true
+                };
+            }
+
+            function getAlertSettings() {
+                try {
+                    var data = localStorage.getItem(getSettingsKey());
+                    if (data) {
+                        var parsed = JSON.parse(data);
+                        var def = getDefaultAlertSettings();
+                        for (var key in def) {
+                            if (parsed[key] === undefined) parsed[key] = def[key];
+                        }
+                        if (parsed.types) {
+                            for (var t in def.types) {
+                                if (parsed.types[t] === undefined) parsed.types[t] = def.types[t];
+                            }
+                        }
+                        return parsed;
+                    }
+                } catch (_) {}
+                return getDefaultAlertSettings();
+            }
+
+            function saveAlertSettings(settings) {
+                localStorage.setItem(getSettingsKey(), JSON.stringify(settings));
+            }
+
+            function getAlerts() {
+                try {
+                    var data = localStorage.getItem(getStorageKey());
+                    return data ? JSON.parse(data) : [];
+                } catch (_) { return []; }
+            }
+
+            function saveAlerts(alerts) {
+                localStorage.setItem(getStorageKey(), JSON.stringify(alerts));
+            }
+
+            function getActivityLogs() {
+                try {
+                    var data = localStorage.getItem("receiptly_activity_logs");
+                    return data ? JSON.parse(data) : [];
+                } catch (_) { return []; }
+            }
+
+            function getAdmins() {
+                try {
+                    var data = localStorage.getItem("receiptly_admins_" + ACCOUNT_ID);
+                    return data ? JSON.parse(data) : [];
+                } catch (_) { return []; }
+            }
+
+            function esc(str) {
+                if (!str) return "";
+                return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g,
+                    "&quot;");
+            }
+
+            function fmtDate(d) {
+                if (!d) return "—";
+                var date = new Date(d);
+                if (isNaN(date)) return "—";
+                return date.toLocaleDateString(undefined, { day: "2-digit", month: "short", year: "numeric" });
+            }
+
+            function fmtDateTime(d) {
+                if (!d) return "—";
+                var date = new Date(d);
+                if (isNaN(date)) return "—";
+                return date.toLocaleString(undefined, { day: "2-digit", month: "short", year: "numeric",
+                    hour: "2-digit", minute: "2-digit" });
+            }
+
+            function fmtTimeAgo(d) {
+                if (!d) return "—";
+                var date = new Date(d);
+                if (isNaN(date)) return "—";
+                var now = Date.now();
+                var diff = now - date.getTime();
+                if (diff < 60000) return "Just now";
+                if (diff < 3600000) return Math.floor(diff / 60000) + "m ago";
+                if (diff < 86400000) return Math.floor(diff / 3600000) + "h ago";
+                if (diff < 604800000) return Math.floor(diff / 86400000) + "d ago";
+                return fmtDate(date);
+            }
+
+            function initials(name) {
+                if (!name) return "U";
+                return name.trim().split(/\s+/).slice(0, 2).map(function(w) { return w[0]; }).join("").toUpperCase();
+            }
+
+            function getAdminName() {
+                return admin.name || "Admin";
+            }
+
+            function getAdminId() {
+                return admin.id || "admin_" + (admin.name || "Admin").toLowerCase().replace(/\s+/g, "_");
+            }
+
+            function generateId() {
+                return "alert_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6);
+            }
+
+            function getSeverityOrder(severity) {
+                var order = { critical: 4, high: 3, medium: 2, low: 1 };
+                return order[severity] || 0;
+            }
+
+            function getDeviceInfo() {
+                var ua = navigator.userAgent || "";
+                var browser = "Unknown";
+                if (ua.indexOf("Chrome") !== -1 && ua.indexOf("Edg") === -1) browser = "Chrome";
+                else if (ua.indexOf("Safari") !== -1 && ua.indexOf("Chrome") === -1) browser = "Safari";
+                else if (ua.indexOf("Firefox") !== -1) browser = "Firefox";
+                else if (ua.indexOf("Edg") !== -1) browser = "Edge";
+                else if (ua.indexOf("Opera") !== -1) browser = "Opera";
+
+                var os = "Unknown";
+                if (ua.indexOf("Windows") !== -1) os = "Windows";
+                else if (ua.indexOf("Mac OS") !== -1) os = "macOS";
+                else if (ua.indexOf("Android") !== -1) os = "Android";
+                else if (ua.indexOf("iOS") !== -1 || ua.indexOf("iPhone") !== -1 || ua.indexOf("iPad") !== -1) os =
+                "iOS";
+                else if (ua.indexOf("Linux") !== -1) os = "Linux";
+
+                var device = "Desktop";
+                if (/mobile/i.test(ua) && !/tablet/i.test(ua)) device = "Mobile";
+                else if (/tablet/i.test(ua)) device = "Tablet";
+
+                return { browser: browser, os: os, device: device };
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  3. TOAST SYSTEM
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function toast(message, type) {
+                type = type || "info";
+                var host = document.getElementById("toastHost");
+                var el = document.createElement("div");
+                el.className = "toast " + type;
+                var icon = type === "error" ? "✕" : type === "success" ? "✓" : "ⓘ";
+                el.innerHTML =
+                    '<span class="t-icon">' + icon + '</span>' +
+                    '<span class="t-msg">' + esc(message) + '</span>' +
+                    '<button class="t-close">&times;</button>';
+                host.appendChild(el);
+
+                requestAnimationFrame(function() {
+                    el.classList.add("show");
+                });
+
+                el.querySelector(".t-close").addEventListener("click", function() {
+                    dismissToast(el);
+                });
+
+                setTimeout(function() {
+                    dismissToast(el);
+                }, 4000);
+
+                return el;
+            }
+
+            function dismissToast(el) {
+                if (!el || el.classList.contains("hide")) return;
+                el.classList.remove("show");
+                el.classList.add("hide");
+                setTimeout(function() {
+                    if (el.parentNode) el.remove();
+                }, 400);
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  4. THEME
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function getTheme() {
+                return localStorage.getItem("receiptly_theme") || "dark";
+            }
+
+            function setTheme(theme) {
+                document.documentElement.setAttribute("data-theme", theme);
+                localStorage.setItem("receiptly_theme", theme);
+                var icon = document.querySelector("#themeToggleBtn svg");
+                if (theme === "dark") {
+                    icon.innerHTML =
+                        '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+                } else {
+                    icon.innerHTML =
+                        '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+                }
+            }
+
+            setTheme(getTheme());
+
+            document.getElementById("themeToggleBtn").addEventListener("click", function() {
+                var current = document.documentElement.getAttribute("data-theme");
+                setTheme(current === "dark" ? "light" : "dark");
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  5. SIDEBAR / HEADER
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var sidebar = document.getElementById("sidebar");
+            var overlay = document.getElementById("sidebarOverlay");
+            var hamburger = document.getElementById("hamburger");
+
+            function toggleSidebar() {
+                sidebar.classList.toggle("open");
+                hamburger.classList.toggle("active");
+                overlay.classList.toggle("open");
+            }
+
+            hamburger.addEventListener("click", toggleSidebar);
+            overlay.addEventListener("click", toggleSidebar);
+
+            // Profile dropdown
+            var profileBtn = document.getElementById("profileBtn");
+            var profileDropdown = document.getElementById("profileDropdown");
+            var dropdownOpen = false;
+
+            profileBtn.addEventListener("click", function(e) {
+                e.stopPropagation();
+                dropdownOpen = !dropdownOpen;
+                profileDropdown.classList.toggle("open", dropdownOpen);
+            });
+
+            document.addEventListener("click", function(e) {
+                if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                    profileDropdown.classList.remove("open");
+                    dropdownOpen = false;
+                }
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  6. LOGOUT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function handleLogout() {
+                if (AdminAuth.logout) {
+                    AdminAuth.logout();
+                } else {
+                    localStorage.removeItem("receiptly_admin_session");
+                }
+                window.location.href = "../admin-login.html";
+            }
+
+            document.getElementById("logoutBtn").addEventListener("click", handleLogout);
+            document.getElementById("dropdownLogout").addEventListener("click", handleLogout);
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  7. HEADER ADMIN INFO
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            document.getElementById("headerName").textContent = getAdminName();
+            document.getElementById("headerAvatar").textContent = initials(getAdminName());
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  8. ALERT DATA MANAGEMENT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var allAlerts = [];
+            var filteredAlerts = [];
+            var alertSettings = getAlertSettings();
+            var currentPage = 1;
+            var perPage = 25;
+            var selectedAlerts = [];
+            var sortField = "createdAt";
+            var sortDirection = "desc";
+
+            // DOM refs
+            var statsGrid = document.getElementById("statsGrid");
+            var statusBanner = document.getElementById("statusBanner");
+            var bannerIcon = document.getElementById("bannerIcon");
+            var bannerText = document.getElementById("bannerText");
+            var bannerActionBtn = document.getElementById("bannerActionBtn");
+            var tableBody = document.getElementById("tableBody");
+            var emptyState = document.getElementById("emptyState");
+            var emptyTitle = document.getElementById("emptyTitle");
+            var emptySub = document.getElementById("emptySub");
+            var searchInput = document.getElementById("searchInput");
+            var clearSearch = document.getElementById("clearSearch");
+            var severityFilter = document.getElementById("severityFilter");
+            var statusFilter = document.getElementById("statusFilter");
+            var typeFilter = document.getElementById("typeFilter");
+            var sortFilter = document.getElementById("sortFilter");
+            var dateFrom = document.getElementById("dateFrom");
+            var dateTo = document.getElementById("dateTo");
+            var searchBtn = document.getElementById("searchBtn");
+            var resetBtn = document.getElementById("resetBtn");
+            var perPageSelect = document.getElementById("perPageSelect");
+            var paginationBtns = document.getElementById("paginationBtns");
+            var paginationInfo = document.getElementById("paginationInfo");
+            var selectAll = document.getElementById("selectAll");
+            var bulkToolbar = document.getElementById("bulkToolbar");
+            var bulkInfo = document.getElementById("bulkInfo");
+            var markAllReadBtn = document.getElementById("markAllReadBtn");
+            var exportBtn = document.getElementById("exportBtn");
+            var settingsBtn = document.getElementById("settingsBtn");
+            var alertCountText = document.getElementById("alertCountText");
+            var alertDot = document.getElementById("alertDot");
+
+            // ─── Load Alerts ──────────────────────────────────────────
+            function loadAlerts() {
+                var stored = getAlerts();
+
+                // Check for existing alerts
+                if (stored.length === 0) {
+                    // Generate initial alerts from activity logs
+                    generateAlertsFromLogs();
+                    stored = getAlerts();
+                }
+
+                // Deduplicate and sort
+                allAlerts = stored;
+
+                // Remove duplicates by ID
+                var seen = {};
+                allAlerts = allAlerts.filter(function(a) {
+                    if (seen[a.id]) return false;
+                    seen[a.id] = true;
+                    return true;
+                });
+
+                // Update stats and render
+                applyFilters();
+            }
+
+            // ─── Generate Alerts from Activity Logs ──────────────────
+            function generateAlertsFromLogs() {
+                var logs = getActivityLogs();
+                var existingAlerts = getAlerts();
+                var existingIds = {};
+                existingAlerts.forEach(function(a) { existingIds[a.id] = true; });
+
+                var newAlerts = [];
+                var settings = getAlertSettings();
+
+                logs.forEach(function(log) {
+                    var action = log.action || "";
+                    var type = "other";
+                    var severity = "low";
+                    var title = "Security Event";
+                    var description = "A security event occurred.";
+
+                    // Map actions to alert types
+                    if (action.indexOf("failed_login") !== -1) {
+                        type = "failed_login";
+                        severity = "high";
+                        title = "Failed Login Attempt";
+                        description = "A failed login attempt was detected for " + esc(log.adminName || "an account") +
+                            ".";
+                    } else if (action.indexOf("new_admin") !== -1 || action.indexOf("admin_created") !== -1) {
+                        type = "new_admin";
+                        severity = "medium";
+                        title = "New Administrator Created";
+                        description = "A new administrator account was created by " + esc(log.adminName ||
+                            "System") + ".";
+                    } else if (action.indexOf("role_change") !== -1 || action.indexOf("role_updated") !== -1) {
+                        type = "role_change";
+                        severity = "high";
+                        title = "Role Change Detected";
+                        description = "Administrator role was changed by " + esc(log.adminName || "System") + ".";
+                    } else if (action.indexOf("permission") !== -1) {
+                        type = "permission_change";
+                        severity = "high";
+                        title = "Permission Change Detected";
+                        description = "Permissions were modified by " + esc(log.adminName || "System") + ".";
+                    } else if (action.indexOf("password") !== -1) {
+                        type = "password_change";
+                        severity = "medium";
+                        title = "Password Change Detected";
+                        description = "Password was changed by " + esc(log.adminName || "System") + ".";
+                    } else if (action.indexOf("session") !== -1 || action.indexOf("revoked") !== -1) {
+                        type = "session_activity";
+                        severity = "medium";
+                        title = "Session Activity Detected";
+                        description = "Session action was performed by " + esc(log.adminName || "System") + ".";
+                    } else if (action.indexOf("security") !== -1) {
+                        type = "security_change";
+                        severity = "medium";
+                        title = "Security Setting Changed";
+                        description = "Security settings were updated by " + esc(log.adminName || "System") + ".";
+                    } else if (action.indexOf("login") !== -1) {
+                        type = "suspicious_login";
+                        severity = "low";
+                        title = "Administrator Login";
+                        description = "Administrator " + esc(log.adminName || "Unknown") + " logged in.";
+                    }
+
+                    // Check if alert already exists for this log
+                    var exists = existingAlerts.some(function(a) {
+                        return a.sourceId === log.timestamp + log.adminId;
+                    });
+
+                    if (!exists && settings.types[type] !== false) {
+                        var alert = {
+                            id: generateId(),
+                            type: type,
+                            severity: severity,
+                            title: title,
+                            description: description,
+                            administratorId: log.adminId || getAdminId(),
+                            administratorName: log.adminName || getAdminName(),
+                            administratorEmail: admin.email || "",
+                            source: "Activity Log",
+                            device: "Unknown",
+                            browser: "Unknown",
+                            status: "unread",
+                            read: false,
+                            createdAt: log.timestamp || new Date().toISOString(),
+                            resolvedAt: null,
+                            dismissedAt: null,
+                            sourceId: log.timestamp + log.adminId,
+                            metadata: { action: action, details: log.details || "" }
+                        };
+                        newAlerts.push(alert);
+                    }
+                });
+
+                // Add a few default alerts if none exist
+                if (newAlerts.length === 0 && existingAlerts.length === 0) {
+                    var now = new Date();
+                    var deviceInfo = getDeviceInfo();
+
+                    // Create a default "welcome" alert
+                    newAlerts.push({
+                        id: generateId(),
+                        type: "security_change",
+                        severity: "low",
+                        title: "Security Alerts Enabled",
+                        description: "Security alert monitoring has been activated for this account.",
+                        administratorId: getAdminId(),
+                        administratorName: getAdminName(),
+                        administratorEmail: admin.email || "",
+                        source: "System",
+                        device: deviceInfo.device,
+                        browser: deviceInfo.browser,
+                        status: "unread",
+                        read: false,
+                        createdAt: new Date(now.getTime() - 60000).toISOString(),
+                        resolvedAt: null,
+                        dismissedAt: null,
+                        sourceId: "system_init",
+                        metadata: { action: "system_init", details: "Security alerts system initialized" }
+                    });
+
+                    // Add a sample suspicious login alert (simulated)
+                    newAlerts.push({
+                        id: generateId(),
+                        type: "suspicious_login",
+                        severity: "medium",
+                        title: "New Device Login",
+                        description: "Administrator logged in from a new device. " + deviceInfo.device + " (" +
+                            deviceInfo.browser + " on " + deviceInfo.os + ")",
+                        administratorId: getAdminId(),
+                        administratorName: getAdminName(),
+                        administratorEmail: admin.email || "",
+                        source: "Login System",
+                        device: deviceInfo.device,
+                        browser: deviceInfo.browser,
+                        status: "unread",
+                        read: false,
+                        createdAt: new Date(now.getTime() - 300000).toISOString(),
+                        resolvedAt: null,
+                        dismissedAt: null,
+                        sourceId: "new_device_login",
+                        metadata: { action: "new_device_login", details: "New device login detected" }
+                    });
+                }
+
+                // Merge with existing
+                var merged = existingAlerts.concat(newAlerts);
+                saveAlerts(merged);
+                allAlerts = merged;
+            }
+
+            // ─── Apply Filters ──────────────────────────────────────
+            function applyFilters() {
+                var search = searchInput.value.trim().toLowerCase();
+                var severity = severityFilter.value;
+                var status = statusFilter.value;
+                var type = typeFilter.value;
+                var sort = sortFilter.value;
+                var from = dateFrom.value ? new Date(dateFrom.value) : null;
+                var to = dateTo.value ? new Date(dateTo.value) : null;
+                if (to) to.setHours(23, 59, 59, 999);
+
+                filteredAlerts = allAlerts.filter(function(a) {
+                    // Search
+                    var matchesSearch = !search ||
+                        (a.title && a.title.toLowerCase().indexOf(search) !== -1) ||
+                        (a.description && a.description.toLowerCase().indexOf(search) !== -1) ||
+                        (a.administratorName && a.administratorName.toLowerCase().indexOf(search) !== -1) ||
+                        (a.type && a.type.toLowerCase().indexOf(search) !== -1);
+
+                    // Severity
+                    var matchesSeverity = severity === "all" || a.severity === severity;
+
+                    // Status
+                    var statusMap = {
+                        unread: !a.read && a.status !== "resolved" && a.status !== "dismissed",
+                        read: a.read && a.status !== "resolved" && a.status !== "dismissed",
+                        resolved: a.status === "resolved",
+                        dismissed: a.status === "dismissed"
+                    };
+                    var matchesStatus = status === "all" || statusMap[status];
+
+                    // Type
+                    var matchesType = type === "all" || a.type === type;
+
+                    // Date
+                    var createdAt = new Date(a.createdAt);
+                    var matchesDate = true;
+                    if (from && createdAt < from) matchesDate = false;
+                    if (to && createdAt > to) matchesDate = false;
+
+                    return matchesSearch && matchesSeverity && matchesStatus && matchesType && matchesDate;
+                });
+
+                // Sort
+                switch (sort) {
+                    case "newest":
+                        filteredAlerts.sort(function(a, b) { return new Date(b.createdAt).getTime() - new Date(a
+                                .createdAt).getTime(); });
+                        break;
+                    case "oldest":
+                        filteredAlerts.sort(function(a, b) { return new Date(a.createdAt).getTime() - new Date(b
+                                .createdAt).getTime(); });
+                        break;
+                    case "highest":
+                        filteredAlerts.sort(function(a, b) {
+                            return getSeverityOrder(b.severity) - getSeverityOrder(a.severity);
+                        });
+                        break;
+                    case "lowest":
+                        filteredAlerts.sort(function(a, b) {
+                            return getSeverityOrder(a.severity) - getSeverityOrder(b.severity);
+                        });
+                        break;
+                    default:
+                        filteredAlerts.sort(function(a, b) { return new Date(b.createdAt).getTime() - new Date(a
+                                .createdAt).getTime(); });
+                }
+
+                renderStats();
+                renderStatusBanner();
+                renderTable();
+                updateAlertCount();
+            }
+
+            // ─── Render Stats ──────────────────────────────────────
+            function renderStats() {
+                var total = allAlerts.length;
+                var critical = allAlerts.filter(function(a) { return a.severity === "critical" && a.status !==
+                        "dismissed" && a.status !== "resolved"; }).length;
+                var high = allAlerts.filter(function(a) { return a.severity === "high" && a.status !== "dismissed" &&
+                        a.status !== "resolved"; }).length;
+                var unresolved = allAlerts.filter(function(a) { return a.status !== "resolved" && a.status !==
+                        "dismissed"; }).length;
+                var unread = allAlerts.filter(function(a) { return !a.read && a.status !== "resolved" && a.status !==
+                        "dismissed"; }).length;
+
+                var stats = [
+                    { label: "Critical Alerts", value: critical, icon: "🔴", iconClass: "stat-icon--danger",
+                        sub: "Require immediate action" },
+                    { label: "High Priority", value: high, icon: "🟠", iconClass: "stat-icon--orange",
+                        sub: "Urgent attention needed" },
+                    { label: "Unresolved Alerts", value: unresolved, icon: "📋", iconClass: "stat-icon--blue",
+                        sub: "Awaiting action" },
+                    { label: "Unread Alerts", value: unread, icon: "🆕", iconClass: "stat-icon--purple",
+                        sub: "New security events" },
+                ];
+
+                statsGrid.innerHTML = "";
+                stats.forEach(function(s) {
+                    var card = document.createElement("div");
+                    card.className = "stat-card";
+                    card.innerHTML =
+                        '<div class="stat-top">' +
+                        '<span class="stat-label">' + esc(s.label) + '</span>' +
+                        '<span class="stat-icon ' + s.iconClass + '">' + s.icon + '</span>' +
+                        '</div>' +
+                        '<div class="stat-value">' + s.value + '</div>' +
+                        '<div class="stat-sub">' + esc(s.sub) + '</div>';
+                    statsGrid.appendChild(card);
+                });
+            }
+
+            // ─── Render Status Banner ──────────────────────────────
+            function renderStatusBanner() {
+                var critical = allAlerts.filter(function(a) {
+                    return a.severity === "critical" && a.status !== "dismissed" && a.status !== "resolved";
+                }).length;
+                var unresolved = allAlerts.filter(function(a) {
+                    return a.status !== "resolved" && a.status !== "dismissed";
+                }).length;
+
+                if (critical > 0) {
+                    statusBanner.className = "status-banner status-banner--critical";
+                    bannerIcon.textContent = "🚨";
+                    bannerText.textContent = "Critical security alerts require immediate attention.";
+                    bannerActionBtn.textContent = "View Critical Alerts";
+                    bannerActionBtn.onclick = function() {
+                        severityFilter.value = "critical";
+                        applyFilters();
+                    };
+                } else if (unresolved > 0) {
+                    statusBanner.className = "status-banner status-banner--attention";
+                    bannerIcon.textContent = "⚠️";
+                    bannerText.textContent = "Some security alerts require review.";
+                    bannerActionBtn.textContent = "View Unresolved Alerts";
+                    bannerActionBtn.onclick = function() {
+                        statusFilter.value = "unread";
+                        applyFilters();
+                    };
+                } else {
+                    statusBanner.className = "status-banner status-banner--secure";
+                    bannerIcon.textContent = "🛡️";
+                    bannerText.textContent = "No critical security alerts require your attention.";
+                    bannerActionBtn.textContent = "View All Alerts";
+                    bannerActionBtn.onclick = function() {
+                        severityFilter.value = "all";
+                        statusFilter.value = "all";
+                        applyFilters();
+                    };
+                }
+            }
+
+            // ─── Render Table ──────────────────────────────────────
+            function renderTable() {
+                var start = (currentPage - 1) * perPage;
+                var end = Math.min(start + perPage, filteredAlerts.length);
+                var pageItems = filteredAlerts.slice(start, end);
+
+                tableBody.innerHTML = "";
+                emptyState.style.display = filteredAlerts.length === 0 ? "block" : "none";
+
+                if (filteredAlerts.length === 0) {
+                    paginationInfo.textContent = "Showing 0–0 of 0";
+                    paginationBtns.innerHTML = "";
+                    if (searchInput.value || severityFilter.value !== "all" || statusFilter.value !== "all" || typeFilter
+                        .value !== "all" || dateFrom.value || dateTo.value) {
+                        emptyTitle.textContent = "No security alerts found";
+                        emptySub.textContent = "No security alerts match your current filters.";
+                    } else {
+                        emptyTitle.textContent = "No security alerts yet";
+                        emptySub.textContent = "Security alerts will appear here as they are generated.";
+                    }
+                    return;
+                }
+
+                pageItems.forEach(function(a) {
+                    var isSelected = selectedAlerts.indexOf(a.id) !== -1;
+                    var severityClass = "severity-badge--" + a.severity;
+                    var severityLabel = a.severity.charAt(0).toUpperCase() + a.severity.slice(1);
+
+                    var statusClass = "alert-status--";
+                    var statusLabel = "";
+                    if (a.status === "resolved") {
+                        statusClass += "resolved";
+                        statusLabel = "Resolved";
+                    } else if (a.status === "dismissed") {
+                        statusClass += "dismissed";
+                        statusLabel = "Dismissed";
+                    } else if (a.read) {
+                        statusClass += "read";
+                        statusLabel = "Read";
+                    } else {
+                        statusClass += "unread";
+                        statusLabel = "Unread";
+                    }
+
+                    var adminName = a.administratorName || "Unknown";
+
+                    var tr = document.createElement("tr");
+                    tr.className = isSelected ? "selected" : "";
+                    tr.innerHTML =
+                        '<td class="alert-select-cell"><input type="checkbox" class="alert-select" data-id="' +
+                        esc(a.id) + '" ' + (isSelected ? 'checked' : '') + ' /></td>' +
+                        '<td><span class="severity-badge ' + severityClass + '"><span class="dot"></span>' +
+                        severityLabel + '</span></td>' +
+                        '<td><div class="alert-title-cell"><span class="at-title">' + esc(a.title) +
+                        '</span><span class="at-desc">' + esc(a.description) + '</span></div></td>' +
+                        '<td>' + esc(adminName) + '</td>' +
+                        '<td>' + esc(a.source || "—") + '</td>' +
+                        '<td>' + fmtDateTime(a.createdAt) + '</td>' +
+                        '<td><span class="alert-status ' + statusClass + '">' + statusLabel + '</span></td>' +
+                        '<td><div class="row-actions">' +
+                        '<button class="row-action-btn row-action-btn--view" data-action="view" data-id="' +
+                        esc(a.id) + '" title="View Details">👁</button>' +
+                        (!a.read && a.status !== "resolved" && a.status !== "dismissed" ?
+                            '<button class="row-action-btn row-action-btn--read" data-action="mark-read" data-id="' +
+                            esc(a.id) + '" title="Mark Read">📖</button>' :
+                            '') +
+                        (a.read && a.status !== "resolved" && a.status !== "dismissed" ?
+                            '<button class="row-action-btn" data-action="mark-unread" data-id="' + esc(a.id) +
+                            '" title="Mark Unread">📄</button>' :
+                            '') +
+                        (a.status !== "resolved" && a.status !== "dismissed" ?
+                            '<button class="row-action-btn row-action-btn--resolve" data-action="resolve" data-id="' +
+                            esc(a.id) + '" title="Resolve">✅</button>' :
+                            '') +
+                        (a.status !== "dismissed" && a.status !== "resolved" ?
+                            '<button class="row-action-btn row-action-btn--dismiss" data-action="dismiss" data-id="' +
+                            esc(a.id) + '" title="Dismiss">✕</button>' :
+                            '') +
+                        '</div></td>';
+                    tableBody.appendChild(tr);
+                });
+
+                paginationInfo.textContent = "Showing " + (start + 1) + "–" + end + " of " + filteredAlerts.length;
+                renderPagination();
+                updateBulkToolbar();
+                updateSelectAll();
+            }
+
+            // ─── Pagination ─────────────────────────────────────────
+            function renderPagination() {
+                var total = filteredAlerts.length;
+                var totalPages = Math.ceil(total / perPage);
+                paginationBtns.innerHTML = "";
+
+                if (totalPages <= 1) {
+                    var prevBtn = document.createElement("button");
+                    prevBtn.textContent = "‹";
+                    prevBtn.disabled = true;
+                    paginationBtns.appendChild(prevBtn);
+
+                    var currBtn = document.createElement("button");
+                    currBtn.textContent = "1";
+                    currBtn.className = "active";
+                    paginationBtns.appendChild(currBtn);
+
+                    var nextBtn = document.createElement("button");
+                    nextBtn.textContent = "›";
+                    nextBtn.disabled = true;
+                    paginationBtns.appendChild(nextBtn);
+                    return;
+                }
+
+                var prevBtn = document.createElement("button");
+                prevBtn.textContent = "‹";
+                prevBtn.disabled = currentPage === 1;
+                prevBtn.addEventListener("click", function() {
+                    if (currentPage > 1) { currentPage--;
+                        renderTable(); }
+                });
+                paginationBtns.appendChild(prevBtn);
+
+                var maxVisible = 5;
+                var startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+                var endPage = Math.min(totalPages, startPage + maxVisible - 1);
+                if (endPage - startPage < maxVisible - 1) {
+                    startPage = Math.max(1, endPage - maxVisible + 1);
+                }
+
+                if (startPage > 1) {
+                    var firstBtn = document.createElement("button");
+                    firstBtn.textContent = "1";
+                    firstBtn.addEventListener("click", function() { currentPage = 1;
+                        renderTable(); });
+                    paginationBtns.appendChild(firstBtn);
+                    if (startPage > 2) {
+                        var dots = document.createElement("button");
+                        dots.textContent = "…";
+                        dots.disabled = true;
+                        paginationBtns.appendChild(dots);
+                    }
+                }
+
+                for (var i = startPage; i <= endPage; i++) {
+                    var btn = document.createElement("button");
+                    btn.textContent = i;
+                    if (i === currentPage) btn.className = "active";
+                    btn.addEventListener("click", function(p) {
+                        return function() { currentPage = p;
+                            renderTable(); };
+                    }(i));
+                    paginationBtns.appendChild(btn);
+                }
+
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+                        var dots2 = document.createElement("button");
+                        dots2.textContent = "…";
+                        dots2.disabled = true;
+                        paginationBtns.appendChild(dots2);
+                    }
+                    var lastBtn = document.createElement("button");
+                    lastBtn.textContent = totalPages;
+                    lastBtn.addEventListener("click", function() { currentPage = totalPages;
+                        renderTable(); });
+                    paginationBtns.appendChild(lastBtn);
+                }
+
+                var nextBtn = document.createElement("button");
+                nextBtn.textContent = "›";
+                nextBtn.disabled = currentPage === totalPages;
+                nextBtn.addEventListener("click", function() {
+                    if (currentPage < totalPages) { currentPage++;
+                        renderTable(); }
+                });
+                paginationBtns.appendChild(nextBtn);
+            }
+
+            // ─── Update Alert Count ────────────────────────────────
+            function updateAlertCount() {
+                var unread = allAlerts.filter(function(a) {
+                    return !a.read && a.status !== "resolved" && a.status !== "dismissed";
+                }).length;
+                alertCountText.textContent = unread + " unread alert" + (unread !== 1 ? "s" : "");
+                alertDot.className = "dot" + (unread > 0 ? " has-alerts" : "");
+            }
+
+            // ─── Update Bulk Toolbar ────────────────────────────────
+            function updateBulkToolbar() {
+                var count = selectedAlerts.length;
+                if (count > 0) {
+                    bulkToolbar.classList.add("visible");
+                    bulkInfo.textContent = count + " alert" + (count !== 1 ? "s" : "") + " selected";
+                } else {
+                    bulkToolbar.classList.remove("visible");
+                }
+            }
+
+            // ─── Update Select All ──────────────────────────────────
+            function updateSelectAll() {
+                var checkboxes = document.querySelectorAll(".alert-select");
+                var checked = document.querySelectorAll(".alert-select:checked");
+                selectAll.checked = checkboxes.length > 0 && checked.length === checkboxes.length;
+            }
+
+            // ─── Select All ─────────────────────────────────────────
+            selectAll.addEventListener("change", function() {
+                var checked = this.checked;
+                document.querySelectorAll(".alert-select").forEach(function(cb) {
+                    cb.checked = checked;
+                    var id = cb.dataset.id;
+                    if (checked) {
+                        if (selectedAlerts.indexOf(id) === -1) selectedAlerts.push(id);
+                    } else {
+                        selectedAlerts = selectedAlerts.filter(function(s) { return s !== id; });
+                    }
+                });
+                // Re-render with selection state
+                renderTable();
+            });
+
+            // ─── Alert Selection ────────────────────────────────────
+            document.addEventListener("change", function(e) {
+                if (e.target.classList.contains("alert-select")) {
+                    var id = e.target.dataset.id;
+                    if (e.target.checked) {
+                        if (selectedAlerts.indexOf(id) === -1) selectedAlerts.push(id);
+                    } else {
+                        selectedAlerts = selectedAlerts.filter(function(s) { return s !== id; });
+                    }
+                    updateBulkToolbar();
+                    updateSelectAll();
+                }
+            });
+
+            // ─── View Alert ──────────────────────────────────────────
+            function viewAlert(id) {
+                var alert = allAlerts.find(function(a) { return a.id === id; });
+                if (!alert) {
+                    toast("Alert not found.", "error");
+                    return;
+                }
+
+                // Mark as read when viewed
+                if (!alert.read && alert.status !== "resolved" && alert.status !== "dismissed") {
+                    alert.read = true;
+                    saveAlerts(allAlerts);
+                    applyFilters();
+                }
+
+                document.getElementById("detailTitle").textContent = alert.title || "Security Alert";
+                document.getElementById("detailSub").textContent = alert.description || "";
+
+                var iconMap = {
+                    critical: "🚨",
+                    high: "⚠️",
+                    medium: "📌",
+                    low: "ℹ️"
+                };
+                document.getElementById("detailIcon").textContent = iconMap[alert.severity] || "📋";
+                document.getElementById("detailIcon").className = "modal-icon modal-icon--" + (alert.severity ===
+                    "critical" ? "danger" : "info");
+
+                var severityLabel = alert.severity.charAt(0).toUpperCase() + alert.severity.slice(1);
+                var statusLabel = alert.status.charAt(0).toUpperCase() + alert.status.slice(1);
+
+                var grid = document.getElementById("detailGrid");
+                grid.innerHTML =
+                    '<div class="ad-item"><span class="ad-label">Severity</span><span class="ad-value"><span class="severity-badge severity-badge--' +
+                    alert.severity + '"><span class="dot"></span>' + severityLabel + '</span></span></div>' +
+                    '<div class="ad-item"><span class="ad-label">Status</span><span class="ad-value"><span class="alert-status alert-status--' +
+                    (alert.status === "resolved" ? "resolved" : alert.status === "dismissed" ? "dismissed" : alert
+                        .read ? "read" : "unread") + '">' + statusLabel + '</span></span></div>' +
+                    '<div class="ad-item"><span class="ad-label">Type</span><span class="ad-value">' + esc(alert
+                        .type || "Other") + '</span></div>' +
+                    '<div class="ad-item"><span class="ad-label">Administrator</span><span class="ad-value">' + esc(
+                        alert.administratorName || "Unknown") + '</span></div>' +
+                    '<div class="ad-item"><span class="ad-label">Source</span><span class="ad-value">' + esc(alert
+                        .source || "—") + '</span></div>' +
+                    '<div class="ad-item"><span class="ad-label">Device</span><span class="ad-value">' + esc(alert
+                        .device || "—") + '</span></div>' +
+                    '<div class="ad-item"><span class="ad-label">Browser</span><span class="ad-value">' + esc(alert
+                        .browser || "—") + '</span></div>' +
+                    '<div class="ad-item"><span class="ad-label">Date &amp; Time</span><span class="ad-value">' +
+                    fmtDateTime(alert.createdAt) + '</span></div>';
+
+                // Timeline
+                var timeline = document.getElementById("detailTimeline");
+                var items = [
+                    { label: "Detected", value: fmtDateTime(alert.createdAt), icon: "🕐" }
+                ];
+                if (alert.read && alert.status !== "unread") {
+                    items.push({ label: "Reviewed", value: fmtDateTime(alert.updatedAt || alert.createdAt),
+                        icon: "👁️" });
+                }
+                if (alert.status === "resolved") {
+                    items.push({ label: "Resolved", value: fmtDateTime(alert.resolvedAt || alert.updatedAt || alert
+                            .createdAt), icon: "✅" });
+                }
+                if (alert.status === "dismissed") {
+                    items.push({ label: "Dismissed", value: fmtDateTime(alert.dismissedAt || alert.updatedAt || alert
+                            .createdAt), icon: "✕" });
+                }
+
+                timeline.innerHTML = items.map(function(item) {
+                    return '<span class="tl-item"><span class="tl-icon">' + item.icon +
+                        '</span><span class="tl-label">' + esc(item.label) + ':</span> ' + esc(item
+                        .value) + '</span>';
+                }).join("");
+
+                // Action buttons
+                var resolveBtn = document.getElementById("detailResolveBtn");
+                var dismissBtn = document.getElementById("detailDismissBtn");
+                var readBtn = document.getElementById("detailReadBtn");
+
+                var canAct = alert.status !== "resolved" && alert.status !== "dismissed";
+
+                resolveBtn.style.display = canAct ? "inline-flex" : "none";
+                dismissBtn.style.display = canAct ? "inline-flex" : "none";
+                readBtn.style.display = (!alert.read && canAct) ? "inline-flex" : "none";
+
+                resolveBtn.onclick = function() {
+                    closeDetailModal();
+                    resolveAlert(alert.id);
+                };
+                dismissBtn.onclick = function() {
+                    closeDetailModal();
+                    dismissAlert(alert.id);
+                };
+                readBtn.onclick = function() {
+                    markAsRead(alert.id);
+                    closeDetailModal();
+                };
+
+                document.getElementById("detailModal").classList.add("is-visible");
+            }
+
+            function closeDetailModal() {
+                document.getElementById("detailModal").classList.remove("is-visible");
+            }
+
+            document.getElementById("detailModal").addEventListener("click", function(e) {
+                if (e.target === this || e.target.closest('[data-action="close-detail"]')) {
+                    closeDetailModal();
+                }
+            });
+
+            // ─── Mark as Read ────────────────────────────────────────
+            function markAsRead(id) {
+                var alert = allAlerts.find(function(a) { return a.id === id; });
+                if (!alert) { toast("Alert not found.", "error"); return; }
+                if (alert.status === "resolved" || alert.status === "dismissed") {
+                    toast("Cannot mark a resolved or dismissed alert as read.", "info");
+                    return;
+                }
+                alert.read = true;
+                alert.updatedAt = new Date().toISOString();
+                saveAlerts(allAlerts);
+                logActivity("alert_marked_read", id);
+                applyFilters();
+                toast("Alert marked as read.", "success");
+            }
+
+            // ─── Mark as Unread ──────────────────────────────────────
+            function markAsUnread(id) {
+                var alert = allAlerts.find(function(a) { return a.id === id; });
+                if (!alert) { toast("Alert not found.", "error"); return; }
+                if (alert.status === "resolved" || alert.status === "dismissed") {
+                    toast("Cannot mark a resolved or dismissed alert as unread.", "info");
+                    return;
+                }
+                alert.read = false;
+                alert.updatedAt = new Date().toISOString();
+                saveAlerts(allAlerts);
+                logActivity("alert_marked_unread", id);
+                applyFilters();
+                toast("Alert marked as unread.", "success");
+            }
+
+            // ─── Resolve Alert ──────────────────────────────────────
+            function resolveAlert(id) {
+                var alert = allAlerts.find(function(a) { return a.id === id; });
+                if (!alert) { toast("Alert not found.", "error"); return; }
+
+                showConfirmModal(
+                    "Resolve this security alert?",
+                    "Resolved alerts will remain in your security history but will no longer appear as unresolved.",
+                    "✅",
+                    "Resolve Alert",
+                    "btn--success",
+                    function() {
+                        alert.status = "resolved";
+                        alert.resolvedAt = new Date().toISOString();
+                        alert.updatedAt = new Date().toISOString();
+                        alert.read = true;
+                        saveAlerts(allAlerts);
+                        logActivity("alert_resolved", id);
+                        applyFilters();
+                        toast("Security alert resolved.", "success");
+                    }
+                );
+            }
+
+            // ─── Dismiss Alert ──────────────────────────────────────
+            function dismissAlert(id) {
+                var alert = allAlerts.find(function(a) { return a.id === id; });
+                if (!alert) { toast("Alert not found.", "error"); return; }
+
+                showConfirmModal(
+                    "Dismiss this security alert?",
+                    "Dismissed alerts will remain in your security history.",
+                    "✕",
+                    "Dismiss",
+                    "btn--warning",
+                    function() {
+                        alert.status = "dismissed";
+                        alert.dismissedAt = new Date().toISOString();
+                        alert.updatedAt = new Date().toISOString();
+                        saveAlerts(allAlerts);
+                        logActivity("alert_dismissed", id);
+                        applyFilters();
+                        toast("Security alert dismissed.", "success");
+                    }
+                );
+            }
+
+            // ─── Mark All Read ──────────────────────────────────────
+            function markAllRead() {
+                var unread = allAlerts.filter(function(a) {
+                    return !a.read && a.status !== "resolved" && a.status !== "dismissed";
+                });
+                if (unread.length === 0) {
+                    toast("All alerts are already read.", "info");
+                    return;
+                }
+
+                showConfirmModal(
+                    "Mark all alerts as read?",
+                    "This will mark all unread alerts as read.",
+                    "📖",
+                    "Mark All Read",
+                    "btn--primary",
+                    function() {
+                        unread.forEach(function(a) {
+                            a.read = true;
+                            a.updatedAt = new Date().toISOString();
+                        });
+                        saveAlerts(allAlerts);
+                        logActivity("all_alerts_marked_read", "all");
+                        applyFilters();
+                        toast("All alerts marked as read.", "success");
+                    }
+                );
+            }
+
+            // ─── Bulk Actions ──────────────────────────────────────
+            function bulkMarkRead() {
+                var ids = selectedAlerts;
+                var alerts = allAlerts.filter(function(a) {
+                    return ids.indexOf(a.id) !== -1 && a.status !== "resolved" && a.status !== "dismissed";
+                });
+                if (alerts.length === 0) {
+                    toast("No resolvable alerts selected.", "info");
+                    return;
+                }
+                alerts.forEach(function(a) {
+                    a.read = true;
+                    a.updatedAt = new Date().toISOString();
+                });
+                saveAlerts(allAlerts);
+                selectedAlerts = [];
+                logActivity("bulk_mark_read", ids.join(","));
+                applyFilters();
+                toast(alerts.length + " alert(s) marked as read.", "success");
+            }
+
+            function bulkMarkUnread() {
+                var ids = selectedAlerts;
+                var alerts = allAlerts.filter(function(a) {
+                    return ids.indexOf(a.id) !== -1 && a.status !== "resolved" && a.status !== "dismissed";
+                });
+                if (alerts.length === 0) {
+                    toast("No alerts selected.", "info");
+                    return;
+                }
+                alerts.forEach(function(a) {
+                    a.read = false;
+                    a.updatedAt = new Date().toISOString();
+                });
+                saveAlerts(allAlerts);
+                selectedAlerts = [];
+                logActivity("bulk_mark_unread", ids.join(","));
+                applyFilters();
+                toast(alerts.length + " alert(s) marked as unread.", "success");
+            }
+
+            function bulkResolve() {
+                var ids = selectedAlerts;
+                var alerts = allAlerts.filter(function(a) {
+                    return ids.indexOf(a.id) !== -1 && a.status !== "resolved" && a.status !== "dismissed";
+                });
+                if (alerts.length === 0) {
+                    toast("No resolvable alerts selected.", "info");
+                    return;
+                }
+
+                showConfirmModal(
+                    "Resolve selected alerts?",
+                    "This will resolve " + alerts.length + " selected alert(s).",
+                    "✅",
+                    "Resolve Alerts",
+                    "btn--success",
+                    function() {
+                        alerts.forEach(function(a) {
+                            a.status = "resolved";
+                            a.resolvedAt = new Date().toISOString();
+                            a.updatedAt = new Date().toISOString();
+                            a.read = true;
+                        });
+                        saveAlerts(allAlerts);
+                        selectedAlerts = [];
+                        logActivity("bulk_resolve", ids.join(","));
+                        applyFilters();
+                        toast(alerts.length + " alert(s) resolved.", "success");
+                    }
+                );
+            }
+
+            function bulkDismiss() {
+                var ids = selectedAlerts;
+                var alerts = allAlerts.filter(function(a) {
+                    return ids.indexOf(a.id) !== -1 && a.status !== "dismissed" && a.status !== "resolved";
+                });
+                if (alerts.length === 0) {
+                    toast("No dismissible alerts selected.", "info");
+                    return;
+                }
+
+                showConfirmModal(
+                    "Dismiss selected alerts?",
+                    "This will dismiss " + alerts.length + " selected alert(s).",
+                    "✕",
+                    "Dismiss Alerts",
+                    "btn--warning",
+                    function() {
+                        alerts.forEach(function(a) {
+                            a.status = "dismissed";
+                            a.dismissedAt = new Date().toISOString();
+                            a.updatedAt = new Date().toISOString();
+                        });
+                        saveAlerts(allAlerts);
+                        selectedAlerts = [];
+                        logActivity("bulk_dismiss", ids.join(","));
+                        applyFilters();
+                        toast(alerts.length + " alert(s) dismissed.", "success");
+                    }
+                );
+            }
+
+            function clearSelection() {
+                selectedAlerts = [];
+                applyFilters();
+            }
+
+            // ─── Export ──────────────────────────────────────────────
+            function exportAlerts() {
+                var dataToExport = filteredAlerts.length > 0 ? filteredAlerts : allAlerts;
+                if (dataToExport.length === 0) {
+                    toast("No alerts to export.", "info");
+                    return;
+                }
+
+                var headers = ["ID", "Severity", "Type", "Title", "Description", "Administrator", "Source", "Device",
+                    "Browser", "Status", "Read", "Created", "Resolved", "Dismissed"
+                ];
+                var rows = dataToExport.map(function(a) {
+                    return [
+                        a.id,
+                        a.severity,
+                        a.type || "",
+                        a.title || "",
+                        a.description || "",
+                        a.administratorName || "",
+                        a.source || "",
+                        a.device || "",
+                        a.browser || "",
+                        a.status || "",
+                        a.read ? "Yes" : "No",
+                        a.createdAt || "",
+                        a.resolvedAt || "",
+                        a.dismissedAt || ""
+                    ];
+                });
+
+                var csv = headers.join(",") + "\n";
+                rows.forEach(function(row) {
+                    csv += row.map(function(cell) {
+                        var str = String(cell);
+                        if (str.indexOf(",") !== -1 || str.indexOf('"') !== -1) {
+                            return '"' + str.replace(/"/g, '""') + '"';
+                        }
+                        return str;
+                    }).join(",") + "\n";
+                });
+
+                var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+                var link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = "security_alerts_" + new Date().toISOString().slice(0, 10) + ".csv";
+                link.click();
+                URL.revokeObjectURL(link.href);
+                toast("Security alerts exported successfully.", "success");
+            }
+
+            // ─── Alert Settings ─────────────────────────────────────
+            function openSettings() {
+                var settings = getAlertSettings();
+                var grid = document.getElementById("settingsGrid");
+
+                var typeLabels = {
+                    suspicious_login: "Suspicious Login",
+                    failed_login: "Failed Login",
+                    new_admin: "New Administrator",
+                    role_change: "Role Change",
+                    permission_change: "Permission Change",
+                    password_change: "Password Change",
+                    session_activity: "Session Activity",
+                    security_change: "Security Setting Change",
+                    other: "Other"
+                };
+
+                var html = '';
+                html +=
+                    '<div class="setting-row-sm" style="grid-column:1/-1;border-bottom:2px solid var(--border-light);padding-bottom:8px;">' +
+                    '<span class="setting-label-sm" style="font-weight:700;">Enable Security Alerts</span>' +
+                    '<div class="setting-control-sm">' +
+                    '<label class="toggle-switch-sm"><input type="checkbox" id="settingsEnabled" ' + (settings
+                        .enabled ? 'checked' : '') + ' /><span class="slider-sm"></span></label>' +
+                    '</div></div>';
+
+                html +=
+                    '<div class="setting-row-sm" style="grid-column:1/-1;border-bottom:2px solid var(--border-light);padding-bottom:8px;margin-bottom:4px;">' +
+                    '<span class="setting-label-sm" style="font-weight:700;">Alert Types</span>' +
+                    '</div>';
+
+                for (var key in typeLabels) {
+                    html +=
+                        '<div class="setting-row-sm">' +
+                        '<span class="setting-label-sm">' + esc(typeLabels[key]) + '</span>' +
+                        '<div class="setting-control-sm">' +
+                        '<label class="toggle-switch-sm"><input type="checkbox" class="settings-type" data-type="' +
+                        esc(key) + '" ' + (settings.types[key] !== false ? 'checked' : '') + ' /><span class="slider-sm"></span></label>' +
+                        '</div></div>';
+                }
+
+                html +=
+                    '<div class="setting-row-sm" style="grid-column:1/-1;border-top:2px solid var(--border-light);padding-top:8px;margin-top:4px;">' +
+                    '<span class="setting-label-sm">Critical Alerts</span>' +
+                    '<div class="setting-control-sm">' +
+                    '<label class="toggle-switch-sm"><input type="checkbox" id="settingsCritical" ' + (settings
+                        .criticalEnabled ? 'checked' : '') + ' /><span class="slider-sm"></span></label>' +
+                    '</div></div>';
+
+                grid.innerHTML = html;
+
+                document.getElementById("settingsModal").classList.add("is-visible");
+            }
+
+            function saveSettings() {
+                var settings = getAlertSettings();
+                settings.enabled = document.getElementById("settingsEnabled").checked;
+                settings.criticalEnabled = document.getElementById("settingsCritical").checked;
+
+                document.querySelectorAll(".settings-type").forEach(function(cb) {
+                    settings.types[cb.dataset.type] = cb.checked;
+                });
+
+                saveAlertSettings(settings);
+                alertSettings = settings;
+                toast("Alert settings saved.", "success");
+                document.getElementById("settingsModal").classList.remove("is-visible");
+                // Regenerate alerts if needed
+                generateAlertsFromLogs();
+                applyFilters();
+            }
+
+            document.getElementById("settingsModal").addEventListener("click", function(e) {
+                if (e.target === this || e.target.closest('[data-action="close-settings"]')) {
+                    this.classList.remove("is-visible");
+                }
+            });
+
+            document.getElementById("settingsSaveBtn").addEventListener("click", saveSettings);
+
+            // ─── Log Activity ────────────────────────────────────────
+            function logActivity(action, targetId) {
+                try {
+                    var logs = JSON.parse(localStorage.getItem("receiptly_activity_logs") || "[]");
+                    logs.push({
+                        adminId: getAdminId(),
+                        adminName: getAdminName(),
+                        action: action,
+                        targetId: targetId || "",
+                        details: "Security alert action",
+                        timestamp: new Date().toISOString()
+                    });
+                    if (logs.length > 500) logs = logs.slice(-500);
+                    localStorage.setItem("receiptly_activity_logs", JSON.stringify(logs));
+                } catch (_) {}
+            }
+
+            // ─── Confirm Modal ──────────────────────────────────────
+            var confirmModal = document.getElementById("confirmModal");
+            var confirmIcon = document.getElementById("confirmIcon");
+            var confirmTitle = document.getElementById("confirmTitle");
+            var confirmMsg = document.getElementById("confirmMsg");
+            var confirmOkBtn = document.getElementById("confirmOkBtn");
+            var confirmResolve = null;
+
+            function showConfirmModal(title, msg, icon, confirmText, confirmClass, onConfirm) {
+                confirmIcon.textContent = icon || "⚠️";
+                confirmIcon.className = "modal-icon";
+                if (icon === "⚠️") confirmIcon.classList.add("modal-icon--danger");
+                else if (icon === "✅") confirmIcon.classList.add("modal-icon--success");
+                else if (icon === "📖") confirmIcon.classList.add("modal-icon--info");
+                else confirmIcon.classList.add("modal-icon--warning");
+
+                confirmTitle.textContent = title;
+                confirmMsg.innerHTML = msg;
+                confirmOkBtn.textContent = confirmText || "Confirm";
+                confirmOkBtn.className = "btn " + (confirmClass || "btn--danger");
+
+                confirmModal.classList.add("is-visible");
+
+                return new Promise(function(resolve) {
+                    confirmResolve = resolve;
+                }).then(function(result) {
+                    if (result && onConfirm) onConfirm();
+                });
+            }
+
+            function closeConfirmModal() {
+                confirmModal.classList.remove("is-visible");
+                if (confirmResolve) confirmResolve(false);
+                confirmResolve = null;
+            }
+
+            confirmModal.addEventListener("click", function(e) {
+                if (e.target === confirmModal || e.target.closest('[data-action="close-confirm"]') || e.target
+                    .closest('[data-action="cancel-confirm"]')) {
+                    closeConfirmModal();
+                }
+                if (e.target.closest('[data-action="ok-confirm"]')) {
+                    confirmModal.classList.remove("is-visible");
+                    if (confirmResolve) confirmResolve(true);
+                    confirmResolve = null;
+                }
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  9. EVENT LISTENERS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            // Table row actions
+            tableBody.addEventListener("click", function(e) {
+                var btn = e.target.closest("[data-action]");
+                if (!btn) return;
+                var action = btn.dataset.action;
+                var id = btn.dataset.id;
+
+                switch (action) {
+                    case "view":
+                        viewAlert(id);
+                        break;
+                    case "mark-read":
+                        markAsRead(id);
+                        break;
+                    case "mark-unread":
+                        markAsUnread(id);
+                        break;
+                    case "resolve":
+                        resolveAlert(id);
+                        break;
+                    case "dismiss":
+                        dismissAlert(id);
+                        break;
+                }
+            });
+
+            // Search
+            searchInput.addEventListener("input", function() {
+                if (this.value.length > 0) {
+                    clearSearch.classList.add("visible");
+                } else {
+                    clearSearch.classList.remove("visible");
+                }
+                currentPage = 1;
+                applyFilters();
+            });
+
+            clearSearch.addEventListener("click", function() {
+                searchInput.value = "";
+                clearSearch.classList.remove("visible");
+                currentPage = 1;
+                applyFilters();
+            });
+
+            // Filters
+            severityFilter.addEventListener("change", function() { currentPage = 1;
+                applyFilters(); });
+            statusFilter.addEventListener("change", function() { currentPage = 1;
+                applyFilters(); });
+            typeFilter.addEventListener("change", function() { currentPage = 1;
+                applyFilters(); });
+            sortFilter.addEventListener("change", function() { currentPage = 1;
+                applyFilters(); });
+            dateFrom.addEventListener("change", function() { currentPage = 1;
+                applyFilters(); });
+            dateTo.addEventListener("change", function() { currentPage = 1;
+                applyFilters(); });
+
+            searchBtn.addEventListener("click", function() { currentPage = 1;
+                applyFilters(); });
+            resetBtn.addEventListener("click", function() {
+                searchInput.value = "";
+                clearSearch.classList.remove("visible");
+                severityFilter.value = "all";
+                statusFilter.value = "all";
+                typeFilter.value = "all";
+                sortFilter.value = "newest";
+                dateFrom.value = "";
+                dateTo.value = "";
+                currentPage = 1;
+                applyFilters();
+                toast("Filters reset.", "success");
+            });
+
+            // Pagination
+            perPageSelect.addEventListener("change", function() {
+                perPage = parseInt(this.value);
+                currentPage = 1;
+                renderTable();
+            });
+
+            // Bulk actions
+            document.getElementById("bulkMarkRead").addEventListener("click", bulkMarkRead);
+            document.getElementById("bulkMarkUnread").addEventListener("click", bulkMarkUnread);
+            document.getElementById("bulkResolve").addEventListener("click", bulkResolve);
+            document.getElementById("bulkDismiss").addEventListener("click", bulkDismiss);
+            document.getElementById("bulkClear").addEventListener("click", clearSelection);
+
+            // Mark All Read
+            markAllReadBtn.addEventListener("click", markAllRead);
+
+            // Export
+            exportBtn.addEventListener("click", exportAlerts);
+
+            // Settings
+            settingsBtn.addEventListener("click", openSettings);
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  10. INIT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            loadAlerts();
+
+            // Set initial sort indicator
+            document.querySelector("#alertTable th[data-sort='createdAt']")?.classList.add("sorted");
+
+        })();
+    </script>
+</body>
+</html>

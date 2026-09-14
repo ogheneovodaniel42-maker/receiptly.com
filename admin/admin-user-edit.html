@@ -1,0 +1,2543 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit User — Receiptly Owner</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ════════════════════════════════════════════════════════════
+               CSS VARIABLES & RESET
+               ════════════════════════════════════════════════════════════ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-display: "Fraunces", Georgia, serif;
+
+            --bg-body: #f1f5f9;
+            --bg-card: rgba(255, 255, 255, 0.78);
+            --bg-card-border: rgba(255, 255, 255, 0.30);
+            --bg-input: #f1f5f9;
+            --bg-input-hover: #e8edf5;
+            --bg-sidebar: rgba(255, 255, 255, 0.92);
+            --bg-header: rgba(255, 255, 255, 0.72);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --text-inverse: #ffffff;
+            --accent: #7c3aed;
+            --accent-dark: #6d28d9;
+            --accent-glow: rgba(124, 58, 237, 0.25);
+            --accent-soft: #ede9fe;
+            --accent-light: #d8b4fe;
+            --border-light: #e2e8f0;
+            --border-strong: #cbd5e1;
+            --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 8px 30px rgba(15, 23, 42, 0.06);
+            --shadow-lg: 0 20px 60px rgba(15, 23, 42, 0.10);
+            --shadow-input: 0 0 0 4px rgba(124, 58, 237, 0.10);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --blur-amount: 20px;
+            --sidebar-width: 260px;
+            --header-height: 64px;
+            --success: #059669;
+            --success-soft: #ecfdf5;
+            --error: #dc2626;
+            --error-soft: #fef2f2;
+            --orange: #d97706;
+            --orange-soft: #fffbeb;
+            --blue: #2563eb;
+            --blue-soft: #eff6ff;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0b1220;
+            --bg-card: rgba(17, 27, 46, 0.80);
+            --bg-card-border: rgba(255, 255, 255, 0.05);
+            --bg-input: #1e293b;
+            --bg-input-hover: #263348;
+            --bg-sidebar: rgba(15, 23, 42, 0.92);
+            --bg-header: rgba(11, 18, 32, 0.80);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent: #8b5cf6;
+            --accent-dark: #7c3aed;
+            --accent-glow: rgba(139, 92, 246, 0.20);
+            --accent-soft: rgba(139, 92, 246, 0.12);
+            --accent-light: #a78bfa;
+            --border-light: #1e293b;
+            --border-strong: #334155;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.35);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+            --shadow-input: 0 0 0 4px rgba(139, 92, 246, 0.15);
+            --success: #34d399;
+            --success-soft: #064e3b;
+            --error: #f87171;
+            --error-soft: #450a0a;
+            --orange: #fbbf24;
+            --orange-soft: #2a1f0f;
+            --blue: #60a5fa;
+            --blue-soft: #1e293b;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: var(--font-sans);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            transition: background var(--transition-slow), color var(--transition-slow);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        button {
+            font: inherit;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: inherit;
+        }
+        input,
+        select,
+        textarea {
+            font: inherit;
+            color: inherit;
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-strong);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* ─── APP LAYOUT ─────────────────────────────────────────── */
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ─── SIDEBAR ────────────────────────────────────────────── */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-right: 1px solid var(--bg-card-border);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition), background var(--transition-slow), border-color var(--transition-slow);
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-bottom: 20px;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 20px 16px;
+            border-bottom: 1px solid var(--border-light);
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand .brand-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 800;
+            flex-shrink: 0;
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+
+        .sidebar-brand .brand-text {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        .sidebar-brand .brand-text .accent {
+            color: var(--accent);
+        }
+        .sidebar-brand .brand-sub {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 1px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .sidebar-nav .nav-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            padding: 12px 14px 6px;
+        }
+
+        .sidebar-nav .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            width: 100%;
+            text-align: left;
+            position: relative;
+        }
+
+        .sidebar-nav .nav-item .nav-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            opacity: 0.6;
+            transition: opacity var(--transition);
+        }
+
+        .sidebar-nav .nav-item:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+        .sidebar-nav .nav-item:hover .nav-icon {
+            opacity: 1;
+        }
+        .sidebar-nav .nav-item.active {
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .sidebar-nav .nav-item.active .nav-icon {
+            opacity: 1;
+            color: var(--accent);
+        }
+        .sidebar-nav .nav-item.active::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 6px;
+            bottom: 6px;
+            width: 3px;
+            border-radius: 0 4px 4px 0;
+            background: var(--accent);
+        }
+
+        .sidebar-footer {
+            padding: 12px 12px 0;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            width: 100%;
+            text-align: left;
+        }
+        .sidebar-footer .nav-item .nav-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            opacity: 0.6;
+        }
+        .sidebar-footer .nav-item:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+        .sidebar-footer .nav-item.logout:hover {
+            color: var(--error);
+        }
+        .sidebar-footer .nav-item.logout:hover .nav-icon {
+            opacity: 1;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+            display: none;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .sidebar-overlay.open {
+            display: block;
+        }
+
+        /* ─── MAIN ───────────────────────────────────────────────── */
+        .main {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left var(--transition);
+        }
+        .main.sidebar-closed {
+            margin-left: 0;
+        }
+
+        /* ─── TOP HEADER ────────────────────────────────────────── */
+        .top-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-header);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-bottom: 1px solid var(--bg-card-border);
+            padding: 0 24px;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            transition: background var(--transition-slow), border-color var(--transition-slow);
+        }
+
+        .top-header__left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 4.5px;
+            padding: 6px;
+            border-radius: var(--radius-sm);
+            transition: background var(--transition);
+        }
+        .hamburger:hover {
+            background: var(--bg-input);
+        }
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2.5px;
+            background: var(--text-primary);
+            border-radius: 100px;
+            transition: all 0.3s ease;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        .top-header__title {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .top-header__title .sub {
+            font-weight: 400;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-left: 6px;
+        }
+
+        .top-header__right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .header-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            font-size: 1rem;
+        }
+        .header-btn:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+
+        .header-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 14px 4px 4px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+            transition: all var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+        .header-profile:hover {
+            border-color: var(--border-strong);
+            background: var(--bg-input);
+        }
+        .header-profile .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+        .header-profile .profile-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        .header-profile .profile-info .name {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .header-profile .profile-info .role {
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+        }
+        .header-profile .chevron {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            margin-left: 2px;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            min-width: 200px;
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            padding: 8px 0;
+            display: none;
+            z-index: 200;
+            overflow: hidden;
+        }
+        .profile-dropdown.open {
+            display: block;
+            animation: dropDown 0.2s ease;
+        }
+        @keyframes dropDown {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .profile-dropdown .drop-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 18px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            width: 100%;
+            text-align: left;
+        }
+        .profile-dropdown .drop-item:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+        .profile-dropdown .drop-item svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            opacity: 0.6;
+        }
+        .profile-dropdown .divider {
+            height: 1px;
+            background: var(--border-light);
+            margin: 4px 12px;
+        }
+        .profile-dropdown .drop-item.logout {
+            color: var(--error);
+        }
+        .profile-dropdown .drop-item.logout:hover {
+            background: var(--error-soft);
+        }
+
+        /* ─── PAGE CONTENT ──────────────────────────────────────── */
+        .page-content {
+            flex: 1;
+            padding: 24px 24px 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* ─── BACK LINK ──────────────────────────────────────────── */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            transition: color var(--transition);
+        }
+        .back-link:hover {
+            color: var(--text-primary);
+        }
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ─── PAGE HEADER ────────────────────────────────────────── */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        .page-header h1 .highlight {
+            background: linear-gradient(135deg, var(--accent), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 1px;
+        }
+
+        .page-header .action-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 20px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.82rem;
+            transition: all var(--transition);
+            border: 1px solid transparent;
+        }
+        .btn--outline {
+            border-color: var(--border-light);
+            color: var(--text-secondary);
+            background: transparent;
+        }
+        .btn--outline:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+        .btn--primary {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn--primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+        .btn--success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn--success:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25);
+        }
+        .btn--danger {
+            background: var(--error);
+            color: #fff;
+        }
+        .btn--danger:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25);
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ─── PANELS ──────────────────────────────────────────────── */
+        .panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 20px;
+            transition: all var(--transition);
+        }
+        .panel:hover {
+            border-color: var(--border-strong);
+        }
+
+        .panel-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .panel-header h3 {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .panel-header .panel-sub {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .panel-body {
+            padding: 20px;
+        }
+
+        /* ─── FORM ────────────────────────────────────────────────── */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0.01em;
+        }
+        .form-group label .required {
+            color: var(--error);
+            margin-left: 2px;
+        }
+
+        .form-group .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--bg-input);
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition);
+        }
+        .form-group .input-wrap:focus-within {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-input);
+            background: var(--bg-card);
+        }
+        .form-group .input-wrap .input-icon {
+            padding: 0 0 0 14px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            font-size: 0.85rem;
+        }
+        .form-group .input-wrap input,
+        .form-group .input-wrap select,
+        .form-group .input-wrap textarea {
+            flex: 1;
+            width: 100%;
+            padding: 10px 14px;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 0.88rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: color var(--transition);
+            min-height: 42px;
+        }
+        .form-group .input-wrap textarea {
+            resize: vertical;
+            min-height: 60px;
+            font-weight: 400;
+        }
+        .form-group .input-wrap input::placeholder,
+        .form-group .input-wrap textarea::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 0.82rem;
+        }
+        .form-group .input-wrap select {
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            padding-right: 36px;
+        }
+        .form-group .input-wrap .select-arrow {
+            position: absolute;
+            right: 14px;
+            color: var(--text-muted);
+            pointer-events: none;
+            font-size: 0.6rem;
+        }
+
+        .form-group .input-wrap.has-error {
+            border-color: var(--error);
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.08);
+        }
+        .form-group .input-wrap.has-error:focus-within {
+            border-color: var(--error);
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.12);
+        }
+
+        .form-group .field-error {
+            font-size: 0.72rem;
+            color: var(--error);
+            font-weight: 500;
+            display: none;
+            margin-top: 2px;
+        }
+        .form-group .field-error.show {
+            display: block;
+        }
+
+        .form-group .field-hint {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* ─── PROFILE PICTURE ────────────────────────────────────── */
+        .avatar-upload {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .avatar-upload .avatar-preview {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: var(--accent-soft);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            border: 2px solid var(--border-light);
+            overflow: hidden;
+        }
+        .avatar-upload .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .avatar-upload .avatar-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .avatar-upload .avatar-actions .btn-sm {
+            padding: 5px 14px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            cursor: pointer;
+        }
+        .avatar-upload .avatar-actions .btn-sm:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+        .avatar-upload .avatar-actions .btn-sm.danger:hover {
+            border-color: var(--error);
+            color: var(--error);
+            background: var(--error-soft);
+        }
+
+        /* ─── DANGER ZONE ────────────────────────────────────────── */
+        .danger-zone {
+            border: 1px solid var(--error);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            background: var(--error-soft);
+            margin-top: 4px;
+        }
+        .danger-zone .danger-title {
+            font-weight: 700;
+            color: var(--error);
+            font-size: 0.85rem;
+        }
+        .danger-zone .danger-desc {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            margin: 4px 0 12px;
+        }
+
+        /* ─── TOAST ──────────────────────────────────────────────── */
+        .toast-host {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 380px;
+            width: 100%;
+        }
+
+        .toast {
+            padding: 12px 18px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast.hide {
+            transform: translateX(120%);
+            opacity: 0;
+        }
+        .toast .t-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+        .toast.error .t-icon {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .toast.success .t-icon {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .toast.info .t-icon {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+        .toast .t-msg {
+            flex: 1;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .toast .t-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0 4px;
+            transition: color var(--transition);
+            line-height: 1;
+        }
+        .toast .t-close:hover {
+            color: var(--text-primary);
+        }
+
+        /* ─── MODALS ─────────────────────────────────────────────── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .modal-overlay.is-visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            max-width: 460px;
+            width: 100%;
+            padding: 28px 30px;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(12px) scale(0.98);
+            transition: transform var(--transition);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .modal-overlay.is-visible .modal {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+        .modal .modal-icon--danger {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .modal .modal-icon--warning {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .modal .modal-icon--success {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+
+        .modal .modal-title {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 4px;
+        }
+        .modal .modal-msg {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .modal .modal-msg strong {
+            color: var(--text-primary);
+        }
+
+        .modal .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* ─── SAVE STATUS ────────────────────────────────────────── */
+        .save-status {
+            display: none;
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            font-weight: 500;
+            margin-top: 12px;
+        }
+        .save-status.show {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .save-status.success {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .save-status.error {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+
+        /* ─── NOT FOUND ──────────────────────────────────────────── */
+        .not-found {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .not-found svg {
+            width: 64px;
+            height: 64px;
+            opacity: 0.3;
+            margin-bottom: 16px;
+            color: var(--text-muted);
+        }
+        .not-found h2 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        .not-found p {
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .not-found .btn {
+            margin-top: 16px;
+        }
+
+        /* ─── SKELETON ───────────────────────────────────────────── */
+        .skeleton {
+            background: var(--bg-input);
+            border-radius: 6px;
+            animation: pulse 1.5s ease-in-out infinite;
+            height: 20px;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+        .skeleton-text {
+            height: 14px;
+            margin-bottom: 4px;
+        }
+        .skeleton-text.w-75 {
+            width: 75%;
+        }
+        .skeleton-text.w-50 {
+            width: 50%;
+        }
+        .skeleton-text.w-25 {
+            width: 25%;
+        }
+        .skeleton-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ─── RESPONSIVE ─────────────────────────────────────────── */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main {
+                margin-left: 0;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .top-header {
+                padding: 0 16px;
+            }
+            .page-content {
+                padding: 16px 16px 32px;
+            }
+            .header-profile .profile-info {
+                display: none;
+            }
+            .header-profile .chevron {
+                display: none;
+            }
+            .header-profile {
+                padding: 4px;
+                border: none;
+                background: transparent;
+            }
+            .header-profile:hover {
+                background: transparent;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .page-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .page-header .action-group {
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .top-header__title .sub {
+                display: none;
+            }
+            .page-content {
+                padding: 12px 12px 24px;
+            }
+            .panel-body {
+                padding: 14px 16px;
+            }
+            .modal {
+                padding: 20px 18px;
+            }
+            .toast-host {
+                bottom: 16px;
+                right: 16px;
+                left: 16px;
+                max-width: none;
+            }
+            .avatar-upload {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .avatar-upload .avatar-actions {
+                justify-content: center;
+            }
+            .page-header h1 {
+                font-size: 1.2rem;
+            }
+            .form-group .input-wrap input,
+            .form-group .input-wrap select,
+            .form-group .input-wrap textarea {
+                font-size: 0.82rem;
+                padding: 8px 12px;
+                min-height: 38px;
+            }
+            .btn {
+                padding: 7px 16px;
+                font-size: 0.78rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .sidebar {
+                transition: none;
+            }
+            .toast {
+                transition: none;
+            }
+            .modal {
+                transition: none;
+            }
+            .skeleton {
+                animation: none;
+                opacity: 0.4;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ════════════════════════════════════════════════════════════
+    SIDEBAR
+    ════════════════════════════════════════════════════════════ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <span class="brand-icon">R</span>
+            <div class="brand-text">
+                Receipt<span class="accent">ly</span>
+                <span class="brand-sub">Owner Panel</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-label">Main</div>
+            <a class="nav-item" href="admin-dashboard.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a class="nav-item" href="admin-analytics.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M4 20l16-16"/></svg>
+                Analytics
+            </a>
+
+            <div class="nav-label">Management</div>
+            <a class="nav-item active" href="admin-users.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Users
+            </a>
+            <div class="nav-label">Finance</div>
+            <a class="nav-item" href="admin-payments.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                Payments
+            </a>
+            <div class="nav-label">Content</div>
+            <a class="nav-item" href="admin-templates.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+                Templates
+            </a>
+            <a class="nav-item" href="admin-announcements.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                Announcements
+            </a>
+
+            <div class="nav-label">Communication</div>
+            <a class="nav-item" href="admin-support.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Support
+            </a>
+            <a class="nav-item" href="admin-messages.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Messages
+                <span id="msgNavBadge" style="margin-left:auto;background:#dc2626;color:#fff;font-size:0.65rem;font-weight:800;border-radius:999px;padding:1px 6px;min-width:16px;text-align:center;display:none;">0</span>
+            </a>
+            <a class="nav-item" href="admin-reports.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Reports
+            </a>
+
+            <div class="nav-label">Administration</div>
+            <a class="nav-item" href="admin-settings.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Settings
+            </a>
+            <a class="nav-item" href="admin-roles.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Roles &amp; Permissions
+            </a>
+            <a class="nav-item" href="admin-permissions.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Permissions
+            </a>
+            <a class="nav-item" href="admin-sessions.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Sessions
+            </a>
+            <a class="nav-item" href="admin-security.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Security
+            </a>
+            <a class="nav-item" href="company-profile.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Company Profile
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="nav-item logout" id="logoutBtn">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+                Logout
+            </button>
+        </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    MAIN CONTENT
+    ════════════════════════════════════════════════════════════ -->
+    <div class="main" id="mainContent">
+        <!-- TOP HEADER -->
+        <header class="top-header">
+            <div class="top-header__left">
+                <button class="hamburger" id="hamburger" aria-label="Toggle sidebar">
+                    <span></span><span></span><span></span>
+                </button>
+                <div class="top-header__title">
+                    Edit User
+                    <span class="sub">Update account</span>
+                </div>
+            </div>
+
+            <div class="top-header__right">
+                <button class="header-btn" id="themeToggleBtn" aria-label="Toggle theme">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                </button>
+
+                <div class="header-profile" id="profileBtn">
+                    <div class="avatar" id="headerAvatar">A</div>
+                    <div class="profile-info">
+                        <span class="name" id="headerName">Admin</span>
+                        <span class="role">Super Admin</span>
+                    </div>
+                    <span class="chevron">▾</span>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <button class="drop-item" data-page="account-profile.html">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            My Account
+                        </button>
+                        <button class="drop-item" data-page="admin-settings.html">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                            Settings
+                        </button>
+                        <div class="divider"></div>
+                        <button class="drop-item logout" id="dropdownLogout">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- PAGE CONTENT -->
+        <div class="page-content" id="pageContent">
+
+            <!-- ─── BACK LINK ─────────────────────────────────────── -->
+            <a href="admin-users.html" class="back-link" id="backLink">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+                Back to Users
+            </a>
+
+            <!-- ─── LOADING SKELETON ─────────────────────────────── -->
+            <div id="loadingState">
+                <div class="panel">
+                    <div class="panel-header"><h3>Loading user data...</h3></div>
+                    <div class="panel-body">
+                        <div class="form-grid">
+                            <div class="form-group"><div class="skeleton" style="height:14px;width:80px;"></div><div class="skeleton" style="height:42px;"></div></div>
+                            <div class="form-group"><div class="skeleton" style="height:14px;width:80px;"></div><div class="skeleton" style="height:42px;"></div></div>
+                            <div class="form-group"><div class="skeleton" style="height:14px;width:80px;"></div><div class="skeleton" style="height:42px;"></div></div>
+                            <div class="form-group"><div class="skeleton" style="height:14px;width:80px;"></div><div class="skeleton" style="height:42px;"></div></div>
+                            <div class="form-group full-width"><div class="skeleton" style="height:14px;width:80px;"></div><div class="skeleton" style="height:42px;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ─── USER CONTENT ──────────────────────────────────── -->
+            <div id="userContent" style="display:none;">
+
+                <!-- ─── PAGE HEADER ────────────────────────────────── -->
+                <div class="page-header">
+                    <div>
+                        <h1>Edit <span class="highlight" id="pageUserName">User</span></h1>
+                        <p id="pageSub">Update this Receiptly account's information and account settings.</p>
+                    </div>
+                    <div class="action-group">
+                        <button class="btn btn--outline" id="cancelBtn">Cancel</button>
+                        <button class="btn btn--primary" id="saveBtn">💾 Save Changes</button>
+                    </div>
+                </div>
+
+                <!-- ─── FORM ────────────────────────────────────────── -->
+                <form id="editForm" novalidate>
+
+                    <!-- Profile Information -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Profile Information</h3>
+                            <span class="panel-sub">Personal details</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-grid">
+                                <!-- Avatar -->
+                                <div class="form-group full-width">
+                                    <label>Profile Picture</label>
+                                    <div class="avatar-upload">
+                                        <div class="avatar-preview" id="avatarPreview">JD</div>
+                                        <div class="avatar-actions">
+                                            <button type="button" class="btn-sm" id="avatarReplaceBtn">Replace</button>
+                                            <button type="button" class="btn-sm danger" id="avatarRemoveBtn">Remove</button>
+                                        </div>
+                                    </div>
+                                    <input type="file" id="avatarFileInput" accept="image/*" style="display:none;" />
+                                    <div class="field-hint">Upload a profile image for this user.</div>
+                                </div>
+
+                                <!-- Full Name -->
+                                <div class="form-group full-width">
+                                    <label for="fullName">Full Name <span class="required">*</span></label>
+                                    <div class="input-wrap" id="nameWrap">
+                                        <span class="input-icon">👤</span>
+                                        <input type="text" id="fullName" placeholder="Enter full name" autocomplete="off" />
+                                    </div>
+                                    <div class="field-error" id="nameError">Please enter a valid name.</div>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="form-group full-width">
+                                    <label for="email">Email Address <span class="required">*</span></label>
+                                    <div class="input-wrap" id="emailWrap">
+                                        <span class="input-icon">✉</span>
+                                        <input type="email" id="email" placeholder="Enter email address" autocomplete="off" />
+                                    </div>
+                                    <div class="field-error" id="emailError">Please enter a valid email address.</div>
+                                </div>
+
+                                <!-- Phone -->
+                                <div class="form-group">
+                                    <label for="phone">Phone Number</label>
+                                    <div class="input-wrap" id="phoneWrap">
+                                        <span class="input-icon">📱</span>
+                                        <input type="tel" id="phone" placeholder="Enter phone number" autocomplete="off" />
+                                    </div>
+                                    <div class="field-error" id="phoneError">Please enter a valid phone number.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Business Information -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Business Information</h3>
+                            <span class="panel-sub">Company / store details</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label for="businessName">Business Name</label>
+                                    <div class="input-wrap">
+                                        <span class="input-icon">🏢</span>
+                                        <input type="text" id="businessName" placeholder="Enter business name" autocomplete="off" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="businessCategory">Business Category</label>
+                                    <div class="input-wrap">
+                                        <span class="input-icon">📂</span>
+                                        <input type="text" id="businessCategory" placeholder="e.g. Retail, Services" autocomplete="off" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="businessPhone">Business Phone</label>
+                                    <div class="input-wrap">
+                                        <span class="input-icon">📞</span>
+                                        <input type="tel" id="businessPhone" placeholder="Business phone number" autocomplete="off" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="businessEmail">Business Email</label>
+                                    <div class="input-wrap">
+                                        <span class="input-icon">✉</span>
+                                        <input type="email" id="businessEmail" placeholder="Business email address" autocomplete="off" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label for="businessAddress">Business Address</label>
+                                    <div class="input-wrap">
+                                        <span class="input-icon">📍</span>
+                                        <input type="text" id="businessAddress" placeholder="Street, city, state, country" autocomplete="off" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label for="website">Website</label>
+                                    <div class="input-wrap">
+                                        <span class="input-icon">🌐</span>
+                                        <input type="url" id="website" placeholder="https://example.com" autocomplete="off" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account Settings -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Account Settings</h3>
+                            <span class="panel-sub">Plan, status, and role</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="planSelect">Plan</label>
+                                    <div class="input-wrap">
+                                        <span class="input-icon">⭐</span>
+                                        <select id="planSelect">
+                                            <option value="Free">Free</option>
+                                            <option value="Pro">Pro</option>
+                                        </select>
+                                        <span class="select-arrow">▾</span>
+                                    </div>
+                                    <div class="field-hint">Changing the plan will update the user's subscription level.</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="statusSelect">Account Status</label>
+                                    <div class="input-wrap">
+                                        <span class="input-icon">🔒</span>
+                                        <select id="statusSelect">
+                                            <option value="active">Active</option>
+                                            <option value="suspended">Suspended</option>
+                                        </select>
+                                        <span class="select-arrow">▾</span>
+                                    </div>
+                                    <div class="field-hint">Suspended users cannot sign in.</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="roleSelect">Account Role</label>
+                                    <div class="input-wrap">
+                                        <span class="input-icon">🛡</span>
+                                        <select id="roleSelect">
+                                            <option value="user">User</option>
+                                            <option value="admin">Admin</option>
+                                            <option value="owner">Owner</option>
+                                        </select>
+                                        <span class="select-arrow">▾</span>
+                                    </div>
+                                    <div class="field-hint">Only set to Admin/Owner for staff accounts. Managed separately via admin-roles.html.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Save Status -->
+                    <div class="save-status" id="saveStatus"></div>
+
+                </form>
+
+                <!-- ─── DANGER ZONE ────────────────────────────────── -->
+                <div class="panel" style="border-color:var(--error);">
+                    <div class="panel-header" style="border-bottom-color:var(--error);"><h3 style="color:var(--error);">Danger Zone</h3></div>
+                    <div class="panel-body">
+                        <div class="danger-zone">
+                            <div class="danger-title">Delete this Receiptly account permanently</div>
+                            <div class="danger-desc">This action cannot be undone. All receipts, invoices, customers, products, expenses, and payments belonging to this user will be removed.</div>
+                            <button class="btn btn--danger" id="deleteUserBtn">🗑 Delete Account</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ─── NOT FOUND ──────────────────────────────────────── -->
+            <div id="notFoundState" style="display:none;">
+                <div class="not-found">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <h2>User Not Found</h2>
+                    <p>The selected Receiptly account could not be found.</p>
+                    <a href="admin-users.html" class="btn btn--primary">Back to Users</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    TOAST HOST
+    ════════════════════════════════════════════════════════════ -->
+    <div class="toast-host" id="toastHost"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    MODALS
+    ════════════════════════════════════════════════════════════ -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <div class="modal-icon" id="modalIcon">⚠️</div>
+            <h3 class="modal-title" id="modalTitle">Are you sure?</h3>
+            <p class="modal-msg" id="modalMsg"></p>
+            <div class="modal-actions">
+                <button class="btn btn--outline" data-action="cancel">Cancel</button>
+                <button class="btn btn--danger" id="modalConfirmBtn" data-action="confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    UNLOAD WARNING
+    ════════════════════════════════════════════════════════════ -->
+    <script>
+        // This is defined globally for the beforeunload handler
+        var __hasUnsavedChanges = false;
+    </script>
+
+    <!-- ════════════════════════════════════════════════════════════
+    SCRIPTS
+    ════════════════════════════════════════════════════════════ -->
+    <script src="../js/security.js"></script>
+    <script src="../js/sessions.js"></script>
+    <script src="../js/roles.js"></script>
+    <script src="../js/admin-auth.js">
+    </script>
+    <script src="../js/user-scope.js">
+    </script>
+    <script src="../js/ui-popup.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/image-utils.js"></script>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  1. AUTH GUARD
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            if (typeof AdminAuth === "undefined") {
+                window.location.href = "../admin-login.html";
+                return;
+            }
+            var admin = AdminAuth.requireAdmin ? AdminAuth.requireAdmin("admin-login.html") : null;
+            if (!admin) {
+                var session = AdminAuth.getSession ? AdminAuth.getSession() : null;
+                if (!session) {
+                    window.location.href = "../admin-login.html";
+                    return;
+                }
+                admin = session;
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  2. HELPERS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function getQueryParam(param) {
+                var urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(param);
+            }
+
+            function getAllUsers() {
+                // Scope (js/user-scope.js) is the single source of truth for
+                // registered users; it is loaded on every admin page.
+                return Scope.getUsers() || [];
+            }
+
+            function saveAllUsers(users) {
+                // Scope (js/user-scope.js) is the single source of truth for
+                // registered users; it is loaded on every admin page.
+                Scope.saveUsers(users);
+            }
+
+            function getUserScopedData(userId, key) {
+                var storageKey = key + "__u_" + userId;
+                try {
+                    var raw = localStorage.getItem(storageKey);
+                    return raw ? JSON.parse(raw) : null;
+                } catch (_) { return null; }
+            }
+
+            function setUserScopedData(userId, key, data) {
+                var storageKey = key + "__u_" + userId;
+                try {
+                    localStorage.setItem(storageKey, JSON.stringify(data));
+                } catch (_) {}
+            }
+
+            function esc(str) {
+                if (!str) return "";
+                return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g,
+                    "&quot;");
+            }
+
+            function fmtDate(d) {
+                if (!d) return "—";
+                var date = d instanceof Date ? d : new Date(d);
+                if (isNaN(date)) return "—";
+                return date.toLocaleDateString(undefined, { day: "2-digit", month: "short", year: "numeric" });
+            }
+
+            function initials(name) {
+                if (!name) return "U";
+                return name.trim().split(/\s+/).slice(0, 2).map(function(w) { return w[0]; }).join("").toUpperCase();
+            }
+
+            function isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            function isValidPhone(phone) {
+                if (!phone) return true;
+                return /^[\+\d\s\-\(\)]{6,20}$/.test(phone);
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  3. TOAST SYSTEM
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function toast(message, type) {
+                type = type || "info";
+                var host = document.getElementById("toastHost");
+                var el = document.createElement("div");
+                el.className = "toast " + type;
+                var icon = type === "error" ? "✕" : type === "success" ? "✓" : "ⓘ";
+                el.innerHTML =
+                    '<span class="t-icon">' + icon + '</span>' +
+                    '<span class="t-msg">' + esc(message) + '</span>' +
+                    '<button class="t-close">&times;</button>';
+                host.appendChild(el);
+
+                requestAnimationFrame(function() {
+                    el.classList.add("show");
+                });
+
+                el.querySelector(".t-close").addEventListener("click", function() {
+                    dismissToast(el);
+                });
+
+                setTimeout(function() {
+                    dismissToast(el);
+                }, 4000);
+
+                return el;
+            }
+
+            function dismissToast(el) {
+                if (!el || el.classList.contains("hide")) return;
+                el.classList.remove("show");
+                el.classList.add("hide");
+                setTimeout(function() {
+                    if (el.parentNode) el.remove();
+                }, 400);
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  4. THEME
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function getTheme() {
+                return localStorage.getItem("receiptly_theme") || "dark";
+            }
+
+            function setTheme(theme) {
+                document.documentElement.setAttribute("data-theme", theme);
+                localStorage.setItem("receiptly_theme", theme);
+                var icon = document.querySelector("#themeToggleBtn svg");
+                if (theme === "dark") {
+                    icon.innerHTML =
+                        '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+                } else {
+                    icon.innerHTML =
+                        '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+                }
+            }
+
+            setTheme(getTheme());
+
+            document.getElementById("themeToggleBtn").addEventListener("click", function() {
+                var current = document.documentElement.getAttribute("data-theme");
+                setTheme(current === "dark" ? "light" : "dark");
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  5. SIDEBAR / HEADER
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var sidebar = document.getElementById("sidebar");
+            var overlay = document.getElementById("sidebarOverlay");
+            var hamburger = document.getElementById("hamburger");
+
+            function toggleSidebar() {
+                sidebar.classList.toggle("open");
+                hamburger.classList.toggle("active");
+                overlay.classList.toggle("open");
+            }
+
+            hamburger.addEventListener("click", toggleSidebar);
+            overlay.addEventListener("click", toggleSidebar);
+
+            // Profile dropdown
+            var profileBtn = document.getElementById("profileBtn");
+            var profileDropdown = document.getElementById("profileDropdown");
+            var dropdownOpen = false;
+
+            profileBtn.addEventListener("click", function(e) {
+                e.stopPropagation();
+                dropdownOpen = !dropdownOpen;
+                profileDropdown.classList.toggle("open", dropdownOpen);
+            });
+
+            document.addEventListener("click", function(e) {
+                if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                    profileDropdown.classList.remove("open");
+                    dropdownOpen = false;
+                }
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  6. LOGOUT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function handleLogout() {
+                if (AdminAuth.logout) {
+                    AdminAuth.logout();
+                } else {
+                    localStorage.removeItem("receiptly_admin_session");
+                }
+                window.location.href = "../admin-login.html";
+            }
+
+            document.getElementById("logoutBtn").addEventListener("click", handleLogout);
+            document.getElementById("dropdownLogout").addEventListener("click", handleLogout);
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  7. HEADER ADMIN INFO
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            document.getElementById("headerName").textContent = admin.name || "Admin";
+            document.getElementById("headerAvatar").textContent = initials(admin.name || "Admin");
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  8. LOAD USER DATA
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var userId = getQueryParam("id");
+            var userData = null;
+            var userProfile = null;
+            var originalData = null;
+            var originalProfile = null;
+            var hasChanges = false;
+            var isSaving = false;
+            var avatarChanged = false;
+
+            // DOM refs
+            var loadingState = document.getElementById("loadingState");
+            var userContent = document.getElementById("userContent");
+            var notFoundState = document.getElementById("notFoundState");
+
+            var fullName = document.getElementById("fullName");
+            var email = document.getElementById("email");
+            var phone = document.getElementById("phone");
+            var businessName = document.getElementById("businessName");
+            var businessCategory = document.getElementById("businessCategory");
+            var businessPhone = document.getElementById("businessPhone");
+            var businessEmail = document.getElementById("businessEmail");
+            var businessAddress = document.getElementById("businessAddress");
+            var website = document.getElementById("website");
+            var planSelect = document.getElementById("planSelect");
+            var statusSelect = document.getElementById("statusSelect");
+            var roleSelect = document.getElementById("roleSelect");
+            var avatarPreview = document.getElementById("avatarPreview");
+
+            var nameWrap = document.getElementById("nameWrap");
+            var emailWrap = document.getElementById("emailWrap");
+            var phoneWrap = document.getElementById("phoneWrap");
+
+            var nameError = document.getElementById("nameError");
+            var emailError = document.getElementById("emailError");
+            var phoneError = document.getElementById("phoneError");
+
+            var saveStatus = document.getElementById("saveStatus");
+
+            function loadUser() {
+                if (!userId) {
+                    loadingState.style.display = "none";
+                    userContent.style.display = "none";
+                    notFoundState.style.display = "block";
+                    return;
+                }
+
+                var users = getAllUsers();
+                userData = users.find(function(u) { return u.id === userId; });
+
+                if (!userData) {
+                    loadingState.style.display = "none";
+                    userContent.style.display = "none";
+                    notFoundState.style.display = "block";
+                    return;
+                }
+
+                // Store original data for change detection
+                originalData = JSON.parse(JSON.stringify(userData));
+
+                // Load this user's REAL scoped business profile — this is the
+                // same "receiptly_profile" record the user's own Settings /
+                // Company Profile pages read and write. Editing it here (not
+                // just the cached copy on the user record) is what makes
+                // admin corrections actually show up on the user's own pages.
+                userProfile = getUserScopedData(userId, "receiptly_profile") || {};
+                originalProfile = JSON.parse(JSON.stringify(userProfile));
+
+                loadingState.style.display = "none";
+                userContent.style.display = "block";
+                notFoundState.style.display = "none";
+
+                populateForm();
+                updatePageTitle();
+                updateBackLink();
+                trackChanges();
+
+                // Reset unsaved changes flag
+                __hasUnsavedChanges = false;
+                hasChanges = false;
+            }
+
+            function populateForm() {
+                fullName.value = userData.fullName || "";
+                email.value = userData.email || "";
+                phone.value = userData.phone || "";
+                businessName.value = userProfile.businessName || userData.businessName || "";
+                businessCategory.value = userData.businessCategory || "";
+                businessPhone.value = userProfile.phone || userData.businessPhone || userData.phone || "";
+                businessEmail.value = userProfile.email || userData.businessEmail || userData.email || "";
+                businessAddress.value = userProfile.address || userData.businessAddress || "";
+                website.value = userProfile.website || userData.website || "";
+
+                planSelect.value = userData.plan || "Free";
+                statusSelect.value = userData.status || "active";
+                roleSelect.value = userData.role || "user";
+
+                // Avatar — prefer the real profile photo the user uploaded
+                // (receiptly_profile.logo), falling back to any picture an
+                // admin previously set directly on the account record.
+                var name = userData.fullName || userData.email || "U";
+                var currentPhoto = userProfile.logo || userData.profilePicture || null;
+                if (currentPhoto) {
+                    avatarPreview.innerHTML = '<img src="' + esc(currentPhoto) + '" alt="Profile" />';
+                } else {
+                    avatarPreview.textContent = initials(name);
+                    avatarPreview.style.background = "var(--accent-soft)";
+                    avatarPreview.style.color = "var(--accent)";
+                }
+            }
+
+            function updatePageTitle() {
+                var name = userData.fullName || userData.email || "User";
+                document.getElementById("pageUserName").textContent = name;
+                document.getElementById("pageSub").textContent = "Update this Receiptly account's information and account settings.";
+            }
+
+            function updateBackLink() {
+                var link = document.getElementById("backLink");
+                link.href = "admin-user-view.html?id=" + esc(userId);
+                link.innerHTML =
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg> Back to User Details';
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  9. CHANGE TRACKING
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function getFormData() {
+                return {
+                    fullName: fullName.value.trim(),
+                    email: email.value.trim(),
+                    phone: phone.value.trim(),
+                    businessName: businessName.value.trim(),
+                    businessCategory: businessCategory.value.trim(),
+                    businessPhone: businessPhone.value.trim(),
+                    businessEmail: businessEmail.value.trim(),
+                    businessAddress: businessAddress.value.trim(),
+                    website: website.value.trim(),
+                    plan: planSelect.value,
+                    status: statusSelect.value,
+                    role: roleSelect.value,
+                };
+            }
+
+            function hasFormChanges() {
+                if (!originalData) return false;
+                var current = getFormData();
+                return current.fullName !== (originalData.fullName || "") ||
+                    current.email !== (originalData.email || "") ||
+                    current.phone !== (originalData.phone || "") ||
+                    current.businessName !== (originalData.businessName || "") ||
+                    current.businessCategory !== (originalData.businessCategory || "") ||
+                    current.businessPhone !== (originalData.businessPhone || originalData.phone || "") ||
+                    current.businessEmail !== (originalData.businessEmail || originalData.email || "") ||
+                    current.businessAddress !== (originalData.businessAddress || "") ||
+                    current.website !== (originalData.website || "") ||
+                    current.plan !== (originalData.plan || "Free") ||
+                    current.status !== (originalData.status || "active") ||
+                    current.role !== (originalData.role || "user");
+            }
+
+            function trackChanges() {
+                var fields = [fullName, email, phone, businessName, businessCategory, businessPhone, businessEmail,
+                    businessAddress, website, planSelect, statusSelect, roleSelect
+                ];
+                fields.forEach(function(el) {
+                    el.addEventListener("input", function() {
+                        __hasUnsavedChanges = hasFormChanges();
+                        hasChanges = __hasUnsavedChanges;
+                    });
+                    el.addEventListener("change", function() {
+                        __hasUnsavedChanges = hasFormChanges();
+                        hasChanges = __hasUnsavedChanges;
+                    });
+                });
+
+                // Also track avatar changes
+                document.getElementById("avatarReplaceBtn").addEventListener("click", function() {
+                    // Avatar change tracking - mark as changed
+                    __hasUnsavedChanges = true;
+                    hasChanges = true;
+                });
+                document.getElementById("avatarRemoveBtn").addEventListener("click", function() {
+                    __hasUnsavedChanges = true;
+                    hasChanges = true;
+                });
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  10. FORM VALIDATION
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function validateForm() {
+                var valid = true;
+
+                // Name
+                var nameVal = fullName.value.trim();
+                if (!nameVal) {
+                    nameWrap.classList.add("has-error");
+                    nameError.textContent = "Full name is required.";
+                    nameError.classList.add("show");
+                    valid = false;
+                } else if (nameVal.length < 2) {
+                    nameWrap.classList.add("has-error");
+                    nameError.textContent = "Name must be at least 2 characters.";
+                    nameError.classList.add("show");
+                    valid = false;
+                } else {
+                    nameWrap.classList.remove("has-error");
+                    nameError.classList.remove("show");
+                }
+
+                // Email
+                var emailVal = email.value.trim();
+                if (!emailVal) {
+                    emailWrap.classList.add("has-error");
+                    emailError.textContent = "Email address is required.";
+                    emailError.classList.add("show");
+                    valid = false;
+                } else if (!isValidEmail(emailVal)) {
+                    emailWrap.classList.add("has-error");
+                    emailError.textContent = "Please enter a valid email address.";
+                    emailError.classList.add("show");
+                    valid = false;
+                } else {
+                    // Check for duplicate email (excluding current user)
+                    var users = getAllUsers();
+                    var duplicate = users.some(function(u) {
+                        return u.id !== userId && u.email && u.email.toLowerCase() === emailVal.toLowerCase();
+                    });
+                    if (duplicate) {
+                        emailWrap.classList.add("has-error");
+                        emailError.textContent = "This email is already in use by another account.";
+                        emailError.classList.add("show");
+                        valid = false;
+                    } else {
+                        emailWrap.classList.remove("has-error");
+                        emailError.classList.remove("show");
+                    }
+                }
+
+                // Phone (optional but validate format if provided)
+                var phoneVal = phone.value.trim();
+                if (phoneVal && !isValidPhone(phoneVal)) {
+                    phoneWrap.classList.add("has-error");
+                    phoneError.textContent = "Please enter a valid phone number.";
+                    phoneError.classList.add("show");
+                    valid = false;
+                } else {
+                    phoneWrap.classList.remove("has-error");
+                    phoneError.classList.remove("show");
+                }
+
+                return valid;
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  11. SAVE CHANGES
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            async function saveChanges() {
+                if (isSaving) return;
+                if (!validateForm()) {
+                    toast("Please fix the errors before saving.", "error");
+                    return;
+                }
+
+                isSaving = true;
+                var saveBtn = document.getElementById("saveBtn");
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = "⏳ Saving...";
+                saveStatus.className = "save-status";
+                saveStatus.textContent = "";
+
+                try {
+                    var currentData = getFormData();
+
+                    // Build updated user object
+                    var updatedUser = JSON.parse(JSON.stringify(originalData));
+                    updatedUser.fullName = currentData.fullName;
+                    updatedUser.email = currentData.email;
+                    updatedUser.phone = currentData.phone;
+                    updatedUser.businessName = currentData.businessName;
+                    updatedUser.businessCategory = currentData.businessCategory;
+                    updatedUser.businessPhone = currentData.businessPhone;
+                    updatedUser.businessEmail = currentData.businessEmail;
+                    updatedUser.businessAddress = currentData.businessAddress;
+                    updatedUser.website = currentData.website;
+                    updatedUser.plan = currentData.plan;
+                    updatedUser.status = currentData.status;
+                    updatedUser.role = currentData.role;
+                    updatedUser.updatedAt = new Date().toISOString();
+
+                    // Carry forward the avatar as it currently stands (this
+                    // was a known bug: without this, a newly uploaded/removed
+                    // photo was silently dropped because updatedUser was
+                    // cloned from the stale originalData, not from userData).
+                    if (avatarChanged) {
+                        updatedUser.profilePicture = userData.profilePicture || null;
+                    }
+
+                    // Save to storage
+                    var users = getAllUsers();
+                    var idx = users.findIndex(function(u) { return u.id === userId; });
+                    if (idx === -1) {
+                        toast("User not found in storage.", "error");
+                        isSaving = false;
+                        saveBtn.disabled = false;
+                        saveBtn.innerHTML = "💾 Save Changes";
+                        return;
+                    }
+
+                    // Track what changed for audit
+                    var changedFields = [];
+                    if (originalData.fullName !== updatedUser.fullName) changedFields.push("Full Name");
+                    if (originalData.email !== updatedUser.email) changedFields.push("Email");
+                    if (originalData.phone !== updatedUser.phone) changedFields.push("Phone");
+                    if (originalData.businessName !== updatedUser.businessName) changedFields.push("Business Name");
+                    if (originalData.businessCategory !== updatedUser.businessCategory) changedFields.push(
+                        "Business Category");
+                    if ((originalData.businessPhone || originalData.phone) !== updatedUser.businessPhone) changedFields
+                        .push("Business Phone");
+                    if ((originalData.businessEmail || originalData.email) !== updatedUser.businessEmail) changedFields
+                        .push("Business Email");
+                    if (originalData.businessAddress !== updatedUser.businessAddress) changedFields.push(
+                        "Business Address");
+                    if (originalData.website !== updatedUser.website) changedFields.push("Website");
+                    if ((originalData.plan || "Free") !== updatedUser.plan) changedFields.push("Plan");
+                    if ((originalData.status || "active") !== updatedUser.status) changedFields.push("Status");
+                    if ((originalData.role || "user") !== updatedUser.role) changedFields.push("Role");
+
+                    users[idx] = updatedUser;
+                    saveAllUsers(users);
+
+                    // Mirror the business details (and avatar) into this
+                    // user's real scoped profile record — the same
+                    // "receiptly_profile__u_<id>" object their own Settings,
+                    // Company Profile, and receipts pages read from. Without
+                    // this, admin edits only updated an internal admin copy
+                    // and never actually reached the user's own pages.
+                    var updatedProfile = Object.assign({}, userProfile);
+                    updatedProfile.businessName = currentData.businessName;
+                    updatedProfile.phone = currentData.businessPhone;
+                    updatedProfile.email = currentData.businessEmail;
+                    updatedProfile.address = currentData.businessAddress;
+                    updatedProfile.website = currentData.website;
+                    if (avatarChanged) {
+                        updatedProfile.logo = userData.profilePicture || null;
+                    }
+                    setUserScopedData(userId, "receiptly_profile", updatedProfile);
+                    userProfile = updatedProfile;
+                    originalProfile = JSON.parse(JSON.stringify(updatedProfile));
+                    avatarChanged = false;
+
+                    // Update local data
+                    userData = updatedUser;
+                    originalData = JSON.parse(JSON.stringify(updatedUser));
+                    __hasUnsavedChanges = false;
+                    hasChanges = false;
+
+                    // Show success
+                    saveStatus.className = "save-status show success";
+                    saveStatus.innerHTML = "✅ User updated successfully.";
+
+                    // Record audit
+                    recordAdminAction("updated_user", userId, changedFields);
+
+                    toast("User updated successfully.", "success");
+
+                    // Update avatar
+                    if (userData.profilePicture) {
+                        avatarPreview.innerHTML = '<img src="' + esc(userData.profilePicture) + '" alt="Profile" />';
+                    }
+
+                } catch (err) {
+                    saveStatus.className = "save-status show error";
+                    saveStatus.innerHTML = "❌ " + (err.message || "Failed to save changes.");
+                    toast("Failed to save changes: " + (err.message || "Unknown error"), "error");
+                }
+
+                isSaving = false;
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = "💾 Save Changes";
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  12. AUDIT LOG
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function recordAdminAction(action, targetUserId, details) {
+                try {
+                    var logs = JSON.parse(localStorage.getItem("receiptly_admin_audit") || "[]");
+                    logs.push({
+                        adminId: admin.id || "admin",
+                        adminName: admin.name || "Admin",
+                        action: action,
+                        targetUserId: targetUserId,
+                        details: details || [],
+                        timestamp: new Date().toISOString(),
+                    });
+                    if (logs.length > 500) logs = logs.slice(-500);
+                    localStorage.setItem("receiptly_admin_audit", JSON.stringify(logs));
+                } catch (_) {}
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  13. MODAL HELPERS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var confirmModal = document.getElementById("confirmModal");
+            var modalTitle = document.getElementById("modalTitle");
+            var modalMsg = document.getElementById("modalMsg");
+            var modalIcon = document.getElementById("modalIcon");
+            var modalConfirmBtn = document.getElementById("modalConfirmBtn");
+            var modalResolve = null;
+
+            function showModal(title, msg, icon, confirmText, confirmClass) {
+                return new Promise(function(resolve) {
+                    modalTitle.textContent = title;
+                    modalMsg.innerHTML = msg;
+                    modalIcon.textContent = icon || "⚠️";
+                    modalIcon.className = "modal-icon";
+                    if (icon === "⚠️") modalIcon.classList.add("modal-icon--danger");
+                    else if (icon === "💡") modalIcon.classList.add("modal-icon--warning");
+                    else modalIcon.classList.add("modal-icon--success");
+
+                    modalConfirmBtn.textContent = confirmText || "Confirm";
+                    modalConfirmBtn.className = "btn " + (confirmClass || "btn--danger");
+
+                    modalResolve = resolve;
+                    confirmModal.classList.add("is-visible");
+                });
+            }
+
+            function closeModal() {
+                confirmModal.classList.remove("is-visible");
+            }
+
+            confirmModal.addEventListener("click", function(e) {
+                if (e.target === confirmModal || e.target.closest('[data-action="cancel"]')) {
+                    closeModal();
+                    if (modalResolve) modalResolve(false);
+                }
+                if (e.target.closest('[data-action="confirm"]')) {
+                    closeModal();
+                    if (modalResolve) modalResolve(true);
+                }
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  14. DELETE USER
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            async function showDeleteModal() {
+                var name = userData.fullName || userData.email || "this user";
+                var confirmed = await showModal(
+                    "Delete this account?",
+                    'This permanently removes <strong>' + esc(name) +
+                    '</strong> and all of their receipts, invoices, customers, products, expenses, and payments. This cannot be undone.',
+                    "⚠️",
+                    "Delete Account",
+                    "btn--danger"
+                );
+                if (confirmed) {
+                    var doubleConfirm = await showModal(
+                        "Are you absolutely sure?",
+                        "This action is permanent. All data belonging to <strong>" + esc(name) +
+                        "</strong> will be lost forever.",
+                        "⚠️",
+                        "Yes, Delete Permanently",
+                        "btn--danger"
+                    );
+                    if (doubleConfirm) {
+                        performDelete();
+                    }
+                }
+            }
+
+            function performDelete() {
+                var users = getAllUsers();
+                var filtered = users.filter(function(u) { return u.id !== userId; });
+                saveAllUsers(filtered);
+
+                // Remove user-scoped data
+                var prefixes = [
+                    "receiptly_receipts__u_",
+                    "receiptly_invoices__u_",
+                    "receiptly_customers__u_",
+                    "receiptly_products__u_",
+                    "receiptly_expenses__u_",
+                    "receiptly_payments__u_"
+                ];
+                var toRemove = [];
+                for (var i = 0; i < localStorage.length; i++) {
+                    var k = localStorage.key(i);
+                    if (k) {
+                        for (var p = 0; p < prefixes.length; p++) {
+                            if (k.indexOf(prefixes[p] + userId) !== -1) {
+                                toRemove.push(k);
+                                break;
+                            }
+                        }
+                    }
+                }
+                toRemove.forEach(function(k) { localStorage.removeItem(k); });
+
+                // Remove activity
+                try {
+                    var activity = JSON.parse(localStorage.getItem("receiptly_activity") || "{}");
+                    delete activity[userId];
+                    localStorage.setItem("receiptly_activity", JSON.stringify(activity));
+                } catch (_) {}
+
+                recordAdminAction("deleted_user", userId);
+                toast("Account deleted.", "success");
+                setTimeout(function() {
+                    window.location.href = "admin-users.html";
+                }, 600);
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  15. CANCEL WITH UNSAVED CHANGES WARNING
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            document.getElementById("cancelBtn").addEventListener("click", async function() {
+                if (hasFormChanges()) {
+                    var stay = await showModal(
+                        "Unsaved changes",
+                        "You have unsaved changes. Leave without saving?",
+                        "💡",
+                        "Discard Changes",
+                        "btn--outline"
+                    );
+                    if (stay) {
+                        // Discard - go back
+                        window.location.href = "admin-user-view.html?id=" + esc(userId);
+                    }
+                    // else stay on page
+                } else {
+                    window.location.href = "admin-user-view.html?id=" + esc(userId);
+                }
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  16. BEFOREUNLOAD WARNING
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            window.addEventListener("beforeunload", function(e) {
+                if (__hasUnsavedChanges) {
+                    e.preventDefault();
+                    e.returnValue =
+                        "You have unsaved changes. Are you sure you want to leave?";
+                    return e.returnValue;
+                }
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  17. EVENT BINDINGS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            // Save
+            document.getElementById("saveBtn").addEventListener("click", saveChanges);
+
+            // Delete
+            document.getElementById("deleteUserBtn").addEventListener("click", showDeleteModal);
+
+            // Avatar replace
+            var avatarFileInput = document.getElementById("avatarFileInput");
+            document.getElementById("avatarReplaceBtn").addEventListener("click", function() {
+                avatarFileInput.click();
+            });
+
+            avatarFileInput.addEventListener("change", function(e) {
+                if (this.files && this.files[0]) {
+                    // Downscale + compress before it ever touches
+                    // localStorage — raw camera photos can blow past
+                    // the quota on their own once stored in the
+                    // shared receiptly_users array.
+                    ImageUtils.resizeToDataURL(this.files[0], 320, 0.75).then(function(imgData) {
+                        avatarPreview.innerHTML = '<img src="' + imgData + '" alt="Profile" />';
+                        // Store in user data
+                        userData.profilePicture = imgData;
+                        avatarChanged = true;
+                        __hasUnsavedChanges = true;
+                        hasChanges = true;
+                        toast("Profile picture updated. Click Save to persist.", "success");
+                    }).catch(function(err) {
+                        toast(err && err.message ? err.message : "Could not process that image.", "error");
+                    });
+                }
+                this.value = "";
+            });
+
+            document.getElementById("avatarRemoveBtn").addEventListener("click", function() {
+                var name = userData.fullName || userData.email || "U";
+                avatarPreview.textContent = initials(name);
+                avatarPreview.style.background = "var(--accent-soft)";
+                avatarPreview.style.color = "var(--accent)";
+                userData.profilePicture = null;
+                avatarChanged = true;
+                __hasUnsavedChanges = true;
+                hasChanges = true;
+                toast("Profile picture removed. Click Save to persist.", "info");
+            });
+
+            // Plan change confirmation
+            planSelect.addEventListener("change", function() {
+                if (this.value !== (originalData.plan || "Free")) {
+                    // Show a subtle confirmation via toast
+                    toast("Plan changed to " + this.value + ". Click Save to apply.", "info");
+                }
+            });
+
+            // Status change confirmation
+            statusSelect.addEventListener("change", function() {
+                var newStatus = this.value;
+                var oldStatus = originalData.status || "active";
+                if (newStatus !== oldStatus) {
+                    var msg = newStatus === "suspended" ?
+                        "This will suspend the user's account. They won't be able to sign in." :
+                        "This will reactivate the user's account.";
+                    toast(msg, "info");
+                }
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  18. INIT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            loadUser();
+
+        })();
+    </script>
+</body>
+</html>

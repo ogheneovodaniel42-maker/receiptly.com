@@ -1,0 +1,3502 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>System Health — Receiptly Owner</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ════════════════════════════════════════════════════════════
+               CSS VARIABLES & RESET (shared with admin-dashboard)
+               ════════════════════════════════════════════════════════════ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-display: "Fraunces", Georgia, serif;
+
+            --bg-body: #f1f5f9;
+            --bg-card: rgba(255, 255, 255, 0.78);
+            --bg-card-border: rgba(255, 255, 255, 0.30);
+            --bg-input: #f1f5f9;
+            --bg-input-hover: #e8edf5;
+            --bg-sidebar: rgba(255, 255, 255, 0.92);
+            --bg-header: rgba(255, 255, 255, 0.72);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --text-inverse: #ffffff;
+            --accent: #7c3aed;
+            --accent-dark: #6d28d9;
+            --accent-glow: rgba(124, 58, 237, 0.25);
+            --accent-soft: #ede9fe;
+            --accent-light: #d8b4fe;
+            --border-light: #e2e8f0;
+            --border-strong: #cbd5e1;
+            --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 8px 30px rgba(15, 23, 42, 0.06);
+            --shadow-lg: 0 20px 60px rgba(15, 23, 42, 0.10);
+            --shadow-input: 0 0 0 4px rgba(124, 58, 237, 0.10);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --blur-amount: 20px;
+            --sidebar-width: 260px;
+            --header-height: 64px;
+            --success: #059669;
+            --success-soft: #ecfdf5;
+            --error: #dc2626;
+            --error-soft: #fef2f2;
+            --orange: #d97706;
+            --orange-soft: #fffbeb;
+            --blue: #2563eb;
+            --blue-soft: #eff6ff;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0b1220;
+            --bg-card: rgba(17, 27, 46, 0.80);
+            --bg-card-border: rgba(255, 255, 255, 0.05);
+            --bg-input: #1e293b;
+            --bg-input-hover: #263348;
+            --bg-sidebar: rgba(15, 23, 42, 0.92);
+            --bg-header: rgba(11, 18, 32, 0.80);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent: #8b5cf6;
+            --accent-dark: #7c3aed;
+            --accent-glow: rgba(139, 92, 246, 0.20);
+            --accent-soft: rgba(139, 92, 246, 0.12);
+            --accent-light: #a78bfa;
+            --border-light: #1e293b;
+            --border-strong: #334155;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.35);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+            --shadow-input: 0 0 0 4px rgba(139, 92, 246, 0.15);
+            --success: #34d399;
+            --success-soft: #064e3b;
+            --error: #f87171;
+            --error-soft: #450a0a;
+            --orange: #fbbf24;
+            --orange-soft: #2a1f0f;
+            --blue: #60a5fa;
+            --blue-soft: #1e293b;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: var(--font-sans);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            transition: background var(--transition-slow), color var(--transition-slow);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        button {
+            font: inherit;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: inherit;
+        }
+        input,
+        select {
+            font: inherit;
+            color: inherit;
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-strong);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* ─── APP LAYOUT ─────────────────────────────────────────── */
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ─── SIDEBAR ────────────────────────────────────────────── */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-right: 1px solid var(--bg-card-border);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition), background var(--transition-slow), border-color var(--transition-slow);
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-bottom: 20px;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 20px 16px;
+            border-bottom: 1px solid var(--border-light);
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand .brand-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 800;
+            flex-shrink: 0;
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+
+        .sidebar-brand .brand-text {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        .sidebar-brand .brand-text .accent {
+            color: var(--accent);
+        }
+        .sidebar-brand .brand-sub {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 1px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .sidebar-nav .nav-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            padding: 12px 14px 6px;
+        }
+
+        .sidebar-nav .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            width: 100%;
+            text-align: left;
+            position: relative;
+        }
+
+        .sidebar-nav .nav-item .nav-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            opacity: 0.6;
+            transition: opacity var(--transition);
+        }
+
+        .sidebar-nav .nav-item:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+        .sidebar-nav .nav-item:hover .nav-icon {
+            opacity: 1;
+        }
+        .sidebar-nav .nav-item.active {
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .sidebar-nav .nav-item.active .nav-icon {
+            opacity: 1;
+            color: var(--accent);
+        }
+        .sidebar-nav .nav-item.active::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 6px;
+            bottom: 6px;
+            width: 3px;
+            border-radius: 0 4px 4px 0;
+            background: var(--accent);
+        }
+
+        .sidebar-footer {
+            padding: 12px 12px 0;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            width: 100%;
+            text-align: left;
+        }
+        .sidebar-footer .nav-item .nav-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            opacity: 0.6;
+        }
+        .sidebar-footer .nav-item:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+        .sidebar-footer .nav-item.logout:hover {
+            color: var(--error);
+        }
+        .sidebar-footer .nav-item.logout:hover .nav-icon {
+            opacity: 1;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+            display: none;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .sidebar-overlay.open {
+            display: block;
+        }
+
+        /* ─── MAIN ───────────────────────────────────────────────── */
+        .main {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left var(--transition);
+        }
+        .main.sidebar-closed {
+            margin-left: 0;
+        }
+
+        /* ─── TOP HEADER ────────────────────────────────────────── */
+        .top-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-header);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-bottom: 1px solid var(--bg-card-border);
+            padding: 0 24px;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            transition: background var(--transition-slow), border-color var(--transition-slow);
+        }
+
+        .top-header__left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 4.5px;
+            padding: 6px;
+            border-radius: var(--radius-sm);
+            transition: background var(--transition);
+        }
+        .hamburger:hover {
+            background: var(--bg-input);
+        }
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2.5px;
+            background: var(--text-primary);
+            border-radius: 100px;
+            transition: all 0.3s ease;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        .top-header__title {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .top-header__title .sub {
+            font-weight: 400;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-left: 6px;
+        }
+
+        .top-header__right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .header-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            font-size: 1rem;
+        }
+        .header-btn:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+
+        .header-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 14px 4px 4px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+            transition: all var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+        .header-profile:hover {
+            border-color: var(--border-strong);
+            background: var(--bg-input);
+        }
+        .header-profile .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+        .header-profile .profile-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        .header-profile .profile-info .name {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .header-profile .profile-info .role {
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+        }
+        .header-profile .chevron {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            margin-left: 2px;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            min-width: 200px;
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            padding: 8px 0;
+            display: none;
+            z-index: 200;
+            overflow: hidden;
+        }
+        .profile-dropdown.open {
+            display: block;
+            animation: dropDown 0.2s ease;
+        }
+        @keyframes dropDown {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .profile-dropdown .drop-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 18px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            width: 100%;
+            text-align: left;
+        }
+        .profile-dropdown .drop-item:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+        .profile-dropdown .drop-item svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            opacity: 0.6;
+        }
+        .profile-dropdown .divider {
+            height: 1px;
+            background: var(--border-light);
+            margin: 4px 12px;
+        }
+        .profile-dropdown .drop-item.logout {
+            color: var(--error);
+        }
+        .profile-dropdown .drop-item.logout:hover {
+            background: var(--error-soft);
+        }
+
+        /* ─── PAGE CONTENT ──────────────────────────────────────── */
+        .page-content {
+            flex: 1;
+            padding: 24px 24px 40px;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+        .page-header h1 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        .page-header h1 .highlight {
+            background: linear-gradient(135deg, var(--accent), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            margin-top: 2px;
+        }
+
+        .page-header .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .page-header .last-check {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .page-header .last-check .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+        .page-header .last-check .dot.checking {
+            animation: pulse-dot 1s infinite;
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 20px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.82rem;
+            transition: all var(--transition);
+            border: 1px solid transparent;
+        }
+        .btn--primary {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn--primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+        .btn--primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .btn--outline {
+            border-color: var(--border-light);
+            color: var(--text-secondary);
+            background: transparent;
+        }
+        .btn--outline:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+        .btn--danger {
+            background: var(--error);
+            color: #fff;
+        }
+        .btn--danger:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25);
+        }
+        .btn .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            border-top-color: #fff;
+            border-radius: 50%;
+            display: none;
+            animation: spin 0.7s linear infinite;
+        }
+        .btn .spinner.show {
+            display: inline-block;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+            font-size: 0.9rem;
+        }
+        .btn-icon:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+
+        /* ─── OVERALL HEALTH CARD ────────────────────────────────── */
+        .health-overview {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            padding: 24px 28px;
+            margin-bottom: 24px;
+            transition: all var(--transition);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px 40px;
+            align-items: center;
+        }
+        .health-overview:hover {
+            border-color: var(--border-strong);
+        }
+
+        .health-overview .ho-ring {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            flex-shrink: 0;
+        }
+
+        .health-overview .ho-ring svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .health-overview .ho-ring .bg {
+            fill: none;
+            stroke: var(--bg-input);
+            stroke-width: 8;
+        }
+
+        .health-overview .ho-ring .progress {
+            fill: none;
+            stroke: var(--accent);
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dasharray 0.8s ease, stroke 0.8s ease;
+        }
+
+        .health-overview .ho-ring .score-label {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--text-primary);
+        }
+
+        .health-overview .ho-ring .score-label .sub {
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-top: -2px;
+        }
+
+        .health-overview .ho-info {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .health-overview .ho-info .ho-status {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .health-overview .ho-info .ho-status .badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 12px;
+            border-radius: var(--radius-full);
+            margin-left: 8px;
+        }
+
+        .health-overview .ho-info .ho-status .badge.healthy {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .health-overview .ho-info .ho-status .badge.good {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+        .health-overview .ho-info .ho-status .badge.needs-attention {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .health-overview .ho-info .ho-status .badge.critical {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+
+        .health-overview .ho-info .ho-desc {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .health-overview .ho-info .ho-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .health-overview .ho-info .ho-details .item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .health-overview .ho-info .ho-details .item .icon {
+            font-size: 0.85rem;
+        }
+
+        .health-overview .ho-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-left: auto;
+        }
+
+        /* ─── HEALTH CARDS ────────────────────────────────────────── */
+        .health-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .health-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-md);
+            padding: 16px 18px;
+            transition: all var(--transition);
+        }
+        .health-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--border-strong);
+        }
+
+        .health-card .hc-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 4px;
+        }
+        .health-card .hc-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+        }
+        .health-card .hc-icon {
+            font-size: 1.2rem;
+        }
+        .health-card .hc-status {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .health-card .hc-status .status-badge {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 2px 10px;
+            border-radius: var(--radius-full);
+            display: inline-block;
+            margin-left: 4px;
+        }
+        .health-card .hc-status .status-badge.healthy {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .health-card .hc-status .status-badge.warning {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .health-card .hc-status .status-badge.critical {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .health-card .hc-status .status-badge.unavailable {
+            background: var(--bg-input);
+            color: var(--text-muted);
+        }
+        .health-card .hc-desc {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        .health-card .hc-time {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+        .health-card .hc-action {
+            margin-top: 8px;
+        }
+        .health-card .hc-action .btn-sm {
+            padding: 2px 12px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: transparent;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            cursor: pointer;
+        }
+        .health-card .hc-action .btn-sm:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+
+        /* ─── SECTION HEADERS ────────────────────────────────────── */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 28px;
+            margin-bottom: 16px;
+        }
+        .section-header h2 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .section-header .section-sub {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        /* ─── STORAGE HEALTH ──────────────────────────────────────── */
+        .storage-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .storage-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-md);
+            padding: 16px 18px;
+            transition: all var(--transition);
+        }
+        .storage-card:hover {
+            border-color: var(--border-strong);
+        }
+
+        .storage-card .sc-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+        }
+        .storage-card .sc-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 2px;
+        }
+        .storage-card .sc-bar {
+            height: 4px;
+            background: var(--bg-input);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .storage-card .sc-bar .sc-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: var(--accent);
+            transition: width 0.6s ease;
+        }
+        .storage-card .sc-sub {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ─── COMPONENTS GRID ────────────────────────────────────── */
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .comp-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-input);
+            border: 1px solid var(--border-light);
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+        }
+        .comp-item .comp-status {
+            font-size: 0.7rem;
+            margin-left: auto;
+        }
+        .comp-item .comp-status.ok {
+            color: var(--success);
+        }
+        .comp-item .comp-status.warning {
+            color: var(--orange);
+        }
+        .comp-item .comp-status.missing {
+            color: var(--text-muted);
+        }
+        .comp-item:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+        }
+
+        /* ─── HEALTH RESULTS TABLE ───────────────────────────────── */
+        .results-panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all var(--transition);
+            margin-bottom: 24px;
+        }
+        .results-panel:hover {
+            border-color: var(--border-strong);
+        }
+
+        .results-panel .panel-header {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .results-panel .panel-header h3 {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .results-panel .panel-body {
+            padding: 4px 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 18px;
+            border-bottom: 1px solid var(--border-light);
+            transition: background var(--transition);
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        .result-item:hover {
+            background: var(--bg-input);
+        }
+
+        .result-item .ri-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 150px;
+        }
+        .result-item .ri-component {
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: var(--text-primary);
+        }
+        .result-item .ri-check {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
+        .result-item .ri-status {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 2px 10px;
+            border-radius: var(--radius-full);
+        }
+        .result-item .ri-status.passed {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .result-item .ri-status.warning {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .result-item .ri-status.failed {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .result-item .ri-status.unavailable {
+            background: var(--bg-input);
+            color: var(--text-muted);
+        }
+        .result-item .ri-details {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            flex: 1;
+            min-width: 100px;
+        }
+        .result-item .ri-time {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        .result-item .ri-view {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--accent);
+            cursor: pointer;
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition);
+        }
+        .result-item .ri-view:hover {
+            background: var(--accent-soft);
+        }
+
+        /* ─── RECOMMENDATIONS ────────────────────────────────────── */
+        .rec-panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all var(--transition);
+            margin-bottom: 24px;
+        }
+        .rec-panel:hover {
+            border-color: var(--border-strong);
+        }
+
+        .rec-panel .panel-header {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .rec-panel .panel-header h3 {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .rec-panel .panel-body {
+            padding: 4px 0;
+        }
+
+        .rec-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 18px;
+            border-bottom: 1px solid var(--border-light);
+            transition: background var(--transition);
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .rec-item:last-child {
+            border-bottom: none;
+        }
+        .rec-item:hover {
+            background: var(--bg-input);
+        }
+
+        .rec-item .rec-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 150px;
+        }
+        .rec-item .rec-icon {
+            font-size: 1rem;
+        }
+        .rec-item .rec-desc {
+            font-size: 0.82rem;
+            color: var(--text-primary);
+        }
+        .rec-item .rec-priority {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 1px 8px;
+            border-radius: var(--radius-full);
+        }
+        .rec-item .rec-priority--high {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .rec-item .rec-priority--medium {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .rec-item .rec-priority--low {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+        .rec-item .rec-fix {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--accent);
+            cursor: pointer;
+            padding: 3px 12px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--accent);
+            background: transparent;
+            transition: all var(--transition);
+        }
+        .rec-item .rec-fix:hover {
+            background: var(--accent-soft);
+        }
+
+        .rec-empty {
+            padding: 20px 18px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* ─── HISTORY ───────────────────────────────────────────────── */
+        .history-panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all var(--transition);
+            margin-bottom: 24px;
+        }
+        .history-panel:hover {
+            border-color: var(--border-strong);
+        }
+
+        .history-panel .panel-header {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .history-panel .panel-header h3 {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .history-panel .panel-body {
+            padding: 4px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 18px;
+            border-bottom: 1px solid var(--border-light);
+            transition: background var(--transition);
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        .history-item:hover {
+            background: var(--bg-input);
+        }
+
+        .history-item .hi-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .history-item .hi-score {
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            min-width: 40px;
+        }
+        .history-item .hi-status {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 2px 10px;
+            border-radius: var(--radius-full);
+        }
+        .history-item .hi-status.passed {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .history-item .hi-status.warning {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .history-item .hi-status.failed {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .history-item .hi-stats {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+        .history-item .hi-date {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .history-empty {
+            padding: 30px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* ─── SECURITY NOTICE ────────────────────────────────────── */
+        .security-notice {
+            background: var(--bg-input);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            border: 1px solid var(--border-light);
+            margin-bottom: 24px;
+        }
+
+        .security-notice .notice-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .security-notice .notice-text {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ─── TOAST ──────────────────────────────────────────────── */
+        .toast-host {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 380px;
+            width: 100%;
+        }
+
+        .toast {
+            padding: 12px 18px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast.hide {
+            transform: translateX(120%);
+            opacity: 0;
+        }
+        .toast .t-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+        .toast.error .t-icon {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .toast.success .t-icon {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .toast.info .t-icon {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+        .toast .t-msg {
+            flex: 1;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .toast .t-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0 4px;
+            transition: color var(--transition);
+            line-height: 1;
+        }
+        .toast .t-close:hover {
+            color: var(--text-primary);
+        }
+
+        /* ─── MODALS ─────────────────────────────────────────────── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .modal-overlay.is-visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            max-width: 560px;
+            width: 100%;
+            padding: 28px 30px;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(12px) scale(0.98);
+            transition: transform var(--transition);
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal-overlay.is-visible .modal {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: color var(--transition);
+            line-height: 1;
+            padding: 4px;
+        }
+        .modal .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .modal .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+        .modal .modal-icon--info {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+        .modal .modal-icon--warning {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .modal .modal-icon--danger {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+
+        .modal .modal-title {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 4px;
+        }
+        .modal .modal-msg {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .modal .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .modal .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 16px;
+            margin-bottom: 12px;
+        }
+        .modal .detail-grid .dg-item {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+        .modal .detail-grid .dg-item .dg-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+        }
+        .modal .detail-grid .dg-item .dg-value {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .modal .detail-grid .dg-item .dg-value .status-badge-sm {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 1px 10px;
+            border-radius: var(--radius-full);
+            display: inline-block;
+        }
+        .modal .detail-grid .dg-item .dg-value .status-badge-sm.passed {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .modal .detail-grid .dg-item .dg-value .status-badge-sm.warning {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .modal .detail-grid .dg-item .dg-value .status-badge-sm.failed {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+
+        /* ─── SKELETON ───────────────────────────────────────────── */
+        .skeleton {
+            background: var(--bg-input);
+            border-radius: 6px;
+            animation: pulse 1.5s ease-in-out infinite;
+            height: 20px;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+        .skeleton-text {
+            height: 14px;
+            margin-bottom: 4px;
+        }
+        .skeleton-text.w-75 {
+            width: 75%;
+        }
+        .skeleton-text.w-50 {
+            width: 50%;
+        }
+
+        /* ─── RESPONSIVE ─────────────────────────────────────────── */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main {
+                margin-left: 0;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .top-header {
+                padding: 0 16px;
+            }
+            .page-content {
+                padding: 16px 16px 32px;
+            }
+            .header-profile .profile-info {
+                display: none;
+            }
+            .header-profile .chevron {
+                display: none;
+            }
+            .header-profile {
+                padding: 4px;
+                border: none;
+                background: transparent;
+            }
+            .header-profile:hover {
+                background: transparent;
+            }
+            .health-overview {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .health-overview .ho-ring {
+                margin: 0 auto;
+            }
+            .health-overview .ho-actions {
+                margin-left: 0;
+                justify-content: center;
+            }
+            .health-overview .ho-info .ho-details {
+                justify-content: center;
+            }
+            .storage-grid {
+                grid-template-columns: 1fr;
+            }
+            .components-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+            .modal .detail-grid {
+                grid-template-columns: 1fr;
+            }
+            .health-cards {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            }
+        }
+
+        @media (max-width: 600px) {
+            .health-cards {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .health-card {
+                padding: 12px 14px;
+            }
+            .health-card .hc-status {
+                font-size: 0.78rem;
+            }
+            .top-header__title .sub {
+                display: none;
+            }
+            .page-content {
+                padding: 12px 12px 24px;
+            }
+            .health-overview {
+                padding: 16px 18px;
+            }
+            .health-overview .ho-ring {
+                width: 80px;
+                height: 80px;
+            }
+            .health-overview .ho-ring .score-label {
+                font-size: 1.2rem;
+            }
+            .components-grid {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            }
+            .comp-item {
+                font-size: 0.7rem;
+                padding: 4px 10px;
+            }
+            .modal {
+                padding: 16px;
+                margin: 8px;
+            }
+            .modal .modal-close {
+                top: 12px;
+                right: 12px;
+            }
+            .toast-host {
+                bottom: 16px;
+                right: 16px;
+                left: 16px;
+                max-width: none;
+            }
+            .result-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .result-item .ri-left {
+                width: 100%;
+            }
+            .result-item .ri-details {
+                width: 100%;
+            }
+            .result-item .ri-time {
+                font-size: 0.6rem;
+            }
+            .rec-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .rec-item .rec-left {
+                width: 100%;
+            }
+            .history-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .history-item .hi-left {
+                width: 100%;
+            }
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .btn {
+                font-size: 0.7rem;
+                padding: 6px 12px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .health-cards {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .health-card {
+                padding: 8px 10px;
+            }
+            .health-card .hc-status {
+                font-size: 0.7rem;
+            }
+            .health-card .hc-label {
+                font-size: 0.55rem;
+            }
+            .health-card .hc-icon {
+                font-size: 1rem;
+            }
+            .page-header h1 {
+                font-size: 1.2rem;
+            }
+            .components-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .sidebar {
+                transition: none;
+            }
+            .toast {
+                transition: none;
+            }
+            .modal {
+                transition: none;
+            }
+            .skeleton {
+                animation: none;
+                opacity: 0.4;
+            }
+            .health-overview .ho-ring .progress {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ════════════════════════════════════════════════════════════
+    SIDEBAR
+    ════════════════════════════════════════════════════════════ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <span class="brand-icon">R</span>
+            <div class="brand-text">
+                Receipt<span class="accent">ly</span>
+                <span class="brand-sub">Owner Panel</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-label">Main</div>
+            <a class="nav-item" href="admin-dashboard.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a class="nav-item" href="admin-analytics.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M4 20l16-16"/></svg>
+                Analytics
+            </a>
+
+            <div class="nav-label">Management</div>
+            <a class="nav-item" href="admin-users.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Users
+            </a>
+            <div class="nav-label">Finance</div>
+            <a class="nav-item" href="admin-payments.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                Payments
+            </a>
+            <div class="nav-label">Content</div>
+            <a class="nav-item" href="admin-templates.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+                Templates
+            </a>
+            <a class="nav-item" href="admin-announcements.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                Announcements
+            </a>
+
+            <div class="nav-label">Communication</div>
+            <a class="nav-item" href="admin-support.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Support
+            </a>
+            <a class="nav-item" href="admin-messages.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Messages
+                <span id="msgNavBadge" style="margin-left:auto;background:#dc2626;color:#fff;font-size:0.65rem;font-weight:800;border-radius:999px;padding:1px 6px;min-width:16px;text-align:center;display:none;">0</span>
+            </a>
+            <a class="nav-item" href="admin-reports.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Reports
+            </a>
+
+            <div class="nav-label">Administration</div>
+            <a class="nav-item" href="admin-settings.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Settings
+            </a>
+            <a class="nav-item" href="admin-roles.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Roles &amp; Permissions
+            </a>
+            <a class="nav-item" href="admin-permissions.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Permissions
+            </a>
+            <a class="nav-item" href="admin-sessions.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Sessions
+            </a>
+            <a class="nav-item active" href="admin-security.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Security
+            </a>
+            <a class="nav-item" href="company-profile.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Company Profile
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="nav-item logout" id="logoutBtn">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+                Logout
+            </button>
+        </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    MAIN CONTENT
+    ════════════════════════════════════════════════════════════ -->
+    <div class="main" id="mainContent">
+        <!-- TOP HEADER -->
+        <header class="top-header">
+            <div class="top-header__left">
+                <button class="hamburger" id="hamburger" aria-label="Toggle sidebar">
+                    <span></span><span></span><span></span>
+                </button>
+                <div class="top-header__title">
+                    System Health
+                    <span class="sub">Admin / System Health</span>
+                </div>
+            </div>
+
+            <div class="top-header__right">
+                <button class="header-btn" id="themeToggleBtn" aria-label="Toggle theme">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                </button>
+
+                <div class="header-profile" id="profileBtn">
+                    <div class="avatar" id="headerAvatar">A</div>
+                    <div class="profile-info">
+                        <span class="name" id="headerName">Admin</span>
+                        <span class="role">Super Admin</span>
+                    </div>
+                    <span class="chevron">▾</span>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <button class="drop-item" data-page="account-profile.html">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            My Account
+                        </button>
+                        <button class="drop-item" data-page="admin-system-health.html">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M4 20l16-16"/></svg>
+                            System Health
+                        </button>
+                        <button class="drop-item" data-page="admin-security.html">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            Security
+                        </button>
+                        <div class="divider"></div>
+                        <button class="drop-item logout" id="dropdownLogout">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- PAGE CONTENT -->
+        <div class="page-content" id="pageContent">
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1>System Health</h1>
+                    <p>Monitor Receiptly's application environment, storage, configuration, and operational status.</p>
+                </div>
+                <div class="action-bar">
+                    <div class="last-check" id="lastCheck">
+                        <span class="dot" id="statusDot"></span>
+                        <span id="lastCheckText">Last check: just now</span>
+                    </div>
+                    <button class="btn btn--primary" id="runHealthBtn">
+                        <span class="spinner" id="runSpinner"></span>
+                        <span id="runText">Run Health Check</span>
+                    </button>
+                    <button class="btn btn--outline" id="refreshBtn">🔄 Refresh</button>
+                    <button class="btn btn--outline" id="exportBtn">📤 Export Report</button>
+                </div>
+            </div>
+
+            <!-- ─── OVERALL HEALTH ─────────────────────────────────── -->
+            <div class="health-overview" id="healthOverview">
+                <div class="ho-ring">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="bg" cx="50" cy="50" r="42" />
+                        <circle class="progress" cx="50" cy="50" r="42" stroke-dasharray="263.89" stroke-dashoffset="263.89" id="scoreCircle" />
+                    </svg>
+                    <div class="score-label" id="scoreLabel">
+                        <span id="scoreNumber">0</span>
+                        <span class="sub">/ 100</span>
+                    </div>
+                </div>
+                <div class="ho-info">
+                    <div class="ho-status">
+                        <span id="healthStatusText">System Health</span>
+                        <span class="badge" id="healthBadge">Good</span>
+                    </div>
+                    <div class="ho-desc" id="healthDesc">All systems are operational.</div>
+                    <div class="ho-details" id="healthDetails">
+                        <span class="item"><span class="icon">✅</span> Checks passed: <strong id="passedCount">0</strong></span>
+                        <span class="item"><span class="icon">⚠️</span> Warnings: <strong id="warningCount">0</strong></span>
+                        <span class="item"><span class="icon">❌</span> Failed: <strong id="failedCount">0</strong></span>
+                    </div>
+                </div>
+                <div class="ho-actions">
+                    <button class="btn btn--outline" id="viewDetailsBtn">View Details</button>
+                </div>
+            </div>
+
+            <!-- ─── HEALTH CARDS ───────────────────────────────────── -->
+            <div class="health-cards" id="healthCards">
+                <!-- populated by JS -->
+            </div>
+
+            <!-- ─── STORAGE HEALTH ─────────────────────────────────── -->
+            <div class="section-header">
+                <h2>📦 Storage Health</h2>
+                <span class="section-sub">Browser storage status</span>
+            </div>
+            <div class="storage-grid" id="storageGrid">
+                <!-- populated by JS -->
+            </div>
+
+            <!-- ─── APPLICATION COMPONENTS ─────────────────────────── -->
+            <div class="section-header">
+                <h2>🧩 Application Components</h2>
+                <span class="section-sub">Page availability</span>
+            </div>
+            <div class="components-grid" id="componentsGrid">
+                <!-- populated by JS -->
+            </div>
+
+            <!-- ─── CONFIGURATION HEALTH ───────────────────────────── -->
+            <div class="section-header">
+                <h2>⚙️ Configuration Health</h2>
+                <span class="section-sub">System settings</span>
+            </div>
+            <div class="storage-grid" id="configGrid" style="grid-template-columns:1fr 1fr 1fr;">
+                <!-- populated by JS -->
+            </div>
+
+            <!-- ─── HEALTH RESULTS ─────────────────────────────────── -->
+            <div class="results-panel" id="resultsPanel">
+                <div class="panel-header">
+                    <h3>📋 Health Check Results</h3>
+                    <span style="font-size:0.75rem;color:var(--text-muted);" id="resultsCount">0 checks</span>
+                </div>
+                <div class="panel-body" id="resultsBody">
+                    <!-- populated by JS -->
+                </div>
+            </div>
+
+            <!-- ─── RECOMMENDATIONS ────────────────────────────────── -->
+            <div class="rec-panel" id="recPanel">
+                <div class="panel-header">
+                    <h3>💡 Recommendations</h3>
+                    <span style="font-size:0.75rem;color:var(--text-muted);">Suggested improvements</span>
+                </div>
+                <div class="panel-body" id="recBody">
+                    <!-- populated by JS -->
+                </div>
+            </div>
+
+            <!-- ─── HEALTH HISTORY ─────────────────────────────────── -->
+            <div class="history-panel" id="historyPanel">
+                <div class="panel-header">
+                    <h3>📊 Health Check History</h3>
+                    <span style="font-size:0.75rem;color:var(--text-muted);">Recent checks</span>
+                </div>
+                <div class="panel-body" id="historyBody">
+                    <!-- populated by JS -->
+                </div>
+            </div>
+
+            <!-- ─── SECURITY NOTICE ─────────────────────────────────── -->
+            <div class="security-notice">
+                <div class="notice-title">Frontend Monitoring Notice</div>
+                <div class="notice-text">
+                    Receiptly is currently running as a frontend application. This page can monitor browser storage, application configuration, local data structures, and other client-side components. Server uptime, API latency, database servers, CPU usage, RAM usage, network infrastructure, and real-time backend monitoring require backend infrastructure.
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    TOAST HOST
+    ════════════════════════════════════════════════════════════ -->
+    <div class="toast-host" id="toastHost"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    MODALS
+    ════════════════════════════════════════════════════════════ -->
+    <!-- Detail Modal -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal">
+            <button class="modal-close" data-action="close-detail">&times;</button>
+            <div class="modal-icon modal-icon--info" id="detailIcon">📋</div>
+            <h3 class="modal-title" id="detailTitle">Health Check Details</h3>
+            <p class="modal-msg" id="detailSub"></p>
+            <div class="detail-grid" id="detailGrid">
+                <!-- populated by JS -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn--outline" data-action="close-detail">Close</button>
+                <button class="btn btn--primary" id="detailFixBtn" style="display:none;">Fix Issue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    SCRIPTS
+    ════════════════════════════════════════════════════════════ -->
+    <script src="../js/security.js"></script>
+    <script src="../js/sessions.js"></script>
+    <script src="../js/roles.js"></script>
+    <script src="../js/admin-auth.js">
+    </script>
+    <script src="../js/ui-popup.js"></script>
+    <script src="../js/storage.js"></script>
+    <script>
+        (function() {
+            "use strict";
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  1. AUTH GUARD
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            if (typeof AdminAuth === "undefined") {
+                window.location.href = "../admin-login.html";
+                return;
+            }
+            var admin = AdminAuth.requireAdmin ? AdminAuth.requireAdmin("admin-login.html") : null;
+            if (!admin) {
+                var session = AdminAuth.getSession ? AdminAuth.getSession() : null;
+                if (!session) {
+                    window.location.href = "../admin-login.html";
+                    return;
+                }
+                admin = session;
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  2. HELPERS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var ACCOUNT_ID = admin.id || admin.email || "default_account";
+
+            function getStorageKey() {
+                return "receiptly_health_history_" + ACCOUNT_ID;
+            }
+
+            function getHealthHistory() {
+                try {
+                    var data = localStorage.getItem(getStorageKey());
+                    return data ? JSON.parse(data) : [];
+                } catch (_) { return []; }
+            }
+
+            function saveHealthHistory(history) {
+                if (history.length > 50) history = history.slice(0, 50);
+                localStorage.setItem(getStorageKey(), JSON.stringify(history));
+            }
+
+            // Centralized (see js/roles.js / js/security.js) — this page
+            // used to read three separate per-admin-id keys directly,
+            // independently of admin-roles.html / admin-security.html.
+            function getRoles() {
+                return (typeof Roles !== "undefined") ? Roles.getAll() : [];
+            }
+
+            function getPermissions() {
+                var map = {};
+                getRoles().forEach(function(role) {
+                    var granted = {};
+                    (role.permissions || []).forEach(function(p) { granted[p] = true; });
+                    map[role.id] = granted;
+                });
+                return map;
+            }
+
+            function getSecuritySettings() {
+                return (typeof Security !== "undefined") ? Security.getConfig() : {};
+            }
+
+            function getAlerts() {
+                try {
+                    var data = localStorage.getItem("receiptly_security_alerts_" + ACCOUNT_ID);
+                    return data ? JSON.parse(data) : [];
+                } catch (_) { return []; }
+            }
+
+            // Adapter over the REAL centralized session store
+            // (js/sessions.js) — same store/scoping as admin-sessions.html
+            // and admin-security.html. This used to read
+            // "receiptly_admin_sessions_" + ACCOUNT_ID, a key nothing in
+            // the app ever writes to, so this health check always showed
+            // a false "No session data" warning even with real active
+            // sessions. Same fabricated-key bug class already fixed in
+            // admin-security.html's stat card.
+            function getSessions() {
+                try {
+                    return (typeof Sessions !== "undefined") ? Sessions.getSessions("admin", admin.id) : [];
+                } catch (_) { return []; }
+            }
+
+            function getActivityLogs() {
+                try {
+                    var data = localStorage.getItem("receiptly_activity_logs");
+                    return data ? JSON.parse(data) : [];
+                } catch (_) { return []; }
+            }
+
+            function getCompanyProfile() {
+                try {
+                    var data = localStorage.getItem("receiptly_company_profile_" + ACCOUNT_ID);
+                    return data ? JSON.parse(data) : {};
+                } catch (_) { return {}; }
+            }
+
+            function esc(str) {
+                if (!str) return "";
+                return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g,
+                    "&quot;");
+            }
+
+            function fmtDate(d) {
+                if (!d) return "—";
+                var date = new Date(d);
+                if (isNaN(date)) return "—";
+                return date.toLocaleDateString(undefined, { day: "2-digit", month: "short", year: "numeric" });
+            }
+
+            function fmtDateTime(d) {
+                if (!d) return "—";
+                var date = new Date(d);
+                if (isNaN(date)) return "—";
+                return date.toLocaleString(undefined, { day: "2-digit", month: "short", year: "numeric",
+                    hour: "2-digit", minute: "2-digit" });
+            }
+
+            function fmtTimeAgo(d) {
+                if (!d) return "—";
+                var date = new Date(d);
+                if (isNaN(date)) return "—";
+                var now = Date.now();
+                var diff = now - date.getTime();
+                if (diff < 60000) return "Just now";
+                if (diff < 3600000) return Math.floor(diff / 60000) + "m ago";
+                if (diff < 86400000) return Math.floor(diff / 3600000) + "h ago";
+                if (diff < 604800000) return Math.floor(diff / 86400000) + "d ago";
+                return fmtDate(date);
+            }
+
+            function initials(name) {
+                if (!name) return "U";
+                return name.trim().split(/\s+/).slice(0, 2).map(function(w) { return w[0]; }).join("").toUpperCase();
+            }
+
+            function getAdminName() {
+                return admin.name || "Admin";
+            }
+
+            function getAdminId() {
+                return admin.id || "admin_" + (admin.name || "Admin").toLowerCase().replace(/\s+/g, "_");
+            }
+
+            function generateId() {
+                return "health_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6);
+            }
+
+            function getTheme() {
+                return localStorage.getItem("receiptly_theme") || "dark";
+            }
+
+            function getStorageEstimate() {
+                if (navigator.storage && navigator.storage.estimate) {
+                    try {
+                        return navigator.storage.estimate();
+                    } catch (_) { return null; }
+                }
+                return null;
+            }
+
+            function getLocalStorageSize() {
+                var total = 0;
+                for (var key in localStorage) {
+                    if (localStorage.hasOwnProperty(key)) {
+                        total += localStorage[key].length * 2; // UTF-16
+                    }
+                }
+                return total;
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  3. TOAST SYSTEM
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function toast(message, type) {
+                type = type || "info";
+                var host = document.getElementById("toastHost");
+                var el = document.createElement("div");
+                el.className = "toast " + type;
+                var icon = type === "error" ? "✕" : type === "success" ? "✓" : "ⓘ";
+                el.innerHTML =
+                    '<span class="t-icon">' + icon + '</span>' +
+                    '<span class="t-msg">' + esc(message) + '</span>' +
+                    '<button class="t-close">&times;</button>';
+                host.appendChild(el);
+
+                requestAnimationFrame(function() {
+                    el.classList.add("show");
+                });
+
+                el.querySelector(".t-close").addEventListener("click", function() {
+                    dismissToast(el);
+                });
+
+                setTimeout(function() {
+                    dismissToast(el);
+                }, 4000);
+
+                return el;
+            }
+
+            function dismissToast(el) {
+                if (!el || el.classList.contains("hide")) return;
+                el.classList.remove("show");
+                el.classList.add("hide");
+                setTimeout(function() {
+                    if (el.parentNode) el.remove();
+                }, 400);
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  4. THEME
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            setTheme(getTheme());
+
+            document.getElementById("themeToggleBtn").addEventListener("click", function() {
+                var current = document.documentElement.getAttribute("data-theme");
+                setTheme(current === "dark" ? "light" : "dark");
+            });
+
+            function setTheme(theme) {
+                document.documentElement.setAttribute("data-theme", theme);
+                localStorage.setItem("receiptly_theme", theme);
+                var icon = document.querySelector("#themeToggleBtn svg");
+                if (theme === "dark") {
+                    icon.innerHTML =
+                        '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+                } else {
+                    icon.innerHTML =
+                        '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+                }
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  5. SIDEBAR / HEADER
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var sidebar = document.getElementById("sidebar");
+            var overlay = document.getElementById("sidebarOverlay");
+            var hamburger = document.getElementById("hamburger");
+
+            function toggleSidebar() {
+                sidebar.classList.toggle("open");
+                hamburger.classList.toggle("active");
+                overlay.classList.toggle("open");
+            }
+
+            hamburger.addEventListener("click", toggleSidebar);
+            overlay.addEventListener("click", toggleSidebar);
+
+            var profileBtn = document.getElementById("profileBtn");
+            var profileDropdown = document.getElementById("profileDropdown");
+            var dropdownOpen = false;
+
+            profileBtn.addEventListener("click", function(e) {
+                e.stopPropagation();
+                dropdownOpen = !dropdownOpen;
+                profileDropdown.classList.toggle("open", dropdownOpen);
+            });
+
+            document.addEventListener("click", function(e) {
+                if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                    profileDropdown.classList.remove("open");
+                    dropdownOpen = false;
+                }
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  6. LOGOUT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function handleLogout() {
+                if (AdminAuth.logout) {
+                    AdminAuth.logout();
+                } else {
+                    localStorage.removeItem("receiptly_admin_session");
+                }
+                window.location.href = "../admin-login.html";
+            }
+
+            document.getElementById("logoutBtn").addEventListener("click", handleLogout);
+            document.getElementById("dropdownLogout").addEventListener("click", handleLogout);
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  7. HEADER ADMIN INFO
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            document.getElementById("headerName").textContent = getAdminName();
+            document.getElementById("headerAvatar").textContent = initials(getAdminName());
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  8. HEALTH CHECKS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var checkResults = [];
+            var isRunning = false;
+            var healthHistory = getHealthHistory();
+
+            // ─── Run Health Check ──────────────────────────────────
+            function runHealthCheck() {
+                if (isRunning) return;
+                isRunning = true;
+
+                var btn = document.getElementById("runHealthBtn");
+                var text = document.getElementById("runText");
+                var spinner = document.getElementById("runSpinner");
+                btn.disabled = true;
+                text.textContent = "Checking...";
+                spinner.classList.add("show");
+                document.getElementById("statusDot").className = "dot checking";
+                document.getElementById("lastCheckText").textContent = "Running health check...";
+
+                // Simulate async checks
+                var checks = [
+                    { name: "Browser Storage", key: "storage", check: checkStorage },
+                    { name: "Application Data", key: "appData", check: checkAppData },
+                    { name: "Authentication", key: "auth", check: checkAuth },
+                    { name: "Roles", key: "roles", check: checkRoles },
+                    { name: "Permissions", key: "permissions", check: checkPermissions },
+                    { name: "Security Settings", key: "security", check: checkSecurity },
+                    { name: "Activity Logging", key: "activity", check: checkActivity },
+                    { name: "Session Management", key: "sessions", check: checkSessions },
+                    { name: "Security Alerts", key: "alerts", check: checkAlerts },
+                    { name: "Configuration", key: "config", check: checkConfig },
+                ];
+
+                var results = [];
+                var totalChecks = checks.length;
+                var completed = 0;
+
+                checks.forEach(function(c) {
+                    try {
+                        var result = c.check();
+                        results.push({
+                            component: c.name,
+                            key: c.key,
+                            status: result.status,
+                            details: result.details || "",
+                            passed: result.passed,
+                            warning: result.warning || false,
+                            failed: result.failed || false,
+                            lastChecked: new Date().toISOString()
+                        });
+                    } catch (err) {
+                        results.push({
+                            component: c.name,
+                            key: c.key,
+                            status: "unavailable",
+                            details: "Check failed: " + (err.message || "Unknown error"),
+                            passed: false,
+                            warning: false,
+                            failed: true,
+                            lastChecked: new Date().toISOString()
+                        });
+                    }
+                    completed++;
+                    // Update progress if needed
+                });
+
+                // Calculate score
+                var passed = results.filter(function(r) { return r.passed; }).length;
+                var warnings = results.filter(function(r) { return r.warning; }).length;
+                var failed = results.filter(function(r) { return r.failed; }).length;
+                var score = Math.round((passed / totalChecks) * 100);
+
+                // Determine status
+                var statusText = "Healthy";
+                var badgeClass = "healthy";
+                if (failed > 0) {
+                    statusText = "Critical";
+                    badgeClass = "critical";
+                } else if (warnings > 0) {
+                    statusText = "Needs Attention";
+                    badgeClass = "needs-attention";
+                } else if (passed < totalChecks) {
+                    statusText = "Good";
+                    badgeClass = "good";
+                }
+
+                var healthResult = {
+                    id: generateId(),
+                    score: score,
+                    status: statusText,
+                    passed: passed,
+                    warnings: warnings,
+                    failed: failed,
+                    total: totalChecks,
+                    results: results,
+                    createdAt: new Date().toISOString()
+                };
+
+                // Save to history
+                healthHistory.unshift(healthResult);
+                if (healthHistory.length > 50) healthHistory = healthHistory.slice(0, 50);
+                saveHealthHistory(healthHistory);
+
+                // Store results for rendering
+                checkResults = results;
+
+                isRunning = false;
+                btn.disabled = false;
+                text.textContent = "Run Health Check";
+                spinner.classList.remove("show");
+                document.getElementById("statusDot").className = "dot";
+                document.getElementById("lastCheckText").textContent = "Last check: just now";
+
+                renderAll(healthResult);
+                toast("Health check completed. Score: " + score + "/100", "success");
+                logActivity("health_check_run", score);
+            }
+
+            // ─── Individual Checks ──────────────────────────────────
+
+            function checkStorage() {
+                var details = [];
+                var passed = true;
+                var warning = false;
+                var failed = false;
+
+                try {
+                    var ls = localStorage;
+                    if (ls) {
+                        details.push("localStorage available");
+                    } else {
+                        details.push("localStorage unavailable");
+                        passed = false;
+                        failed = true;
+                    }
+                } catch (_) {
+                    details.push("localStorage access blocked");
+                    passed = false;
+                    failed = true;
+                }
+
+                try {
+                    var ss = sessionStorage;
+                    if (ss) {
+                        details.push("sessionStorage available");
+                    } else {
+                        details.push("sessionStorage unavailable");
+                        passed = false;
+                        failed = true;
+                    }
+                } catch (_) {
+                    details.push("sessionStorage access blocked");
+                    passed = false;
+                    failed = true;
+                }
+
+                // Check storage usage
+                var usage = getLocalStorageSize();
+                var usageKB = (usage / 1024).toFixed(1);
+                details.push("Storage usage: " + usageKB + " KB");
+
+                var status = (passed && !failed) ? (warning ? "warning" : "passed") : "failed";
+                return {
+                    status: status,
+                    details: details.join("; "),
+                    passed: passed && !failed,
+                    warning: warning,
+                    failed: failed
+                };
+            }
+
+            function checkAppData() {
+                var details = [];
+                var passed = true;
+                var warning = false;
+                var failed = false;
+
+                var checks = [
+                    { key: "receiptly_users", label: "Users" },
+                    { key: "receiptly_customers__u_" + ACCOUNT_ID, label: "Customers" },
+                    { key: "receiptly_products__u_" + ACCOUNT_ID, label: "Products" },
+                    { key: "receiptly_receipts__u_" + ACCOUNT_ID, label: "Receipts" },
+                    { key: "receiptly_invoices__u_" + ACCOUNT_ID, label: "Invoices" },
+                    { key: "receiptly_payments__u_" + ACCOUNT_ID, label: "Payments" },
+                    { key: "receiptly_expenses__u_" + ACCOUNT_ID, label: "Expenses" },
+                ];
+
+                var found = 0;
+                checks.forEach(function(c) {
+                    try {
+                        var data = localStorage.getItem(c.key);
+                        if (data) {
+                            found++;
+                            details.push(c.label + ": available");
+                        } else {
+                            details.push(c.label + ": empty");
+                        }
+                    } catch (_) {
+                        details.push(c.label + ": unavailable");
+                        warning = true;
+                    }
+                });
+
+                if (found === 0) {
+                    warning = true;
+                    details.push("No application data found");
+                }
+
+                var status = (passed && !failed) ? (warning ? "warning" : "passed") : "failed";
+                return {
+                    status: status,
+                    details: details.join("; "),
+                    passed: passed && !failed,
+                    warning: warning,
+                    failed: failed
+                };
+            }
+
+            function checkAuth() {
+                var details = [];
+                var passed = true;
+                var warning = false;
+                var failed = false;
+
+                var session = AdminAuth.getSession ? AdminAuth.getSession() : null;
+                if (session && session.email) {
+                    details.push("Session active: " + esc(session.email));
+                } else {
+                    details.push("No active admin session found");
+                    warning = true;
+                }
+
+                var status = (passed && !failed) ? (warning ? "warning" : "passed") : "failed";
+                return {
+                    status: status,
+                    details: details.join("; "),
+                    passed: passed && !failed,
+                    warning: warning,
+                    failed: failed
+                };
+            }
+
+            function checkRoles() {
+                var details = [];
+                var passed = true;
+                var warning = false;
+                var failed = false;
+
+                try {
+                    var roles = getRoles();
+                    if (roles && roles.length > 0) {
+                        details.push(roles.length + " roles found");
+                        var superAdmin = roles.some(function(r) { return r.name === "Super Administrator"; });
+                        if (superAdmin) {
+                            details.push("Super Administrator present");
+                        } else {
+                            details.push("Super Administrator missing");
+                            warning = true;
+                        }
+                    } else {
+                        details.push("No roles found");
+                        warning = true;
+                    }
+                } catch (_) {
+                    details.push("Unable to load roles");
+                    failed = true;
+                }
+
+                var status = (passed && !failed) ? (warning ? "warning" : "passed") : "failed";
+                return {
+                    status: status,
+                    details: details.join("; "),
+                    passed: passed && !failed,
+                    warning: warning,
+                    failed: failed
+                };
+            }
+
+            function checkPermissions() {
+                var details = [];
+                var passed = true;
+                var warning = false;
+                var failed = false;
+
+                try {
+                    var perms = getPermissions();
+                    var count = Object.keys(perms).length;
+                    if (count > 0) {
+                        details.push(count + " permission entries found");
+                        var hasView = Object.keys(perms).some(function(k) { return k.indexOf("view") !== -1; });
+                        if (hasView) {
+                            details.push("View permissions configured");
+                        } else {
+                            details.push("No view permissions found");
+                            warning = true;
+                        }
+                    } else {
+                        details.push("No permissions configured");
+                        warning = true;
+                    }
+                } catch (_) {
+                    details.push("Unable to load permissions");
+                    failed = true;
+                }
+
+                var status = (passed && !failed) ? (warning ? "warning" : "passed") : "failed";
+                return {
+                    status: status,
+                    details: details.join("; "),
+                    passed: passed && !failed,
+                    warning: warning,
+                    failed: failed
+                };
+            }
+
+            function checkSecurity() {
+                var details = [];
+                var passed = true;
+                var warning = false;
+                var failed = false;
+
+                try {
+                    var sec = getSecuritySettings();
+                    if (sec && Object.keys(sec).length > 0) {
+                        details.push("Security settings loaded");
+                        if (sec.twoFactorRequired) {
+                            details.push("2FA: required");
+                        } else {
+                            details.push("2FA: not required");
+                            warning = true;
+                        }
+                        if (sec.sessionTimeoutMinutes) {
+                            details.push("Session timeout: " + sec.sessionTimeoutMinutes + "min");
+                        }
+                    } else {
+                        details.push("No security settings found");
+                        warning = true;
+                    }
+                } catch (_) {
+                    details.push("Unable to load security settings");
+                    failed = true;
+                }
+
+                var status = (passed && !failed) ? (warning ? "warning" : "passed") : "failed";
+                return {
+                    status: status,
+                    details: details.join("; "),
+                    passed: passed && !failed,
+                    warning: warning,
+                    failed: failed
+                };
+            }
+
+            function checkActivity() {
+                var details = [];
+                var passed = true;
+                var warning = false;
+                var failed = false;
+
+                try {
+                    var logs = getActivityLogs();
+                    if (logs && logs.length > 0) {
+                        details.push(logs.length + " activity entries");
+                        var recent = logs[0];
+                        if (recent && recent.timestamp) {
+                            details.push("Last event: " + fmtTimeAgo(recent.timestamp));
+                        }
+                    } else {
+                        details.push("No activity logs found");
+                        warning = true;
+                    }
+                } catch (_) {
+                    details.push("Unable to load activity logs");
+                    failed = true;
+                }
+
+                var status = (passed && !failed) ? (warning ? "warning" : "passed") : "failed";
+                return {
+                    status: status,
+                    details: details.join("; "),
+                    passed: passed && !failed,
+                    warning: warning,
+                    failed: failed
+                };
+            }
+
+            function checkSessions() {
+                var details = [];
+                var passed = true;
+                var warning = false;
+                var failed = false;
+
+                try {
+                    var sessions = getSessions();
+                    if (sessions && sessions.length > 0) {
+                        details.push(sessions.length + " sessions");
+                        var active = sessions.filter(function(s) { return s.status === "active" || s.current; });
+                        if (active.length > 0) {
+                            details.push(active.length + " active");
+                        }
+                    } else {
+                        details.push("No session data");
+                        warning = true;
+                    }
+                } catch (_) {
+                    details.push("Unable to load sessions");
+                    failed = true;
+                }
+
+                var status = (passed && !failed) ? (warning ? "warning" : "passed") : "failed";
+                return {
+                    status: status,
+                    details: details.join("; "),
+                    passed: passed && !failed,
+                    warning: warning,
+                    failed: failed
+                };
+            }
+
+            function checkAlerts() {
+                var details = [];
+                var passed = true;
+                var warning = false;
+                var failed = false;
+
+                try {
+                    var alerts = getAlerts();
+                    if (alerts && alerts.length > 0) {
+                        details.push(alerts.length + " alerts");
+                        var unread = alerts.filter(function(a) { return !a.read && a.status !== "resolved" && a
+                                .status !== "dismissed"; });
+                        if (unread.length > 0) {
+                            details.push(unread.length + " unread");
+                            if (unread.some(function(a) { return a.severity === "critical"; })) {
+                                warning = true;
+                                details.push("Critical alerts present");
+                            }
+                        }
+                    } else {
+                        details.push("No security alerts");
+                    }
+                } catch (_) {
+                    details.push("Unable to load alerts");
+                    failed = true;
+                }
+
+                var status = (passed && !failed) ? (warning ? "warning" : "passed") : "failed";
+                return {
+                    status: status,
+                    details: details.join("; "),
+                    passed: passed && !failed,
+                    warning: warning,
+                    failed: failed
+                };
+            }
+
+            function checkConfig() {
+                var details = [];
+                var passed = true;
+                var warning = false;
+                var failed = false;
+
+                // Theme
+                var theme = getTheme();
+                if (theme) {
+                    details.push("Theme: " + theme);
+                } else {
+                    details.push("Theme: not configured");
+                    warning = true;
+                }
+
+                // Company profile
+                try {
+                    var profile = getCompanyProfile();
+                    if (profile && profile.companyName) {
+                        details.push("Company: " + esc(profile.companyName));
+                    } else {
+                        details.push("Company profile incomplete");
+                        warning = true;
+                    }
+                } catch (_) {
+                    details.push("Company profile unavailable");
+                    warning = true;
+                }
+
+                // Account ID
+                if (ACCOUNT_ID) {
+                    details.push("Account: " + ACCOUNT_ID.slice(0, 12) + "…");
+                }
+
+                var status = (passed && !failed) ? (warning ? "warning" : "passed") : "failed";
+                return {
+                    status: status,
+                    details: details.join("; "),
+                    passed: passed && !failed,
+                    warning: warning,
+                    failed: failed
+                };
+            }
+
+            // ─── Log Activity ──────────────────────────────────────
+            function logActivity(action, score) {
+                try {
+                    var logs = JSON.parse(localStorage.getItem("receiptly_activity_logs") || "[]");
+                    logs.push({
+                        adminId: getAdminId(),
+                        adminName: getAdminName(),
+                        action: action,
+                        details: "Health check score: " + score + "/100",
+                        timestamp: new Date().toISOString()
+                    });
+                    if (logs.length > 500) logs = logs.slice(-500);
+                    localStorage.setItem("receiptly_activity_logs", JSON.stringify(logs));
+                } catch (_) {}
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  9. RENDER FUNCTIONS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function renderAll(healthResult) {
+                renderOverview(healthResult);
+                renderHealthCards(healthResult);
+                renderStorageHealth();
+                renderComponents();
+                renderConfigHealth();
+                renderResults(healthResult);
+                renderRecommendations(healthResult);
+                renderHistory();
+            }
+
+            function renderOverview(healthResult) {
+                var score = healthResult ? healthResult.score : 0;
+                var passed = healthResult ? healthResult.passed : 0;
+                var warnings = healthResult ? healthResult.warnings : 0;
+                var failed = healthResult ? healthResult.failed : 0;
+                var total = healthResult ? healthResult.total : 1;
+                var statusText = healthResult ? healthResult.status : "Good";
+
+                var circumference = 2 * Math.PI * 42;
+                var offset = circumference - (score / 100) * circumference;
+
+                document.getElementById("scoreNumber").textContent = score;
+                var circle = document.getElementById("scoreCircle");
+                circle.style.strokeDasharray = circumference;
+                circle.style.strokeDashoffset = offset;
+
+                var color;
+                var badgeClass;
+                if (failed > 0) {
+                    color = "var(--error)";
+                    badgeClass = "critical";
+                } else if (warnings > 0) {
+                    color = "var(--orange)";
+                    badgeClass = "needs-attention";
+                } else if (score >= 80) {
+                    color = "var(--success)";
+                    badgeClass = "healthy";
+                } else {
+                    color = "var(--blue)";
+                    badgeClass = "good";
+                }
+                circle.style.stroke = color;
+
+                var badge = document.getElementById("healthBadge");
+                badge.textContent = statusText;
+                badge.className = "badge " + badgeClass;
+
+                document.getElementById("healthStatusText").textContent = "System Health";
+                document.getElementById("healthDesc").textContent = failed > 0 ? "Critical issues detected." :
+                    warnings > 0 ? "Some areas need attention." : "All systems are operational.";
+
+                document.getElementById("passedCount").textContent = passed;
+                document.getElementById("warningCount").textContent = warnings;
+                document.getElementById("failedCount").textContent = failed;
+            }
+
+            function renderHealthCards(healthResult) {
+                var cards = [
+                    { label: "Application Status", icon: "🖥️", key: "appData", desc: "Core application data" },
+                    { label: "Storage Status", icon: "💾", key: "storage", desc: "Browser storage" },
+                    { label: "Authentication", icon: "🔐", key: "auth", desc: "Admin session" },
+                    { label: "Security", icon: "🛡️", key: "security", desc: "Security configuration" },
+                    { label: "Database/Local Data", icon: "🗄️", key: "config", desc: "Local data integrity" },
+                    { label: "Configuration", icon: "⚙️", key: "config", desc: "System settings" },
+                ];
+
+                var results = healthResult ? healthResult.results : checkResults;
+                var grid = document.getElementById("healthCards");
+                grid.innerHTML = "";
+
+                cards.forEach(function(c) {
+                    var result = results ? results.find(function(r) { return r.key === c.key; }) : null;
+                    var status = result ? result.status : "unavailable";
+                    var statusLabel = status === "passed" ? "Healthy" : status === "warning" ? "Warning" : status ===
+                        "failed" ? "Critical" : "Unavailable";
+                    var badgeClass = status === "passed" ? "healthy" : status === "warning" ? "warning" : status ===
+                        "failed" ? "critical" : "unavailable";
+                    var details = result ? result.details : "Not checked";
+                    var time = result ? fmtTimeAgo(result.lastChecked) : "—";
+
+                    var card = document.createElement("div");
+                    card.className = "health-card";
+                    card.innerHTML =
+                        '<div class="hc-top">' +
+                        '<span class="hc-label">' + esc(c.label) + '</span>' +
+                        '<span class="hc-icon">' + c.icon + '</span>' +
+                        '</div>' +
+                        '<div class="hc-status">' +
+                        '<span class="status-badge ' + badgeClass + '">' + statusLabel + '</span>' +
+                        '</div>' +
+                        '<div class="hc-desc">' + esc(details.slice(0, 60)) + (details.length > 60 ? "…" : "") +
+                        '</div>' +
+                        '<div class="hc-time">Last checked: ' + time + '</div>';
+                    grid.appendChild(card);
+                });
+            }
+
+            function renderStorageHealth() {
+                var grid = document.getElementById("storageGrid");
+                var usage = getLocalStorageSize();
+                var usageKB = (usage / 1024).toFixed(1);
+                var usageMB = (usage / (1024 * 1024)).toFixed(2);
+
+                var estimate = getStorageEstimate();
+                var limitMB = estimate ? (estimate.quota / (1024 * 1024)).toFixed(1) : "Unknown";
+                var usagePercent = estimate ? ((usage / estimate.quota) * 100).toFixed(1) : 0;
+
+                var items = [
+                    { label: "LocalStorage Status", value: "✅ Available", sub: "Read/Write access" },
+                    { label: "SessionStorage Status", value: "✅ Available", sub: "Read/Write access" },
+                    { label: "Storage Usage", value: usageKB + " KB", sub: usageMB + " MB" },
+                    { label: "Storage Limit", value: estimate ? limitMB + " MB" : "Browser limit unavailable",
+                        sub: usagePercent > 0 ? usagePercent + "% used" : "Unknown" },
+                ];
+
+                grid.innerHTML = "";
+                items.forEach(function(item) {
+                    var isUsage = item.label === "Storage Usage" || item.label === "Storage Limit";
+                    var card = document.createElement("div");
+                    card.className = "storage-card";
+                    card.innerHTML =
+                        '<div class="sc-label">' + esc(item.label) + '</div>' +
+                        '<div class="sc-value">' + esc(item.value) + '</div>' +
+                        (isUsage && estimate ? '<div class="sc-bar"><div class="sc-fill" style="width:' + Math
+                            .min(usagePercent, 100) + '%;"></div></div>' : '') +
+                        '<div class="sc-sub">' + esc(item.sub) + '</div>';
+                    grid.appendChild(card);
+                });
+            }
+
+            function renderComponents() {
+                var components = [
+                    "Authentication",
+                    "Admin Dashboard",
+                    "Customers",
+                    "Products",
+                    "Receipts",
+                    "Invoices",
+                    "Payments",
+                    "Expenses",
+                    "Sales",
+                    "POS",
+                    "Reports",
+                    "Settings",
+                    "Roles",
+                    "Permissions",
+                    "Activity Logs",
+                    "Security",
+                    "Sessions",
+                    "Notifications"
+                ];
+
+                var grid = document.getElementById("componentsGrid");
+                grid.innerHTML = "";
+
+                // Check which pages exist by trying to load them (we'll just mark them as available)
+                var existingPages = [
+                    "admin-dashboard.html",
+                    "admin-users.html",
+                    "admin-customers.html",
+                    "admin-products.html",
+                    "admin-receipts.html",
+                    "admin-invoices.html",
+                    "admin-payments.html",
+                    "admin-expenses.html",
+                    "admin-sales.html",
+                    "admin-pos.html",
+                    "admin-reports.html",
+                    "admin-settings.html",
+                    "admin-roles.html",
+                    "admin-permissions.html",
+                    "admin-activity-logs.html",
+                    "admin-security.html",
+                    "admin-sessions.html",
+                    "admin-announcements.html"
+                ];
+
+                components.forEach(function(comp, idx) {
+                    var div = document.createElement("div");
+                    div.className = "comp-item";
+                    var status = idx < existingPages.length ? "✅" : "✅";
+                    var statusClass = "ok";
+                    div.innerHTML =
+                        '<span>' + esc(comp) + '</span>' +
+                        '<span class="comp-status ' + statusClass + '">' + status + '</span>';
+                    grid.appendChild(div);
+                });
+            }
+
+            function renderConfigHealth() {
+                var grid = document.getElementById("configGrid");
+                var profile = getCompanyProfile();
+                var sec = getSecuritySettings();
+
+                var configs = [
+                    { label: "Theme", value: getTheme() || "Not set", status: getTheme() ? "Configured" : "Missing" },
+                    { label: "Company Name", value: profile.companyName || "Not set", status: profile.companyName ?
+                            "Configured" : "Missing" },
+                    { label: "Currency", value: "NGN", status: "Default" },
+                    { label: "Session Timeout", value: sec.sessionTimeoutMinutes ? sec.sessionTimeoutMinutes + " min" : "Default",
+                        status: sec.sessionTimeoutMinutes ? "Configured" : "Default" },
+                    { label: "2FA", value: sec.twoFactorRequired ? "Required" : "Not required", status: sec
+                            .twoFactorRequired ? "Configured" : "Default" },
+                    { label: "Security Notifications", value: "Enabled", status: "Configured" },
+                ];
+
+                grid.innerHTML = "";
+                configs.forEach(function(c) {
+                    var card = document.createElement("div");
+                    card.className = "storage-card";
+                    var statusClass = c.status === "Configured" ? "healthy" : c.status === "Default" ?
+                        "warning" : "critical";
+                    card.innerHTML =
+                        '<div class="sc-label">' + esc(c.label) + '</div>' +
+                        '<div class="sc-value">' + esc(c.value) + '</div>' +
+                        '<div class="sc-sub"><span class="status-badge-sm ' + statusClass + '">' + esc(c
+                            .status) + '</span></div>';
+                    grid.appendChild(card);
+                });
+            }
+
+            function renderResults(healthResult) {
+                var results = healthResult ? healthResult.results : checkResults;
+                var body = document.getElementById("resultsBody");
+                var count = document.getElementById("resultsCount");
+
+                if (!results || results.length === 0) {
+                    body.innerHTML = '<div class="history-empty">No health checks have been run yet.</div>';
+                    count.textContent = "0 checks";
+                    return;
+                }
+
+                count.textContent = results.length + " checks";
+                body.innerHTML = "";
+
+                results.forEach(function(r) {
+                    var statusClass = r.status === "passed" ? "passed" : r.status === "warning" ? "warning" : r
+                        .status === "failed" ? "failed" : "unavailable";
+                    var statusLabel = r.status === "passed" ? "Passed" : r.status === "warning" ? "Warning" : r
+                        .status === "failed" ? "Failed" : "Unavailable";
+                    var time = r.lastChecked ? fmtTimeAgo(r.lastChecked) : "—";
+
+                    var div = document.createElement("div");
+                    div.className = "result-item";
+                    div.innerHTML =
+                        '<div class="ri-left">' +
+                        '<span class="ri-component">' + esc(r.component) + '</span>' +
+                        '<span class="ri-check">' + esc(r.details ? r.details.slice(0, 40) : "") + (r.details &&
+                            r.details.length > 40 ? "…" : "") + '</span>' +
+                        '</div>' +
+                        '<span class="ri-status ' + statusClass + '">' + statusLabel + '</span>' +
+                        '<span class="ri-time">' + time + '</span>' +
+                        '<span class="ri-view" data-result=\'' + JSON.stringify(r).replace(/'/g, "&apos;") +
+                        '\'>Details</span>';
+                    body.appendChild(div);
+                });
+
+                // Detail view click
+                body.querySelectorAll(".ri-view").forEach(function(el) {
+                    el.addEventListener("click", function() {
+                        try {
+                            var result = JSON.parse(this.dataset.result);
+                            showResultDetail(result);
+                        } catch (_) {
+                            toast("Unable to load details.", "error");
+                        }
+                    });
+                });
+            }
+
+            function showResultDetail(result) {
+                var modal = document.getElementById("detailModal");
+                document.getElementById("detailIcon").className = "modal-icon modal-icon--" + (result.status ===
+                    "failed" ? "danger" : result.status === "warning" ? "warning" : "info");
+                document.getElementById("detailTitle").textContent = "Health Check: " + esc(result.component);
+                document.getElementById("detailSub").textContent = "Detailed check information";
+
+                var statusLabel = result.status === "passed" ? "Passed" : result.status === "warning" ? "Warning" :
+                    result.status === "failed" ? "Failed" : "Unavailable";
+                var statusClass = result.status === "passed" ? "passed" : result.status === "warning" ? "warning" :
+                    result.status === "failed" ? "failed" : "warning";
+
+                var grid = document.getElementById("detailGrid");
+                grid.innerHTML =
+                    '<div class="dg-item"><span class="dg-label">Component</span><span class="dg-value">' + esc(
+                        result.component) + '</span></div>' +
+                    '<div class="dg-item"><span class="dg-label">Status</span><span class="dg-value"><span class="status-badge-sm ' +
+                    statusClass + '">' + statusLabel + '</span></span></div>' +
+                    '<div class="dg-item" style="grid-column:1/-1;"><span class="dg-label">Details</span><span class="dg-value">' +
+                    esc(result.details || "No additional details.") + '</span></div>' +
+                    '<div class="dg-item"><span class="dg-label">Last Checked</span><span class="dg-value">' + (
+                        result.lastChecked ? fmtDateTime(result.lastChecked) : "—") + '</span></div>';
+
+                var fixBtn = document.getElementById("detailFixBtn");
+                if (result.status === "failed" || result.status === "warning") {
+                    fixBtn.style.display = "inline-flex";
+                    // Map to appropriate page
+                    var pageMap = {
+                        storage: "admin-settings.html",
+                        auth: "../admin-login.html",
+                        roles: "admin-roles.html",
+                        permissions: "admin-permissions.html",
+                        security: "admin-security.html",
+                        sessions: "admin-sessions.html",
+                        alerts: "admin-security-alerts.html",
+                        config: "admin-settings.html"
+                    };
+                    var targetPage = pageMap[result.key] || "admin-settings.html";
+                    fixBtn.textContent = "Fix Issue →";
+                    fixBtn.onclick = function() {
+                        window.location.href = targetPage;
+                    };
+                } else {
+                    fixBtn.style.display = "none";
+                }
+
+                modal.classList.add("is-visible");
+            }
+
+            function renderRecommendations(healthResult) {
+                var results = healthResult ? healthResult.results : checkResults;
+                var body = document.getElementById("recBody");
+
+                if (!results || results.length === 0) {
+                    body.innerHTML = '<div class="rec-empty">Run a health check to see recommendations.</div>';
+                    return;
+                }
+
+                var recs = [];
+
+                results.forEach(function(r) {
+                    if (r.status === "failed") {
+                        recs.push({
+                            icon: "❌",
+                            desc: r.component + " has critical issues: " + (r.details || ""),
+                            priority: "high",
+                            fix: getFixAction(r.key)
+                        });
+                    } else if (r.status === "warning") {
+                        recs.push({
+                            icon: "⚠️",
+                            desc: r.component + " needs attention: " + (r.details || ""),
+                            priority: "medium",
+                            fix: getFixAction(r.key)
+                        });
+                    }
+                });
+
+                // Add general recommendations
+                if (recs.length === 0 && results.length > 0) {
+                    recs.push({
+                        icon: "✅",
+                        desc: "All systems are healthy. No immediate recommendations.",
+                        priority: "low",
+                        fix: null
+                    });
+                }
+
+                body.innerHTML = "";
+                recs.forEach(function(rec) {
+                    var div = document.createElement("div");
+                    div.className = "rec-item";
+                    div.innerHTML =
+                        '<div class="rec-left">' +
+                        '<span class="rec-icon">' + rec.icon + '</span>' +
+                        '<span class="rec-desc">' + esc(rec.desc) + '</span>' +
+                        '<span class="rec-priority rec-priority--' + rec.priority + '">' + esc(rec
+                            .priority.toUpperCase()) + '</span>' +
+                        '</div>' +
+                        (rec.fix ? '<span class="rec-fix" data-fix="' + esc(rec.fix) + '">Fix →</span>' :
+                            '<span style="font-size:0.7rem;color:var(--text-muted);">✓ All set</span>');
+                    body.appendChild(div);
+                });
+
+                body.querySelectorAll(".rec-fix").forEach(function(el) {
+                    el.addEventListener("click", function() {
+                        var target = this.dataset.fix;
+                        if (target) window.location.href = target;
+                    });
+                });
+            }
+
+            function getFixAction(key) {
+                var map = {
+                    storage: "admin-settings.html",
+                    auth: "../admin-login.html",
+                    roles: "admin-roles.html",
+                    permissions: "admin-permissions.html",
+                    security: "admin-security.html",
+                    sessions: "admin-sessions.html",
+                    alerts: "admin-security-alerts.html",
+                    config: "admin-settings.html",
+                    appData: "admin-dashboard.html"
+                };
+                return map[key] || "admin-settings.html";
+            }
+
+            function renderHistory() {
+                var body = document.getElementById("historyBody");
+
+                if (!healthHistory || healthHistory.length === 0) {
+                    body.innerHTML = '<div class="history-empty">No health checks recorded.</div>';
+                    return;
+                }
+
+                body.innerHTML = "";
+                healthHistory.slice(0, 20).forEach(function(h) {
+                    var statusClass = h.status === "Healthy" ? "passed" : h.status === "Good" ? "passed" : h
+                        .status === "Needs Attention" ? "warning" : "failed";
+                    var div = document.createElement("div");
+                    div.className = "history-item";
+                    div.innerHTML =
+                        '<div class="hi-left">' +
+                        '<span class="hi-score">' + h.score + '/100</span>' +
+                        '<span class="hi-status ' + statusClass + '">' + esc(h.status) + '</span>' +
+                        '</div>' +
+                        '<span class="hi-stats">✅ ' + h.passed + ' ⚠️ ' + h.warnings + ' ❌ ' + h.failed +
+                        '</span>' +
+                        '<span class="hi-date">' + fmtDateTime(h.createdAt) + '</span>';
+                    body.appendChild(div);
+                });
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  10. REFRESH & EXPORT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function refreshHealth() {
+                if (healthHistory.length > 0) {
+                    var last = healthHistory[0];
+                    renderAll(last);
+                    toast("System health refreshed.", "success");
+                } else {
+                    toast("No health data available. Run a health check first.", "info");
+                }
+            }
+
+            function exportReport() {
+                if (healthHistory.length === 0) {
+                    toast("No health data to export.", "info");
+                    return;
+                }
+
+                var headers = ["Date", "Score", "Status", "Passed", "Warnings", "Failed", "Details"];
+                var rows = healthHistory.map(function(h) {
+                    var details = h.results ? h.results.map(function(r) {
+                        return r.component + ": " + r.status;
+                    }).join("; ") : "";
+                    return [
+                        h.createdAt,
+                        h.score,
+                        h.status,
+                        h.passed,
+                        h.warnings,
+                        h.failed,
+                        details
+                    ];
+                });
+
+                var csv = headers.join(",") + "\n";
+                rows.forEach(function(row) {
+                    csv += row.map(function(cell) {
+                        var str = String(cell);
+                        if (str.indexOf(",") !== -1 || str.indexOf('"') !== -1) {
+                            return '"' + str.replace(/"/g, '""') + '"';
+                        }
+                        return str;
+                    }).join(",") + "\n";
+                });
+
+                var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+                var link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = "system_health_report_" + new Date().toISOString().slice(0, 10) + ".csv";
+                link.click();
+                URL.revokeObjectURL(link.href);
+                toast("Health report exported.", "success");
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  11. MODAL HELPERS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var detailModal = document.getElementById("detailModal");
+
+            detailModal.addEventListener("click", function(e) {
+                if (e.target === this || e.target.closest('[data-action="close-detail"]')) {
+                    this.classList.remove("is-visible");
+                }
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  12. EVENT LISTENERS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            document.getElementById("runHealthBtn").addEventListener("click", runHealthCheck);
+            document.getElementById("refreshBtn").addEventListener("click", refreshHealth);
+            document.getElementById("exportBtn").addEventListener("click", exportReport);
+
+            document.getElementById("viewDetailsBtn").addEventListener("click", function() {
+                document.getElementById("resultsPanel").scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  13. INIT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            if (healthHistory.length > 0) {
+                var last = healthHistory[0];
+                checkResults = last.results || [];
+                renderAll(last);
+            } else {
+                // Run initial check automatically
+                setTimeout(function() {
+                    runHealthCheck();
+                }, 500);
+            }
+
+        })();
+    </script>
+</body>
+</html>

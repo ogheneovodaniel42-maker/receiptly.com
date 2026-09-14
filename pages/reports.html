@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reports — Receiptly</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap"
+    rel="stylesheet"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script>
+      if (typeof Chart === "undefined") {
+        document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"><\/script>');
+      }
+    </script>
+  <style>
+    /* ============================================================
+       CSS VARIABLES & RESET — Same as dashboard / payments
+       ============================================================ */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --paper-raised: #ffffff;
+      --paper-sunken: #f8fafc;
+      --line: #e2e8f0;
+      --line-strong: #cbd5e1;
+      --ink: #0f172a;
+      --ink-soft: #475569;
+      --muted: #94a3b8;
+      --primary: #2563eb;
+      --primary-soft: #eff6ff;
+      --primary-glow: rgba(37, 99, 235, 0.15);
+      --primary-dark: #1d4ed8;
+      --primary-light: #dbeafe;
+      --secondary-blue: #3b82f6;
+      --secondary-blue-soft: #e0f2fe;
+      --success: #059669;
+      --success-soft: #ecfdf5;
+      --red: #dc2626;
+      --red-soft: #fef2f2;
+      --orange: #d97706;
+      --orange-soft: #fffbeb;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+      --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.03);
+      --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.04);
+      --shadow-xl: 0 40px 80px rgba(0, 0, 0, 0.1), 0 12px 32px rgba(0, 0, 0, 0.05);
+      --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --transition-slow: 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --accent: #2563eb;
+      --accent-soft: #eff6ff;
+      --accent-glow: rgba(37, 99, 235, 0.15);
+      --accent-dark: #1d4ed8;
+      --nav-height: 60px;
+      --sidebar-width: 260px;
+    }
+
+    [data-theme="dark"] {
+      --paper-raised: #1e293b;
+      --paper-sunken: #0f172a;
+      --line: #334155;
+      --line-strong: #475569;
+      --ink: #f8fafc;
+      --ink-soft: #cbd5e1;
+      --muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-soft: #1e3a5f;
+      --primary-glow: rgba(59, 130, 246, 0.12);
+      --primary-dark: #2563eb;
+      --primary-light: #1e3a5f;
+      --secondary-blue: #60a5fa;
+      --secondary-blue-soft: #1e293b;
+      --success: #34d399;
+      --success-soft: #064e3b;
+      --red: #f87171;
+      --red-soft: #450a0a;
+      --orange: #fbbf24;
+      --orange-soft: #2a1f0f;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-sans);
+      background: var(--paper-sunken);
+      color: var(--ink);
+      transition: background var(--transition), color var(--transition);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+    .icon {
+      display: inline-block;
+      flex-shrink: 0;
+      width: 1em;
+      height: 1em;
+      vertical-align: middle;
+      fill: currentColor;
+      stroke: none;
+    }
+
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--paper-raised);
+      border-right: 1px solid var(--line);
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      overflow-y: auto;
+      transition: transform 0.3s ease, background var(--transition), border-color var(--transition);
+      z-index: 100;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 24px 20px 20px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+      border-bottom: 1px solid var(--line);
+    }
+    .sidebar-brand .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .sidebar-nav {
+      flex: 1;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      transition: all var(--transition);
+      position: relative;
+    }
+    .sidebar-nav a .nav-icon {
+      font-size: 1.1rem;
+      width: 24px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .sidebar-nav a:hover {
+      background: var(--paper-sunken);
+      color: var(--ink);
+    }
+    .sidebar-nav a.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .sidebar-nav a.active::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 3px;
+      border-radius: 0 4px 4px 0;
+      background: var(--primary);
+    }
+    .sidebar-footer {
+      padding: 16px 12px;
+      border-top: 1px solid var(--line);
+    }
+    .sidebar-footer a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      transition: all var(--transition);
+    }
+    .sidebar-footer a .nav-icon {
+      font-size: 1.1rem;
+      width: 24px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .sidebar-footer a:hover {
+      background: var(--paper-sunken);
+      color: var(--red);
+    }
+
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #appLayout {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 0 24px 40px;
+      width: 100%;
+    }
+
+    .dash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px 16px 0;
+      flex-wrap: wrap;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 24px;
+      background: var(--paper-sunken);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .dash-header__left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      padding: 6px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      transition: background var(--transition);
+    }
+    .hamburger:hover {
+      background: var(--paper-raised);
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2.5px;
+      background: var(--ink);
+      border-radius: 100px;
+      transition: all 0.3s ease;
+      transform-origin: center;
+    }
+    .hamburger.active span:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+    }
+    .dash-header__greeting-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+    .dash-header__greeting {
+      font-size: clamp(1rem, 1.8vw, 1.4rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+    .dash-header__greeting .highlight {
+      color: var(--primary);
+    }
+    .dash-header__sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .dash-header__sub .business-name {
+      font-weight: 600;
+      color: var(--ink-soft);
+    }
+    .dash-header__right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+    .dash-header__date {
+      font-size: 0.78rem;
+      color: var(--muted);
+      background: var(--paper-raised);
+      padding: 4px 14px;
+      border-radius: 100px;
+      border: 1px solid var(--line);
+      white-space: nowrap;
+    }
+    .dash-header__notif {
+      width: 38px;
+      height: 38px;
+      border-radius: 100px;
+      background: var(--paper-raised);
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: all var(--transition);
+      position: relative;
+      color: var(--ink-soft);
+    }
+    .dash-header__notif:hover {
+      border-color: var(--line-strong);
+      background: var(--paper-sunken);
+    }
+    .dash-header__notif .dot {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 100px;
+      background: var(--red);
+    }
+    .dash-header__theme-toggle {
+      width: 38px;
+      height: 38px;
+      border-radius: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      background: var(--paper-raised);
+      border: 1px solid var(--line);
+      transition: all var(--transition);
+      color: var(--ink-soft);
+    }
+    .dash-header__theme-toggle:hover {
+      background: var(--paper-sunken);
+      border-color: var(--line-strong);
+      color: var(--ink);
+    }
+    .dash-header__avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 100px;
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all var(--transition);
+      border: 2px solid transparent;
+      flex-shrink: 0;
+    }
+    .dash-header__avatar:hover {
+      border-color: var(--primary);
+      transform: scale(1.04);
+    }
+
+    .page-wrap {
+      padding: 0 0 28px;
+    }
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .page-head h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin: 0 0 4px;
+      color: var(--ink);
+    }
+    .page-head p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+    }
+    .btn-primary {
+      border: 0;
+      border-radius: var(--radius-sm);
+      padding: 10px 20px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--paper-raised);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 16px 14px;
+      transition: all var(--transition);
+    }
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--line-strong);
+    }
+    .stat-card__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 4px;
+    }
+    .stat-card__icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+    .stat-card__icon--blue { background: var(--primary-soft); color: var(--primary); }
+    .stat-card__icon--green { background: var(--success-soft); color: var(--success); }
+    .stat-card__icon--orange { background: var(--orange-soft); color: var(--orange); }
+    .stat-card__icon--red { background: var(--red-soft); color: var(--red); }
+    .stat-card__label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+    .stat-card__value {
+      font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+    .stat-card__value.positive { color: var(--success); }
+    .stat-card__value.negative { color: var(--red); }
+
+    .panel {
+      background: var(--paper-raised);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .panel-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .panel-head h3 {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-head .panel-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th {
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 2px solid var(--line);
+      font-weight: 600;
+      color: var(--ink-soft);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: var(--paper-sunken);
+    }
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+      color: var(--ink);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .badge-success { background: var(--success-soft); color: var(--success); }
+    .badge-danger { background: var(--red-soft); color: var(--red); }
+    .badge-warning { background: var(--orange-soft); color: var(--orange); }
+    .badge-info { background: var(--primary-soft); color: var(--primary); }
+    .badge-secondary { background: var(--line); color: var(--ink-soft); }
+
+    .empty-state {
+      text-align: center;
+      padding: 32px 10px;
+      color: var(--muted);
+    }
+    .empty-state .empty-icon {
+      font-size: 2.4rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .filter-bar input,
+    .filter-bar select {
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+      background: var(--paper-sunken);
+      color: var(--ink);
+      font-size: 0.85rem;
+      transition: border-color var(--transition);
+    }
+    .filter-bar input:focus,
+    .filter-bar select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .chart-container {
+      position: relative;
+      height: 200px;
+      padding: 8px 4px;
+    }
+
+    .mt-16 { margin-top: 16px; }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.3);
+      z-index: 999;
+      backdrop-filter: blur(2px);
+    }
+    .sidebar-overlay.open { display: block; }
+
+    @media (max-width: 1024px) {
+      #appLayout { padding: 0 16px 32px; }
+      .dash-header { padding: 12px 16px 12px 0; }
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        transform: translateX(-100%);
+        box-shadow: var(--shadow-lg);
+        z-index: 1000;
+        width: 280px;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .hamburger { display: flex; }
+      .dash-header { padding: 10px 0; flex-wrap: wrap; }
+      .dash-header__right { gap: 8px; }
+      .dash-header__date { font-size: 0.65rem; padding: 2px 10px; }
+      .dash-header__notif, .dash-header__theme-toggle, .dash-header__avatar { width: 34px; height: 34px; font-size: 0.85rem; }
+      .dash-header__greeting { font-size: 1rem; }
+      .dash-header__sub { font-size: 0.7rem; }
+      .sidebar-overlay { display: none; }
+      .sidebar-overlay.open { display: block; }
+      #appLayout { padding: 0 12px 24px; }
+      .stats-grid { grid-template-columns: repeat(2,1fr); gap: 12px; }
+      .stat-card { padding: 12px 10px; }
+      .stat-card__value { font-size: 1rem; }
+      .page-head { flex-direction: column; align-items: flex-start; }
+      .filter-bar { flex-direction: column; align-items: stretch; }
+      .filter-bar input, .filter-bar select { width: 100%; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .stat-card { padding: 10px 8px; }
+      .stat-card__value { font-size: 0.9rem; }
+      .stat-card__label { font-size: 0.55rem; }
+      .stat-card__icon { width: 28px; height: 28px; font-size: 0.75rem; }
+    }
+
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 100px; }
+  .msg-nav-badge{margin-left:auto;background:#dc2626;color:#fff;font-size:.68rem;font-weight:800;border-radius:999px;padding:1px 6px;min-width:18px;text-align:center;line-height:1.4;}
+
+    /* ============================================================
+       PRINT — drop the sidebar/header chrome and center the report
+       at a readable width instead of stretching edge to edge.
+       ============================================================ */
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .sidebar,
+      .dash-header,
+      .page-head button {
+        display: none !important;
+      }
+
+      .app-container {
+        display: block;
+      }
+
+      #appLayout {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0;
+      }
+
+      .stat-card,
+      .card {
+        box-shadow: none !important;
+        break-inside: avoid;
+      }
+
+      @page {
+        margin: 0.5in;
+      }
+    }
+</style>
+</head>
+<body>
+  <!-- ============================================================
+       SIDEBAR OVERLAY (mobile)
+       ============================================================ -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app-container">
+    <!-- ============================================================
+         SIDEBAR
+         ============================================================ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-icon">R</span>
+        <span>Receiptly</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg></span> Dashboard</a>
+        <a href="create-receipt.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54h3.58l-4.08 5.25L8 11.29h-3.58L10 6.25z"/></svg></span> New Receipt</a>
+        <a href="receipts.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-8-6z"/></svg></span> Receipts</a>
+        <a href="customers.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></span> Customers</a>
+        <a href="analytics.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M16 6l2.29 2.29-4.71 4.71-4-4L2 16.59 3.41 18 9 12.41l4 4 6-6V6z"/></svg></span> Analytics</a>
+        <a href="expenses.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M16 18l2.29-2.29-4.71-4.71-4 4L2 7.41 3.41 6 9 11.59l4-4 6 6V6h2v12z"/></svg></span> Expenses</a>
+        <a href="payments.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span> Payments</a>
+        <a href="reports.html" class="active"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 17v-4M12 17v-7M16 17v-2"/></svg></span> Reports</a>
+        <a href="audit-log.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v6h6M12 7v5l3 2"/></svg></span> Audit Log</a>
+        <a href="verify-receipt.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></span> Verify</a>
+        <a href="messages.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></span> Messages<span class="msg-nav-badge" id="msgNavBadge" style="display:none;">0</span></a><a href="settings.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.62l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.48.1.62l2.03 1.58c-.05.3-.07.62-.07.94 0 .33.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.62l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.47.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.48-.1-.62l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></span> Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="../login.html" id="logoutLink"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M19 19V5c0-1.1-.9-2-2-2H7c-1.1 0-2 .9-2 2v14H3v2h18v-2h-2zM9 7h6v5H9V7z"/></svg></span> Logout</a>
+      </div>
+    </aside>
+
+    <!-- ============================================================
+         MAIN CONTENT
+         ============================================================ -->
+    <main class="main-content">
+      <!-- HEADER -->
+      <header class="dash-header">
+        <div class="dash-header__left">
+          <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+            <span></span><span></span><span></span>
+          </button>
+          <div class="dash-header__greeting-wrap">
+            <div class="dash-header__greeting">Reports</div>
+            <div class="dash-header__sub">Financial overview of your entire business</div>
+          </div>
+        </div>
+        <div class="dash-header__right">
+          <span class="dash-header__date" id="currentDate">Loading...</span>
+          <button class="dash-header__notif" aria-label="Notifications">
+            <svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+            <span class="dot" style="display:none;"></span>
+          </button>
+          <button class="dash-header__theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <span id="themeIcon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+          </button>
+          <div class="dash-header__avatar" id="avatar" tabindex="0">
+            <img id="avatarLogo" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;">
+            <span id="avatarInitials">U</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- ============================================================
+           APP LAYOUT
+           ============================================================ -->
+      <div id="appLayout">
+        <div class="page-wrap">
+          <!-- ===== PAGE HEADER ===== -->
+          <div class="page-head">
+            <div>
+              <h2>Financial Reports</h2>
+              <p>A comprehensive summary built from your receipts, payments, and expenses.</p>
+            </div>
+            <button class="btn-primary" onclick="window.print()">
+              <svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M18 9h3v6h-3"/><path d="M6 9H3v6h3"/><rect x="6" y="15" width="12" height="7"/><line x1="18" y1="12" x2="18" y2="12.01"/></svg>
+              Print Report
+            </button>
+          </div>
+
+          <!-- ===== STATS GRID ===== -->
+          <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+              <div class="stat-card__top">
+                <span class="stat-card__label">Gross Sales</span>
+                <span class="stat-card__icon stat-card__icon--blue"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg></span>
+              </div>
+              <div class="stat-card__value" id="reportGrossSales">₦0.00</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__top">
+                <span class="stat-card__label">Collected</span>
+                <span class="stat-card__icon stat-card__icon--green"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></span>
+              </div>
+              <div class="stat-card__value" id="reportCollected">₦0.00</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__top">
+                <span class="stat-card__label">Expenses</span>
+                <span class="stat-card__icon stat-card__icon--orange"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M16 18l2.29-2.29-4.71-4.71-4 4L2 7.41 3.41 6 9 11.59l4-4 6 6V6h2v12z"/></svg></span>
+              </div>
+              <div class="stat-card__value" id="reportExpenses">₦0.00</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__top">
+                <span class="stat-card__label">Net Profit</span>
+                <span class="stat-card__icon stat-card__icon--green"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M16 6l2.29 2.29-4.71 4.71-4-4L2 16.59 3.41 18 9 12.41l4 4 6-6V6z"/></svg></span>
+              </div>
+              <div class="stat-card__value" id="reportProfit">₦0.00</div>
+            </div>
+          </div>
+
+          <div class="stats-grid" id="statsGrid2">
+            <div class="stat-card">
+              <div class="stat-card__top">
+                <span class="stat-card__label">Outstanding</span>
+                <span class="stat-card__icon stat-card__icon--red"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M9 1v2h6V1H9zm0 4h6V3H9v2zm9 7c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9 9-4.03 9-9zm-2 0c0 3.86-3.14 7-7 7s-7-3.14-7-7 3.14-7 7-7 7 3.14 7 7z"/></svg></span>
+              </div>
+              <div class="stat-card__value" id="reportOutstanding">₦0.00</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__top">
+                <span class="stat-card__label">Receipts</span>
+                <span class="stat-card__icon stat-card__icon--blue"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54h3.58l-4.08 5.25L8 11.29h-3.58L10 6.25z"/></svg></span>
+              </div>
+              <div class="stat-card__value" id="reportReceipts">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__top">
+                <span class="stat-card__label">Payments</span>
+                <span class="stat-card__icon stat-card__icon--green"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>
+              </div>
+              <div class="stat-card__value" id="reportPayments">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__top">
+                <span class="stat-card__label">Customers</span>
+                <span class="stat-card__icon stat-card__icon--orange"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></span>
+              </div>
+              <div class="stat-card__value" id="reportCustomers">0</div>
+            </div>
+          </div>
+
+          <!-- ===== FINANCIAL SUMMARY TABLE ===== -->
+          <div class="panel">
+            <div class="panel-head">
+              <h3>
+                <svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12z"/></svg>
+                Financial Summary
+              </h3>
+              <span class="panel-sub">All available local records</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Metric</th>
+                    <th>Type</th>
+                    <th style="text-align:right">Amount</th>
+                  </tr>
+                </thead>
+                <tbody id="reportRows">
+                  <!-- populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ===== CHARTS SECTION ===== -->
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+            <div class="panel">
+              <div class="panel-head"><h3>Sales vs Expenses</h3></div>
+              <div class="panel-body" style="padding:16px;">
+                <div class="chart-container"><canvas id="salesExpensesChart"></canvas></div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><h3>Expense Breakdown</h3></div>
+              <div class="panel-body" style="padding:16px;">
+                <div class="chart-container"><canvas id="expenseBreakdownChart"></canvas></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== RECENT TRANSACTIONS ===== -->
+          <div class="panel">
+            <div class="panel-head">
+              <h3>
+                <svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13h-1v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                Recent Transactions
+              </h3>
+              <span class="panel-sub">Latest payments</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Customer</th>
+                    <th>Receipt</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody id="recentTransactions">
+                  <!-- populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <!-- /#appLayout -->
+    </main>
+  </div>
+
+  <!-- ============================================================
+       JAVASCRIPT
+       ============================================================ -->
+  <script src="../js/ui-popup.js"></script>
+  <script src="../js/storage.js"></script>
+    <script src="../js/currency.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/user-scope.js"></script>
+  <script src="../js/plan-access.js"></script>
+  <script>
+    (function() {
+      'use strict';
+
+      // ============================================================
+      // 1. USER SESSION & AUTH
+      // ============================================================
+      // Scope (js/user-scope.js) is the single source of truth for
+      // session storage and the current user; it is loaded above.
+      function getSession() {
+        return Scope.getSession();
+      }
+
+      function currentUser() {
+        return Scope.currentUser();
+      }
+
+      function requireAuth() {
+        return Scope.requireLogin('../login.html');
+      }
+      if (!requireAuth()) return;
+
+      // ============================================================
+      // 2. STORAGE HELPERS
+      // ============================================================
+      function scopedKey(base) {
+        // Scope (js/user-scope.js) owns the "<base>__u_<userId>" scoping
+        // scheme; every page must use it so all data stays in the same
+        // per-account namespace.
+        return Scope.key(base);
+      }
+
+      function getData(base) {
+        try {
+          const val = localStorage.getItem(scopedKey(base));
+          return val ? JSON.parse(val) : [];
+        } catch(e) { return []; }
+      }
+
+      function getReceipts() { return getData('receiptly_receipts'); }
+      function getPayments() { return getData('receiptly_payments'); }
+      function getExpenses() { return getData('receiptly_expenses'); }
+      function getCustomers() { return getData('receiptly_customers'); }
+
+      // ============================================================
+      // 3. HELPERS
+      // ============================================================
+      function money(val) {
+        return '₦' + Number(val).toFixed(2);
+      }
+
+      function formatDate(dateStr) {
+        if (!dateStr) return '-';
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
+      }
+
+      // Canonical payment status vocabulary (matches pages/payments.html and
+      // admin/admin-payments.html): 'completed' | 'pending' | 'failed' | 'refunded'
+      function getStatusBadge(status) {
+        const map = {
+          'completed': 'badge-success',
+          'pending': 'badge-warning',
+          'failed': 'badge-danger',
+          'refunded': 'badge-secondary'
+        };
+        const key = String(status || '').toLowerCase();
+        const label = key ? key.charAt(0).toUpperCase() + key.slice(1) : 'Unknown';
+        return `<span class="badge ${map[key] || 'badge-secondary'}">${label}</span>`;
+      }
+
+      // ============================================================
+      // 4. DATA CALCULATIONS
+      // ============================================================
+      function computeReports() {
+        const receipts = getReceipts();
+        // Exclude subscription/billing payments (what this business pays
+        // Receiptly itself) — those aren't customer payments and must never
+        // count as business revenue collected. They belong on Settings > Billing.
+        const payments = getPayments().filter(p => p.type !== 'subscription');
+        const expenses = getExpenses();
+        const customers = getCustomers();
+
+        // Gross Sales: sum of all receipt totals
+        const grossSales = receipts.reduce((sum, r) => sum + (r.total || 0), 0);
+
+        // Collected: sum of all successful payments
+        const collected = payments.filter(p => String(p.status || '').toLowerCase() === 'completed').reduce((sum, p) => sum + (p.amount || 0), 0);
+
+        // Total Expenses
+        const totalExpenses = expenses.reduce((sum, e) => sum + (e.amount || 0), 0);
+
+        // Net Profit
+        const netProfit = collected - totalExpenses;
+
+        // Outstanding: sum of all receipt totals minus what has been paid
+        let outstanding = 0;
+        receipts.forEach(r => {
+          const paid = r.amountPaid || 0;
+          const total = r.total || 0;
+          if (paid < total) outstanding += (total - paid);
+        });
+
+        const totalReceipts = receipts.length;
+        const totalPayments = payments.length;
+        const totalCustomers = customers.length;
+
+        return {
+          grossSales,
+          collected,
+          totalExpenses,
+          netProfit,
+          outstanding,
+          totalReceipts,
+          totalPayments,
+          totalCustomers,
+          receipts,
+          payments,
+          expenses,
+          customers
+        };
+      }
+
+      // ============================================================
+      // 5. RENDER FUNCTIONS
+      // ============================================================
+      function renderStats(data) {
+        document.getElementById('reportGrossSales').textContent = money(data.grossSales);
+        document.getElementById('reportCollected').textContent = money(data.collected);
+        document.getElementById('reportExpenses').textContent = money(data.totalExpenses);
+
+        const profitEl = document.getElementById('reportProfit');
+        profitEl.textContent = money(data.netProfit);
+        profitEl.className = 'stat-card__value';
+        if (data.netProfit > 0) profitEl.classList.add('positive');
+        else if (data.netProfit < 0) profitEl.classList.add('negative');
+
+        document.getElementById('reportOutstanding').textContent = money(data.outstanding);
+        document.getElementById('reportReceipts').textContent = data.totalReceipts;
+        document.getElementById('reportPayments').textContent = data.totalPayments;
+        document.getElementById('reportCustomers').textContent = data.totalCustomers;
+      }
+
+      function renderSummaryTable(data) {
+        const tbody = document.getElementById('reportRows');
+        const rows = [
+          { metric: 'Gross Sales (Receipts)', type: 'Revenue', amount: data.grossSales },
+          { metric: 'Total Payments (Collected)', type: 'Revenue', amount: data.collected },
+          { metric: 'Total Expenses', type: 'Cost', amount: data.totalExpenses },
+          { metric: 'Net Profit', type: 'Profit', amount: data.netProfit },
+          { metric: 'Outstanding Balance', type: 'Receivable', amount: data.outstanding },
+          { metric: 'Total Receipts', type: 'Count', amount: data.totalReceipts },
+          { metric: 'Total Payments', type: 'Count', amount: data.totalPayments },
+          { metric: 'Total Customers', type: 'Count', amount: data.totalCustomers },
+        ];
+
+        tbody.innerHTML = rows.map(row => `
+          <tr>
+            <td><strong>${row.metric}</strong></td>
+            <td><span class="badge ${row.type === 'Revenue' ? 'badge-success' : row.type === 'Cost' ? 'badge-danger' : row.type === 'Profit' ? 'badge-info' : 'badge-secondary'}">${row.type}</span></td>
+            <td style="text-align:right; font-weight:600;">${typeof row.amount === 'number' ? money(row.amount) : row.amount}</td>
+          </tr>
+        `).join('');
+      }
+
+      function renderRecentTransactions(data) {
+        const tbody = document.getElementById('recentTransactions');
+        const payments = data.payments || [];
+        const recent = payments.slice(-6).reverse();
+
+        if (recent.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><span class="empty-icon">💳</span><p>No payments recorded yet.</p></td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = recent.map(p => {
+          const receipt = data.receipts.find(r => r.id == p.receiptId);
+          const customer = data.customers.find(c => c.id == p.customerId);
+          const customerName = customer ? (customer.name || customer.email) : (p.customerName || 'Unknown');
+          const receiptNumber = receipt ? (receipt.receiptNumber || 'RC-'+receipt.id) : 'N/A';
+          return `
+            <tr>
+              <td><strong>${customerName}</strong></td>
+              <td>${receiptNumber}</td>
+              <td style="font-weight:600;">${money(p.amount)}</td>
+              <td>${p.method || '—'}</td>
+              <td>${getStatusBadge(p.status)}</td>
+              <td>${formatDate(p.date)}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // ============================================================
+      // 6. CHARTS (Chart.js)
+      // ============================================================
+      let salesExpensesChartInstance = null;
+      let expenseBreakdownChartInstance = null;
+
+      // Chart.js is loaded from a CDN with a fallback (see <head>);
+      // on very poor connections BOTH can fail, which used to throw
+      // an uncaught "Chart is not defined" and break the rest of the
+      // page. This guard makes that a console warning + skipped
+      // chart instead of a crash.
+      function safeNewChart(ctx, config) {
+        if (typeof Chart === "undefined") {
+          console.warn("Chart.js failed to load — skipping chart render.");
+          return null;
+        }
+        return new Chart(ctx, config);
+      }
+
+      function renderCharts(data) {
+        // Sales vs Expenses (Bar Chart)
+        const ctx1 = document.getElementById('salesExpensesChart');
+        if (ctx1) {
+          if (salesExpensesChartInstance) salesExpensesChartInstance.destroy();
+          salesExpensesChartInstance = safeNewChart(ctx1, {
+            type: 'bar',
+            data: {
+              labels: ['Gross Sales', 'Collected', 'Expenses', 'Net Profit'],
+              datasets: [{
+                label: 'Amount (₦)',
+                data: [data.grossSales, data.collected, data.totalExpenses, data.netProfit],
+                backgroundColor: ['#2563eb', '#059669', '#d97706', '#8b5cf6'],
+                borderRadius: 6,
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: { callbacks: { label: (ctx) => ' ' + money(ctx.parsed.y) } }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: { callback: (val) => money(val), font: { size: 10 } },
+                  grid: { color: 'var(--line)' }
+                },
+                x: {
+                  grid: { display: false },
+                  ticks: { font: { size: 10 } }
+                }
+              }
+            }
+          });
+        }
+
+        // Expense Breakdown (Doughnut)
+        const ctx2 = document.getElementById('expenseBreakdownChart');
+        if (ctx2) {
+          if (expenseBreakdownChartInstance) expenseBreakdownChartInstance.destroy();
+          const expenses = data.expenses || [];
+          const categories = {};
+          expenses.forEach(e => {
+            const cat = e.category || 'Uncategorized';
+            categories[cat] = (categories[cat] || 0) + (e.amount || 0);
+          });
+          const labels = Object.keys(categories);
+          const values = Object.values(categories);
+
+          if (labels.length === 0) {
+            expenseBreakdownChartInstance = safeNewChart(ctx2, {
+              type: 'doughnut',
+              data: {
+                labels: ['No Data'],
+                datasets: [{ data: [1], backgroundColor: ['#e2e8f0'] }]
+              },
+              options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+            return;
+          }
+
+          expenseBreakdownChartInstance = safeNewChart(ctx2, {
+            type: 'doughnut',
+            data: {
+              labels: labels,
+              datasets: [{
+                data: values,
+                backgroundColor: ['#2563eb', '#059669', '#d97706', '#8b5cf6', '#ef4444', '#14b8a6', '#f43f5e']
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: 'bottom', labels: { font: { size: 10 }, color: 'var(--ink-soft)' } },
+                tooltip: { callbacks: { label: (ctx) => ' ' + money(ctx.parsed) } }
+              }
+            }
+          });
+        }
+      }
+
+      // ============================================================
+      // 7. MAIN LOAD FUNCTION
+      // ============================================================
+      function loadReports() {
+        const data = computeReports();
+        renderStats(data);
+        renderSummaryTable(data);
+        renderRecentTransactions(data);
+        renderCharts(data);
+      }
+
+      // ============================================================
+      // 8. THEME & HEADER SETUP
+      // ============================================================
+      function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        const icon = document.getElementById('themeIcon');
+        if (icon) {
+          if (theme === 'dark') {
+            icon.innerHTML = `<svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+          } else {
+            icon.innerHTML = `<svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+          }
+        }
+        localStorage.setItem('receiptpro-theme', theme);
+        // Re-render charts to match theme
+        loadReports();
+      }
+
+      const savedTheme = localStorage.getItem('receiptpro-theme') || 'light';
+      setTheme(savedTheme);
+
+      document.getElementById('themeToggle').addEventListener('click', function() {
+        const current = document.documentElement.getAttribute('data-theme');
+        setTheme(current === 'light' ? 'dark' : 'light');
+      });
+
+      // Header date
+      document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+        weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
+      });
+
+      // Avatar initials
+      const user = currentUser();
+      const avatarEl = document.getElementById('avatarInitials');
+      const avatarLogoEl = document.getElementById('avatarLogo');
+      if (avatarEl) {
+        const name = user ? (user.name || user.fullName || user.email || 'User') : 'User';
+        const parts = name.split(' ');
+        let initials = parts[0] ? parts[0][0] : 'U';
+        if (parts.length > 1) initials += parts[1][0] || '';
+        avatarEl.textContent = initials.toUpperCase();
+      }
+      if (avatarLogoEl) {
+        let profile = null;
+        try {
+          const p = localStorage.getItem(Scope.key('receiptly_profile'));
+          if (p) profile = JSON.parse(p);
+        } catch (e) {}
+        if (profile && profile.logo) {
+          avatarLogoEl.src = profile.logo;
+          avatarLogoEl.style.display = 'block';
+          if (avatarEl) avatarEl.style.display = 'none';
+        } else {
+          avatarLogoEl.style.display = 'none';
+          if (avatarEl) avatarEl.style.display = '';
+        }
+      }
+
+      // ============================================================
+      // 9. SIDEBAR TOGGLE (mobile)
+      // ============================================================
+      const hamburger = document.getElementById('hamburger');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+
+      function toggleSidebar() {
+        const isOpen = sidebar.classList.toggle('open');
+        hamburger.classList.toggle('active');
+        overlay.classList.toggle('open');
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+      }
+
+      hamburger.addEventListener('click', toggleSidebar);
+      overlay.addEventListener('click', function() {
+        sidebar.classList.remove('open');
+        hamburger.classList.remove('active');
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+
+      // Close sidebar on link click (mobile)
+      document.querySelectorAll('.sidebar-nav a, .sidebar-footer a').forEach(function(link) {
+        link.addEventListener('click', function() {
+          if (window.innerWidth <= 768) {
+            sidebar.classList.remove('open');
+            hamburger.classList.remove('active');
+            overlay.classList.remove('open');
+            document.body.style.overflow = '';
+          }
+        });
+      });
+
+      // ============================================================
+      // 10. STORAGE CHANGE LISTENER
+      // ============================================================
+      window.addEventListener('storage', function(e) {
+        if (e.key && e.key.includes('receiptly_')) {
+          loadReports();
+        }
+      });
+
+      // ============================================================
+      // 11. LOGOUT
+      // ============================================================
+      document.getElementById('logoutLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        // Scope (js/user-scope.js) is the single source of truth for
+        // session storage.
+        Scope.clearSession();
+        window.location.href = '../login.html';
+      });
+
+      // ============================================================
+      // 12. INIT
+      // ============================================================
+      loadReports();
+
+      console.log('%c Receiptly Reports ', 'background:#2563EB;color:#fff;font-weight:700;font-size:14px;padding:4px 12px;border-radius:4px;');
+      console.log('%c Full financial reporting loaded.', 'color:#475569;font-size:13px;');
+
+    })();
+  </script>
+
+</body>
+</html>

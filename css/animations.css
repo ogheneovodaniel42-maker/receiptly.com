@@ -1,0 +1,607 @@
+/* ============================================================
+   Receiptly — animations.css
+   Used sparingly: entrance fades and a couple of signature
+   moments (receipt stamp, verification check).
+   ============================================================ */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in { animation: fadeUp .45s cubic-bezier(.2,.7,.3,1) both; }
+.animate-in--1 { animation-delay: .04s; }
+.animate-in--2 { animation-delay: .1s; }
+.animate-in--3 { animation-delay: .16s; }
+.animate-in--4 { animation-delay: .22s; }
+
+@keyframes stampIn {
+  0% { opacity: 0; transform: scale(1.6) rotate(-4deg); }
+  60% { opacity: 1; transform: scale(.94) rotate(-4deg); }
+  100% { opacity: 1; transform: scale(1) rotate(-4deg); }
+}
+.stamp-animate { animation: stampIn .5s cubic-bezier(.2,.8,.3,1) both; }
+
+@keyframes shakeX {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(2px); }
+}
+.shake { animation: shakeX .4s ease; }
+
+.hover-lift { transition: transform .18s ease, box-shadow .18s ease; }
+.hover-lift:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+
+/* ===== RECEIPT GENERATION ANIMATION ===== */
+@keyframes popupFadeIn {
+  from { 
+    opacity: 0;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+  }
+  to { 
+    opacity: 1;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+}
+
+@keyframes popupScaleIn {
+  from { 
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulseGlow {
+  0% { 
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7),
+                inset 0 0 20px rgba(37, 99, 235, 0.1);
+  }
+  50% { 
+    box-shadow: 0 0 0 15px rgba(37, 99, 235, 0),
+                inset 0 0 20px rgba(37, 99, 235, 0.2);
+  }
+  100% { 
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0),
+                inset 0 0 20px rgba(37, 99, 235, 0.1);
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbitPulse {
+  0% { 
+    r: 50px;
+    opacity: 0.8;
+  }
+  50% { 
+    r: 65px;
+    opacity: 0.4;
+  }
+  100% { 
+    r: 50px;
+    opacity: 0.8;
+  }
+}
+
+@keyframes shimmer {
+  0% { 
+    background-position: -1000px 0;
+  }
+  100% { 
+    background-position: 1000px 0;
+  }
+}
+
+.receipt-gen-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: popupFadeIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.receipt-gen-overlay.hidden {
+  display: none;
+}
+
+.receipt-gen-popup {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  text-align: center;
+  position: relative;
+  max-width: 320px;
+  width: 90%;
+  box-shadow: var(--shadow-lg), 
+              0 0 40px rgba(37, 99, 235, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: popupScaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.receipt-gen-popup::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.1) 0%,
+    rgba(37, 99, 235, 0) 50%,
+    rgba(37, 99, 235, 0.05) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.receipt-gen-popup > * {
+  position: relative;
+  z-index: 1;
+}
+
+.receipt-gen-spinner {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 24px;
+  position: relative;
+}
+
+.receipt-gen-spinner-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid var(--line);
+  border-top-color: var(--accent);
+  border-right-color: var(--accent);
+  animation: spin 1.5s linear infinite;
+  box-shadow: inset 0 0 20px rgba(37, 99, 235, 0.1);
+}
+
+.receipt-gen-text h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.receipt-gen-text p {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.receipt-gen-dots {
+  display: inline-block;
+  margin-left: 4px;
+}
+
+.receipt-gen-dot {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin: 0 2px;
+  opacity: 0.6;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.receipt-gen-dot:nth-child(1) { animation-delay: -0.24s; }
+.receipt-gen-dot:nth-child(2) { animation-delay: -0.12s; }
+.receipt-gen-dot:nth-child(3) { animation-delay: 0s; }
+
+@keyframes pulse {
+  0%, 60%, 100% { 
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  30% { 
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ===== INSTANT PAYMENT ANIMATION ===== */
+.payment-anim-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(33, 29, 24, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: popupFadeIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.payment-anim-overlay.hidden { display: none; }
+
+.payment-anim-card {
+  width: 100%;
+  max-width: 340px;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 20px;
+  animation: popupScaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.payment-anim-cardface {
+  position: relative;
+  min-height: 168px;
+  padding: 20px 22px 22px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(145deg, #2b3a4f, #1a2432);
+  color: #fff;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+
+.payment-anim-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.payment-anim-chip {
+  width: 34px;
+  height: 24px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, var(--gold), #8f651c);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.25);
+}
+
+.payment-anim-brand {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.payment-anim-number {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  letter-spacing: 2px;
+  margin-top: 14px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.payment-anim-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 14px;
+}
+
+.payment-anim-bottom span {
+  display: block;
+  font-size: 0.85rem;
+  color: #fff;
+  font-weight: 600;
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.payment-anim-processing,
+.payment-anim-success {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-md);
+  background: rgba(15, 20, 28, 0.72);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-align: center;
+}
+
+.payment-anim-processing {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.payment-anim-cardface.is-success .payment-anim-processing {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.payment-anim-success {
+  opacity: 0;
+  transform: scale(0.9);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.payment-anim-cardface.is-success .payment-anim-success {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.payment-anim-ring {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 12px;
+}
+
+.payment-anim-ring svg {
+  transform: rotate(-90deg);
+  width: 64px;
+  height: 64px;
+}
+
+.pa-bg-circle {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.15);
+  stroke-width: 4;
+}
+
+.pa-progress-circle {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 188.5;
+  stroke-dashoffset: 188.5;
+  transition: stroke-dashoffset 0.3s ease, stroke 0.4s ease;
+}
+
+.pa-progress-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.pa-status {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.pa-sub {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 3px;
+}
+
+.pa-check {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--ledger-green-soft);
+  color: var(--ledger-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  box-shadow: 0 0 0 6px rgba(31, 111, 79, 0.15);
+}
+
+.pa-success-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #8fe3bd;
+}
+
+.pa-success-sub {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 3px;
+}
+
+.payment-anim-footer { margin-top: 16px; }
+
+.pa-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  padding: 6px 2px;
+}
+
+.pa-footer-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.pa-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: paDotPulse 1.1s infinite;
+}
+
+.payment-anim-cardface.is-success ~ .payment-anim-footer .pa-dot {
+  background: var(--ledger-green);
+  animation: none;
+}
+
+.pa-amount-row {
+  border-top: 1px solid var(--line);
+  margin-top: 4px;
+  padding-top: 10px;
+}
+
+.pa-amount {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+  font-family: var(--font-mono);
+}
+
+@keyframes paDotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.7); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-in, .stamp-animate, .shake { animation: none !important; }
+  .receipt-gen-overlay { animation: none !important; }
+  .receipt-gen-popup { animation: none !important; }
+  .receipt-gen-spinner-circle { animation: none !important; }
+  .receipt-gen-dot { animation: none !important; }
+  .payment-anim-overlay { animation: none !important; }
+  .payment-anim-card { animation: none !important; }
+  .pa-dot { animation: none !important; }
+  .pod-anim-overlay { animation: none !important; }
+  .pod-anim-card { animation: none !important; }
+  .pod-anim-truck { transition: none !important; }
+  .pod-anim-stamp { animation: none !important; }
+}
+
+/* ===== PAY ON DELIVERY ANIMATION ===== */
+.pod-anim-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(33, 29, 24, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: popupFadeIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.pod-anim-overlay.hidden { display: none; }
+
+.pod-anim-card {
+  width: 100%;
+  max-width: 340px;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 20px;
+  animation: popupScaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.pod-anim-paper {
+  position: relative;
+  min-height: 168px;
+  padding: 18px 18px 16px;
+  border-radius: var(--radius-md);
+  background: var(--paper-sunken);
+  border: 1.5px dashed var(--line-strong);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pod-anim-road {
+  position: relative;
+  height: 34px;
+  border-bottom: 2px dashed var(--line-strong);
+  margin-bottom: 8px;
+}
+
+.pod-anim-truck {
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  color: var(--ledger-green);
+  transform: translateX(0);
+  transition: transform 1.5s cubic-bezier(0.45, 0, 0.2, 1);
+}
+
+.pod-anim-truck.is-driving {
+  transform: translateX(calc(100% + 220px));
+}
+
+.pod-anim-stampzone {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70px;
+}
+
+.pod-anim-stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 2.5px solid var(--ledger-green);
+  color: var(--ledger-green);
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  line-height: 1.25;
+  font-family: var(--font-body);
+  opacity: 0;
+  transform: scale(1.6) rotate(-4deg);
+}
+
+.pod-anim-overlay.is-stamped .pod-anim-stamp {
+  animation: stampIn 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+.pod-anim-status {
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+.pod-anim-overlay.is-stamped .pod-anim-status {
+  color: var(--ledger-green);
+}
+
+/* Icon styles */
+.icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 0.2em;
+    font-size: inherit;
+    width: 1em;
+    height: 1em;
+}

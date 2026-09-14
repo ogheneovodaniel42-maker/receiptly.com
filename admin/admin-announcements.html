@@ -1,0 +1,3037 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Announcements — Receiptly Owner</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ════════════════════════════════════════════════════════════
+               CSS VARIABLES & RESET
+               ════════════════════════════════════════════════════════════ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-display: "Fraunces", Georgia, serif;
+
+            --bg-body: #f1f5f9;
+            --bg-card: rgba(255, 255, 255, 0.78);
+            --bg-card-border: rgba(255, 255, 255, 0.30);
+            --bg-input: #f1f5f9;
+            --bg-input-hover: #e8edf5;
+            --bg-sidebar: rgba(255, 255, 255, 0.92);
+            --bg-header: rgba(255, 255, 255, 0.72);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --text-inverse: #ffffff;
+            --accent: #7c3aed;
+            --accent-dark: #6d28d9;
+            --accent-glow: rgba(124, 58, 237, 0.25);
+            --accent-soft: #ede9fe;
+            --accent-light: #d8b4fe;
+            --border-light: #e2e8f0;
+            --border-strong: #cbd5e1;
+            --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 8px 30px rgba(15, 23, 42, 0.06);
+            --shadow-lg: 0 20px 60px rgba(15, 23, 42, 0.10);
+            --shadow-input: 0 0 0 4px rgba(124, 58, 237, 0.10);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --blur-amount: 20px;
+            --sidebar-width: 260px;
+            --header-height: 64px;
+            --success: #059669;
+            --success-soft: #ecfdf5;
+            --error: #dc2626;
+            --error-soft: #fef2f2;
+            --orange: #d97706;
+            --orange-soft: #fffbeb;
+            --blue: #2563eb;
+            --blue-soft: #eff6ff;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0b1220;
+            --bg-card: rgba(17, 27, 46, 0.80);
+            --bg-card-border: rgba(255, 255, 255, 0.05);
+            --bg-input: #1e293b;
+            --bg-input-hover: #263348;
+            --bg-sidebar: rgba(15, 23, 42, 0.92);
+            --bg-header: rgba(11, 18, 32, 0.80);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent: #8b5cf6;
+            --accent-dark: #7c3aed;
+            --accent-glow: rgba(139, 92, 246, 0.20);
+            --accent-soft: rgba(139, 92, 246, 0.12);
+            --accent-light: #a78bfa;
+            --border-light: #1e293b;
+            --border-strong: #334155;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.35);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+            --shadow-input: 0 0 0 4px rgba(139, 92, 246, 0.15);
+            --success: #34d399;
+            --success-soft: #064e3b;
+            --error: #f87171;
+            --error-soft: #450a0a;
+            --orange: #fbbf24;
+            --orange-soft: #2a1f0f;
+            --blue: #60a5fa;
+            --blue-soft: #1e293b;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: var(--font-sans);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            transition: background var(--transition-slow), color var(--transition-slow);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        button {
+            font: inherit;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: inherit;
+        }
+        input,
+        select,
+        textarea {
+            font: inherit;
+            color: inherit;
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-strong);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* ─── APP LAYOUT ─────────────────────────────────────────── */
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ─── SIDEBAR ────────────────────────────────────────────── */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-right: 1px solid var(--bg-card-border);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition), background var(--transition-slow), border-color var(--transition-slow);
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-bottom: 20px;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 20px 16px;
+            border-bottom: 1px solid var(--border-light);
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand .brand-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 800;
+            flex-shrink: 0;
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+
+        .sidebar-brand .brand-text {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        .sidebar-brand .brand-text .accent {
+            color: var(--accent);
+        }
+        .sidebar-brand .brand-sub {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 1px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .sidebar-nav .nav-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            padding: 12px 14px 6px;
+        }
+
+        .sidebar-nav .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            width: 100%;
+            text-align: left;
+            position: relative;
+        }
+
+        .sidebar-nav .nav-item .nav-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            opacity: 0.6;
+            transition: opacity var(--transition);
+        }
+
+        .sidebar-nav .nav-item:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+        .sidebar-nav .nav-item:hover .nav-icon {
+            opacity: 1;
+        }
+        .sidebar-nav .nav-item.active {
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .sidebar-nav .nav-item.active .nav-icon {
+            opacity: 1;
+            color: var(--accent);
+        }
+        .sidebar-nav .nav-item.active::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 6px;
+            bottom: 6px;
+            width: 3px;
+            border-radius: 0 4px 4px 0;
+            background: var(--accent);
+        }
+
+        .sidebar-footer {
+            padding: 12px 12px 0;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            width: 100%;
+            text-align: left;
+        }
+        .sidebar-footer .nav-item .nav-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            opacity: 0.6;
+        }
+        .sidebar-footer .nav-item:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+        .sidebar-footer .nav-item.logout:hover {
+            color: var(--error);
+        }
+        .sidebar-footer .nav-item.logout:hover .nav-icon {
+            opacity: 1;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+            display: none;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .sidebar-overlay.open {
+            display: block;
+        }
+
+        /* ─── MAIN ───────────────────────────────────────────────── */
+        .main {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left var(--transition);
+        }
+        .main.sidebar-closed {
+            margin-left: 0;
+        }
+
+        /* ─── TOP HEADER ────────────────────────────────────────── */
+        .top-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-header);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-bottom: 1px solid var(--bg-card-border);
+            padding: 0 24px;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            transition: background var(--transition-slow), border-color var(--transition-slow);
+        }
+
+        .top-header__left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 4.5px;
+            padding: 6px;
+            border-radius: var(--radius-sm);
+            transition: background var(--transition);
+        }
+        .hamburger:hover {
+            background: var(--bg-input);
+        }
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2.5px;
+            background: var(--text-primary);
+            border-radius: 100px;
+            transition: all 0.3s ease;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        .top-header__title {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .top-header__title .sub {
+            font-weight: 400;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-left: 6px;
+        }
+
+        .top-header__right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .header-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            font-size: 1rem;
+        }
+        .header-btn:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+
+        .header-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 14px 4px 4px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+            transition: all var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+        .header-profile:hover {
+            border-color: var(--border-strong);
+            background: var(--bg-input);
+        }
+        .header-profile .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+        .header-profile .profile-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        .header-profile .profile-info .name {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .header-profile .profile-info .role {
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+        }
+        .header-profile .chevron {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            margin-left: 2px;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            min-width: 200px;
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            padding: 8px 0;
+            display: none;
+            z-index: 200;
+            overflow: hidden;
+        }
+        .profile-dropdown.open {
+            display: block;
+            animation: dropDown 0.2s ease;
+        }
+        @keyframes dropDown {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .profile-dropdown .drop-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 18px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            width: 100%;
+            text-align: left;
+        }
+        .profile-dropdown .drop-item:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+        .profile-dropdown .drop-item svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            opacity: 0.6;
+        }
+        .profile-dropdown .divider {
+            height: 1px;
+            background: var(--border-light);
+            margin: 4px 12px;
+        }
+        .profile-dropdown .drop-item.logout {
+            color: var(--error);
+        }
+        .profile-dropdown .drop-item.logout:hover {
+            background: var(--error-soft);
+        }
+
+        /* ─── PAGE CONTENT ──────────────────────────────────────── */
+        .page-content {
+            flex: 1;
+            padding: 24px 24px 40px;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+        .page-header h1 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        .page-header h1 .highlight {
+            background: linear-gradient(135deg, var(--accent), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            margin-top: 2px;
+        }
+
+        .page-header .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 20px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.82rem;
+            transition: all var(--transition);
+            border: 1px solid transparent;
+        }
+        .btn--primary {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn--primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+        .btn--outline {
+            border-color: var(--border-light);
+            color: var(--text-secondary);
+            background: transparent;
+        }
+        .btn--outline:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+        .btn--danger {
+            background: var(--error);
+            color: #fff;
+        }
+        .btn--danger:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25);
+        }
+        .btn--success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn--success:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25);
+        }
+        .btn--warning {
+            background: var(--orange);
+            color: #fff;
+        }
+        .btn--warning:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(217, 119, 6, 0.25);
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+            font-size: 0.9rem;
+        }
+        .btn-icon:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+
+        /* ─── STATS ──────────────────────────────────────────────── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            transition: all var(--transition);
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--border-strong);
+        }
+        .stat-card .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2px;
+        }
+        .stat-card .stat-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+        }
+        .stat-card .stat-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.75rem;
+        }
+        .stat-card .stat-icon--purple {
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+        .stat-card .stat-icon--blue {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+        .stat-card .stat-icon--green {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .stat-card .stat-icon--orange {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .stat-card .stat-icon--red {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .stat-card .stat-value {
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: var(--text-primary);
+        }
+        .stat-card .stat-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+
+        /* ─── TOOLBAR ────────────────────────────────────────────── */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 20px;
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            transition: all var(--transition);
+        }
+
+        .toolbar .search-wrap {
+            flex: 1;
+            min-width: 180px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            padding: 7px 16px;
+            transition: all var(--transition);
+        }
+        .toolbar .search-wrap:focus-within {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-input);
+            background: var(--bg-card);
+        }
+        .toolbar .search-wrap svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        .toolbar .search-wrap input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 0.82rem;
+            padding: 4px 0;
+            width: 100%;
+            color: var(--text-primary);
+        }
+        .toolbar .search-wrap input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .toolbar .filter-group {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .toolbar .filter-group select {
+            border: 1px solid var(--border-light);
+            background: var(--bg-input);
+            border-radius: var(--radius-full);
+            padding: 7px 14px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            outline: none;
+            transition: all var(--transition);
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            min-width: 90px;
+        }
+        .toolbar .filter-group select:focus {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-input);
+        }
+
+        .toolbar .action-btns {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .toolbar .action-btns .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+            font-size: 0.9rem;
+        }
+        .toolbar .action-btns .btn-icon:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+        .toolbar .action-btns .btn-icon.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+        .toolbar .action-btns .btn-icon.primary:hover {
+            background: var(--accent-dark);
+            border-color: var(--accent-dark);
+        }
+
+        /* ─── TABLE ───────────────────────────────────────────────── */
+        .table-panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all var(--transition);
+            margin-bottom: 24px;
+        }
+        .table-panel:hover {
+            border-color: var(--border-strong);
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            padding: 0 4px 4px 4px;
+        }
+
+        table.announcement-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            min-width: 950px;
+        }
+
+        table.announcement-table th {
+            text-align: left;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-light);
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+            transition: color var(--transition);
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            z-index: 2;
+        }
+        table.announcement-table th:hover {
+            color: var(--text-primary);
+        }
+        table.announcement-table th .sort-icon {
+            display: inline-block;
+            margin-left: 4px;
+            opacity: 0.4;
+            font-size: 0.6rem;
+        }
+        table.announcement-table th.sorted .sort-icon {
+            opacity: 1;
+        }
+
+        table.announcement-table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-light);
+            vertical-align: middle;
+        }
+        table.announcement-table tr:last-child td {
+            border-bottom: none;
+        }
+        table.announcement-table tr:hover td {
+            background: var(--bg-input);
+        }
+
+        .title-cell {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.82rem;
+        }
+        .title-cell .sub {
+            font-weight: 400;
+            color: var(--text-muted);
+            font-size: 0.65rem;
+        }
+
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 2px 10px;
+            border-radius: var(--radius-full);
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .badge-status .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+        }
+        .badge-status--draft {
+            background: var(--bg-input);
+            color: var(--text-muted);
+        }
+        .badge-status--draft .dot {
+            background: var(--text-muted);
+        }
+        .badge-status--scheduled {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+        .badge-status--scheduled .dot {
+            background: var(--blue);
+        }
+        .badge-status--published {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .badge-status--published .dot {
+            background: var(--success);
+        }
+        .badge-status--expired {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .badge-status--expired .dot {
+            background: var(--error);
+        }
+        .badge-status--archived {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .badge-status--archived .dot {
+            background: var(--orange);
+        }
+
+        .badge-type {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 10px;
+            border-radius: var(--radius-full);
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+        .badge-type--general {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+        .badge-type--update {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .badge-type--maintenance {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .badge-type--promotion {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .badge-type--important {
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        .row-actions {
+            display: flex;
+            gap: 3px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        .row-action-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-muted);
+            transition: all var(--transition);
+            font-size: 0.7rem;
+        }
+        .row-action-btn:hover {
+            border-color: var(--border-light);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+        .row-action-btn--view:hover {
+            color: var(--blue);
+            border-color: var(--blue-soft);
+            background: var(--blue-soft);
+        }
+        .row-action-btn--edit:hover {
+            color: var(--orange);
+            border-color: var(--orange-soft);
+            background: var(--orange-soft);
+        }
+        .row-action-btn--publish:hover {
+            color: var(--success);
+            border-color: var(--success-soft);
+            background: var(--success-soft);
+        }
+        .row-action-btn--archive:hover {
+            color: var(--orange);
+            border-color: var(--orange-soft);
+            background: var(--orange-soft);
+        }
+        .row-action-btn--delete:hover {
+            color: var(--error);
+            border-color: var(--error-soft);
+            background: var(--error-soft);
+        }
+
+        .table-empty {
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        .table-empty svg {
+            width: 48px;
+            height: 48px;
+            opacity: 0.3;
+            margin-bottom: 12px;
+        }
+        .table-empty p {
+            font-size: 0.9rem;
+        }
+        .table-empty .sub {
+            font-size: 0.78rem;
+            margin-top: 4px;
+        }
+
+        /* ─── PAGINATION ─────────────────────────────────────────── */
+        .pagination-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 14px 20px;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
+
+        .pagination-wrap .info {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .pagination-wrap .controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pagination-wrap .controls select {
+            border: 1px solid var(--border-light);
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            padding: 4px 8px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .pagination-wrap .controls .pagination-btns {
+            display: flex;
+            gap: 2px;
+        }
+
+        .pagination-wrap .controls .pagination-btns button {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.78rem;
+            transition: all var(--transition);
+        }
+        .pagination-wrap .controls .pagination-btns button:hover:not(:disabled) {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+        .pagination-wrap .controls .pagination-btns button.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+        .pagination-wrap .controls .pagination-btns button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* ─── MODALS ─────────────────────────────────────────────── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .modal-overlay.is-visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            max-width: 560px;
+            width: 100%;
+            padding: 28px 30px;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(12px) scale(0.98);
+            transition: transform var(--transition);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .modal-overlay.is-visible .modal {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+        .modal .modal-icon--danger {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .modal .modal-icon--warning {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .modal .modal-icon--success {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+
+        .modal .modal-title {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 4px;
+        }
+        .modal .modal-msg {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .modal .modal-msg strong {
+            color: var(--text-primary);
+        }
+
+        .modal .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* ─── FORM MODAL ─────────────────────────────────────────── */
+        .form-group {
+            margin-bottom: 14px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .form-group .input-wrap {
+            display: flex;
+            align-items: center;
+            background: var(--bg-input);
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition);
+        }
+        .form-group .input-wrap:focus-within {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-input);
+            background: var(--bg-card);
+        }
+        .form-group .input-wrap input,
+        .form-group .input-wrap select,
+        .form-group .input-wrap textarea {
+            flex: 1;
+            width: 100%;
+            padding: 9px 14px;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: color var(--transition);
+        }
+        .form-group .input-wrap textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-weight: 400;
+        }
+        .form-group .input-wrap select {
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            padding-right: 36px;
+        }
+        .form-group .input-wrap .select-arrow {
+            position: absolute;
+            right: 14px;
+            color: var(--text-muted);
+            pointer-events: none;
+            font-size: 0.6rem;
+        }
+        .form-group .input-wrap {
+            position: relative;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-group .field-hint {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .form-group .field-error {
+            font-size: 0.72rem;
+            color: var(--error);
+            font-weight: 500;
+            display: none;
+            margin-top: 2px;
+        }
+        .form-group .field-error.show {
+            display: block;
+        }
+
+        /* ─── TOAST ──────────────────────────────────────────────── */
+        .toast-host {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 380px;
+            width: 100%;
+        }
+
+        .toast {
+            padding: 12px 18px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast.hide {
+            transform: translateX(120%);
+            opacity: 0;
+        }
+        .toast .t-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+        .toast.error .t-icon {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .toast.success .t-icon {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .toast.info .t-icon {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+        .toast .t-msg {
+            flex: 1;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .toast .t-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0 4px;
+            transition: color var(--transition);
+            line-height: 1;
+        }
+        .toast .t-close:hover {
+            color: var(--text-primary);
+        }
+
+        /* ─── SKELETON ───────────────────────────────────────────── */
+        .skeleton {
+            background: var(--bg-input);
+            border-radius: 6px;
+            animation: pulse 1.5s ease-in-out infinite;
+            height: 20px;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+        .skeleton-text {
+            height: 14px;
+            margin-bottom: 4px;
+        }
+        .skeleton-text.w-75 {
+            width: 75%;
+        }
+        .skeleton-text.w-50 {
+            width: 50%;
+        }
+        .skeleton-text.w-25 {
+            width: 25%;
+        }
+        .skeleton-line {
+            height: 18px;
+            margin-bottom: 6px;
+        }
+
+        /* ─── RESPONSIVE ─────────────────────────────────────────── */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main {
+                margin-left: 0;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .top-header {
+                padding: 0 16px;
+            }
+            .page-content {
+                padding: 16px 16px 32px;
+            }
+            .header-profile .profile-info {
+                display: none;
+            }
+            .header-profile .chevron {
+                display: none;
+            }
+            .header-profile {
+                padding: 4px;
+                border: none;
+                background: transparent;
+            }
+            .header-profile:hover {
+                background: transparent;
+            }
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .toolbar .action-btns {
+                margin-left: 0;
+                justify-content: flex-end;
+            }
+            .toolbar .filter-group {
+                flex-wrap: wrap;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .stat-card {
+                padding: 10px 12px;
+            }
+            .stat-card .stat-value {
+                font-size: 1.1rem;
+            }
+            .top-header__title .sub {
+                display: none;
+            }
+            .page-content {
+                padding: 12px 12px 24px;
+            }
+            .toolbar {
+                padding: 10px 12px;
+            }
+            .toolbar .search-wrap {
+                min-width: 120px;
+            }
+            .pagination-wrap {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .pagination-wrap .controls {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .modal {
+                padding: 20px 18px;
+            }
+            .toast-host {
+                bottom: 16px;
+                right: 16px;
+                left: 16px;
+                max-width: none;
+            }
+            table.announcement-table {
+                min-width: 700px;
+                font-size: 0.75rem;
+            }
+            table.announcement-table th,
+            table.announcement-table td {
+                padding: 8px 10px;
+            }
+            .row-actions .row-action-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 0.6rem;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .sidebar {
+                transition: none;
+            }
+            .toast {
+                transition: none;
+            }
+            .modal {
+                transition: none;
+            }
+            .skeleton {
+                animation: none;
+                opacity: 0.4;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ════════════════════════════════════════════════════════════
+    SIDEBAR
+    ════════════════════════════════════════════════════════════ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <span class="brand-icon">R</span>
+            <div class="brand-text">
+                Receipt<span class="accent">ly</span>
+                <span class="brand-sub">Owner Panel</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-label">Main</div>
+            <a class="nav-item" href="admin-dashboard.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a class="nav-item" href="admin-analytics.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M4 20l16-16"/></svg>
+                Analytics
+            </a>
+
+            <div class="nav-label">Management</div>
+            <a class="nav-item" href="admin-users.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Users
+            </a>
+
+            <div class="nav-label">Finance</div>
+            <a class="nav-item" href="admin-payments.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                Payments
+            </a>
+
+            <div class="nav-label">Content</div>
+            <a class="nav-item" href="admin-templates.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+                Templates
+            </a>
+            <a class="nav-item  active" href="admin-announcements.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                Announcements
+            </a>
+
+            <div class="nav-label">Communication</div>
+            <a class="nav-item" href="admin-support.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Support
+            </a>
+            <a class="nav-item" href="admin-messages.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Messages
+                <span id="msgNavBadge" style="margin-left:auto;background:#dc2626;color:#fff;font-size:0.65rem;font-weight:800;border-radius:999px;padding:1px 6px;min-width:16px;text-align:center;display:none;">0</span>
+            </a>
+            <a class="nav-item" href="admin-reports.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Reports
+            </a>
+
+            <div class="nav-label">Administration</div>
+            <a class="nav-item" href="admin-settings.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Settings
+            </a>
+            <a class="nav-item" href="admin-roles.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Roles
+            </a>
+            <a class="nav-item" href="admin-permissions.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Permissions
+            </a>
+            <a class="nav-item" href="admin-sessions.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Sessions
+            </a>
+            <a class="nav-item" href="admin-security.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Security
+            </a>
+            <a class="nav-item" href="company-profile.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Company Profile
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="nav-item logout" id="logoutBtn">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+                Logout
+            </button>
+        </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    MAIN CONTENT
+    ════════════════════════════════════════════════════════════ -->
+    <div class="main" id="mainContent">
+        <!-- TOP HEADER -->
+        <header class="top-header">
+            <div class="top-header__left">
+                <button class="hamburger" id="hamburger" aria-label="Toggle sidebar">
+                    <span></span><span></span><span></span>
+                </button>
+                <div class="top-header__title">
+                    Announcements
+                    <span class="sub">Manage platform messages</span>
+                </div>
+            </div>
+
+            <div class="top-header__right">
+                <button class="header-btn" id="themeToggleBtn" aria-label="Toggle theme">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                </button>
+
+                <div class="header-profile" id="profileBtn">
+                    <div class="avatar" id="headerAvatar">A</div>
+                    <div class="profile-info">
+                        <span class="name" id="headerName">Admin</span>
+                        <span class="role">Super Admin</span>
+                    </div>
+                    <span class="chevron">▾</span>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <button class="drop-item" data-page="account-profile.html">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            My Account
+                        </button>
+                        <button class="drop-item" data-page="admin-settings.html">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                            Settings
+                        </button>
+                        <div class="divider"></div>
+                        <button class="drop-item logout" id="dropdownLogout">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- PAGE CONTENT -->
+        <div class="page-content" id="pageContent">
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1>Announcements</h1>
+                    <p>Create and manage messages, updates, promotions, maintenance notices, and important information for Receiptly users.</p>
+                </div>
+                <div class="action-bar">
+                    <button class="btn btn--primary" id="createBtn">+ Create Announcement</button>
+                    <button class="btn btn--outline" id="refreshBtn">🔄 Refresh</button>
+                    <button class="btn btn--outline" id="exportBtn">📤 Export</button>
+                </div>
+            </div>
+
+            <!-- ─── STATS ──────────────────────────────────────────── -->
+            <div class="stats-grid" id="statsGrid">
+                <!-- populated by JS -->
+            </div>
+
+            <!-- ─── TOOLBAR ────────────────────────────────────────── -->
+            <div class="toolbar" id="toolbar">
+                <div class="search-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="searchInput" placeholder="Search announcements..." />
+                </div>
+
+                <div class="filter-group">
+                    <select id="statusFilter">
+                        <option value="all">All Status</option>
+                        <option value="draft">Draft</option>
+                        <option value="scheduled">Scheduled</option>
+                        <option value="published">Published</option>
+                        <option value="expired">Expired</option>
+                        <option value="archived">Archived</option>
+                    </select>
+
+                    <select id="typeFilter">
+                        <option value="all">All Types</option>
+                        <option value="general">General</option>
+                        <option value="update">Update</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="promotion">Promotion</option>
+                        <option value="important">Important</option>
+                    </select>
+
+                    <select id="audienceFilter">
+                        <option value="all">All Audiences</option>
+                        <option value="all">All Users</option>
+                        <option value="free">Free Users</option>
+                        <option value="pro">Pro Users</option>
+                        <option value="trial">Trial Users</option>
+                        <option value="plan">Specific Plan</option>
+                    </select>
+                </div>
+
+                <div class="action-btns">
+                    <button class="btn-icon" id="refreshBtnSmall" title="Refresh">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ─── TABLE ──────────────────────────────────────────── -->
+            <div class="table-panel" id="tablePanel">
+                <div class="table-wrap">
+                    <table class="announcement-table" id="announcementTable">
+                        <thead>
+                            <tr>
+                                <th data-sort="title">Title <span class="sort-icon">↕</span></th>
+                                <th data-sort="type">Type <span class="sort-icon">↕</span></th>
+                                <th data-sort="status">Status <span class="sort-icon">↕</span></th>
+                                <th data-sort="audience">Audience <span class="sort-icon">↕</span></th>
+                                <th data-sort="createdBy">Created By <span class="sort-icon">↕</span></th>
+                                <th data-sort="createdAt">Created <span class="sort-icon">↕</span></th>
+                                <th data-sort="publishDate">Publish <span class="sort-icon">↕</span></th>
+                                <th data-sort="expiryDate">Expiry <span class="sort-icon">↕</span></th>
+                                <th style="text-align:right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- populated by JS -->
+                        </tbody>
+                    </table>
+                    <div class="table-empty" id="emptyState" style="display:none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                        <p>No Announcements Yet</p>
+                        <div class="sub">Create your first announcement for Receiptly users.</div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination-wrap" id="paginationWrap">
+                    <span class="info" id="paginationInfo">Showing 0–0 of 0</span>
+                    <div class="controls">
+                        <select id="perPageSelect">
+                            <option value="10">10</option>
+                            <option value="20" selected>20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <div class="pagination-btns" id="paginationBtns"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    TOAST HOST
+    ════════════════════════════════════════════════════════════ -->
+    <div class="toast-host" id="toastHost"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    MODALS
+    ════════════════════════════════════════════════════════════ -->
+    <!-- Confirm Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <div class="modal-icon" id="modalIcon">⚠️</div>
+            <h3 class="modal-title" id="modalTitle">Are you sure?</h3>
+            <p class="modal-msg" id="modalMsg"></p>
+            <div class="modal-actions">
+                <button class="btn btn--outline" data-action="cancel">Cancel</button>
+                <button class="btn btn--danger" id="modalConfirmBtn" data-action="confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create/Edit Announcement Modal -->
+    <div class="modal-overlay" id="announcementModal">
+        <div class="modal">
+            <div class="modal-icon modal-icon--success" id="announcementModalIcon">📢</div>
+            <h3 class="modal-title" id="announcementModalTitle">Create Announcement</h3>
+            <p class="modal-msg" id="announcementModalMsg">Create a new announcement for Receiptly users.</p>
+            <form id="announcementForm" novalidate>
+                <div class="form-group">
+                    <label for="annTitle">Title <span style="color:var(--error);">*</span></label>
+                    <div class="input-wrap">
+                        <input type="text" id="annTitle" placeholder="Enter announcement title" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="annMessage">Message <span style="color:var(--error);">*</span></label>
+                    <div class="input-wrap">
+                        <textarea id="annMessage" placeholder="Write your announcement content..." rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="annType">Type</label>
+                        <div class="input-wrap">
+                            <select id="annType">
+                                <option value="general">General</option>
+                                <option value="update">Update</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="promotion">Promotion</option>
+                                <option value="important">Important</option>
+                            </select>
+                            <span class="select-arrow">▾</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="annStatus">Status</label>
+                        <div class="input-wrap">
+                            <select id="annStatus">
+                                <option value="draft">Draft</option>
+                                <option value="scheduled">Scheduled</option>
+                                <option value="published">Published</option>
+                            </select>
+                            <span class="select-arrow">▾</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="annAudience">Audience</label>
+                    <div class="input-wrap">
+                        <select id="annAudience">
+                            <option value="all">All Users</option>
+                            <option value="free">Free Users</option>
+                            <option value="pro">Pro Users</option>
+                            <option value="trial">Trial Users</option>
+                            <option value="plan">Specific Plan</option>
+                        </select>
+                        <span class="select-arrow">▾</span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="annPublishDate">Publish Date</label>
+                        <div class="input-wrap">
+                            <input type="datetime-local" id="annPublishDate" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="annExpiryDate">Expiry Date</label>
+                        <div class="input-wrap">
+                            <input type="datetime-local" id="annExpiryDate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-actions" style="margin-top:16px;">
+                    <button type="button" class="btn btn--outline" data-action="cancel-ann">Cancel</button>
+                    <button type="submit" class="btn btn--primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    SCRIPTS
+    ════════════════════════════════════════════════════════════ -->
+    <script src="../js/security.js"></script>
+    <script src="../js/sessions.js"></script>
+    <script src="../js/roles.js"></script>
+    <script src="../js/admin-auth.js">
+    </script>
+    <script src="../js/user-scope.js">
+    </script>
+    <script src="../js/ui-popup.js"></script>
+    <script src="../js/storage.js"></script>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  1. AUTH GUARD
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            if (typeof AdminAuth === "undefined") {
+                window.location.href = "../admin-login.html";
+                return;
+            }
+            var admin = AdminAuth.requireAdmin ? AdminAuth.requireAdmin("admin-login.html") : null;
+            if (!admin) {
+                var session = AdminAuth.getSession ? AdminAuth.getSession() : null;
+                if (!session) {
+                    window.location.href = "../admin-login.html";
+                    return;
+                }
+                admin = session;
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  2. HELPERS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function getAllUsers() {
+                // Scope (js/user-scope.js) is the single source of truth for
+                // registered users; it is loaded on every admin page.
+                return Scope.getUsers() || [];
+            }
+
+            function getAnnouncements() {
+                try {
+                    var data = localStorage.getItem("receiptly_announcements");
+                    return data ? JSON.parse(data) : [];
+                } catch (_) { return []; }
+            }
+
+            function saveAnnouncements(announcements) {
+                localStorage.setItem("receiptly_announcements", JSON.stringify(announcements));
+            }
+
+            function getReadStatus() {
+                try {
+                    var data = localStorage.getItem("receiptly_announcement_reads");
+                    return data ? JSON.parse(data) : {};
+                } catch (_) { return {}; }
+            }
+
+            function saveReadStatus(readStatus) {
+                localStorage.setItem("receiptly_announcement_reads", JSON.stringify(readStatus));
+            }
+
+            function esc(str) {
+                if (!str) return "";
+                return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g,
+                    "&quot;");
+            }
+
+            function fmtDate(d) {
+                if (!d) return "—";
+                var date = new Date(d);
+                if (isNaN(date)) return "—";
+                return date.toLocaleDateString(undefined, { day: "2-digit", month: "short", year: "numeric" });
+            }
+
+            function fmtDateTime(d) {
+                if (!d) return "—";
+                var date = new Date(d);
+                if (isNaN(date)) return "—";
+                return date.toLocaleString(undefined, { day: "2-digit", month: "short", year: "numeric",
+                    hour: "2-digit", minute: "2-digit" });
+            }
+
+            function initials(name) {
+                if (!name) return "U";
+                return name.trim().split(/\s+/).slice(0, 2).map(function(w) { return w[0]; }).join("").toUpperCase();
+            }
+
+            function getPlanName(planId) {
+                var plans = getPlans();
+                var plan = plans.find(function(p) { return p.id === planId; });
+                return plan ? plan.name : planId;
+            }
+
+            function getPlans() {
+                try {
+                    var data = localStorage.getItem("receiptly_plans");
+                    return data ? JSON.parse(data) : [];
+                } catch (_) { return []; }
+            }
+
+            function generateId() {
+                return "ann_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6);
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  3. TOAST SYSTEM
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function toast(message, type) {
+                type = type || "info";
+                var host = document.getElementById("toastHost");
+                var el = document.createElement("div");
+                el.className = "toast " + type;
+                var icon = type === "error" ? "✕" : type === "success" ? "✓" : "ⓘ";
+                el.innerHTML =
+                    '<span class="t-icon">' + icon + '</span>' +
+                    '<span class="t-msg">' + esc(message) + '</span>' +
+                    '<button class="t-close">&times;</button>';
+                host.appendChild(el);
+
+                requestAnimationFrame(function() {
+                    el.classList.add("show");
+                });
+
+                el.querySelector(".t-close").addEventListener("click", function() {
+                    dismissToast(el);
+                });
+
+                setTimeout(function() {
+                    dismissToast(el);
+                }, 4000);
+
+                return el;
+            }
+
+            function dismissToast(el) {
+                if (!el || el.classList.contains("hide")) return;
+                el.classList.remove("show");
+                el.classList.add("hide");
+                setTimeout(function() {
+                    if (el.parentNode) el.remove();
+                }, 400);
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  4. THEME
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function getTheme() {
+                return localStorage.getItem("receiptly_theme") || "dark";
+            }
+
+            function setTheme(theme) {
+                document.documentElement.setAttribute("data-theme", theme);
+                localStorage.setItem("receiptly_theme", theme);
+                var icon = document.querySelector("#themeToggleBtn svg");
+                if (theme === "dark") {
+                    icon.innerHTML =
+                        '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+                } else {
+                    icon.innerHTML =
+                        '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+                }
+            }
+
+            setTheme(getTheme());
+
+            document.getElementById("themeToggleBtn").addEventListener("click", function() {
+                var current = document.documentElement.getAttribute("data-theme");
+                setTheme(current === "dark" ? "light" : "dark");
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  5. SIDEBAR / HEADER
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var sidebar = document.getElementById("sidebar");
+            var overlay = document.getElementById("sidebarOverlay");
+            var hamburger = document.getElementById("hamburger");
+
+            function toggleSidebar() {
+                sidebar.classList.toggle("open");
+                hamburger.classList.toggle("active");
+                overlay.classList.toggle("open");
+            }
+
+            hamburger.addEventListener("click", toggleSidebar);
+            overlay.addEventListener("click", toggleSidebar);
+
+            // Profile dropdown
+            var profileBtn = document.getElementById("profileBtn");
+            var profileDropdown = document.getElementById("profileDropdown");
+            var dropdownOpen = false;
+
+            profileBtn.addEventListener("click", function(e) {
+                e.stopPropagation();
+                dropdownOpen = !dropdownOpen;
+                profileDropdown.classList.toggle("open", dropdownOpen);
+            });
+
+            document.addEventListener("click", function(e) {
+                if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                    profileDropdown.classList.remove("open");
+                    dropdownOpen = false;
+                }
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  6. LOGOUT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function handleLogout() {
+                if (AdminAuth.logout) {
+                    AdminAuth.logout();
+                } else {
+                    localStorage.removeItem("receiptly_admin_session");
+                }
+                window.location.href = "../admin-login.html";
+            }
+
+            document.getElementById("logoutBtn").addEventListener("click", handleLogout);
+            document.getElementById("dropdownLogout").addEventListener("click", handleLogout);
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  7. HEADER ADMIN INFO
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            document.getElementById("headerName").textContent = admin.name || "Admin";
+            document.getElementById("headerAvatar").textContent = initials(admin.name || "Admin");
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  8. DATA LOADING
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var allAnnouncements = [];
+            var filteredAnnouncements = [];
+            var currentPage = 1;
+            var perPage = 20;
+            var sortField = "createdAt";
+            var sortDirection = "desc";
+
+            // DOM refs
+            var tableBody = document.getElementById("tableBody");
+            var emptyState = document.getElementById("emptyState");
+            var statsGrid = document.getElementById("statsGrid");
+            var searchInput = document.getElementById("searchInput");
+            var statusFilter = document.getElementById("statusFilter");
+            var typeFilter = document.getElementById("typeFilter");
+            var audienceFilter = document.getElementById("audienceFilter");
+            var perPageSelect = document.getElementById("perPageSelect");
+            var paginationBtns = document.getElementById("paginationBtns");
+            var paginationInfo = document.getElementById("paginationInfo");
+            var createBtn = document.getElementById("createBtn");
+
+            // Announcement modal
+            var announcementModal = document.getElementById("announcementModal");
+            var announcementForm = document.getElementById("announcementForm");
+            var annTitle = document.getElementById("annTitle");
+            var annMessage = document.getElementById("annMessage");
+            var annType = document.getElementById("annType");
+            var annStatus = document.getElementById("annStatus");
+            var annAudience = document.getElementById("annAudience");
+            var annPublishDate = document.getElementById("annPublishDate");
+            var annExpiryDate = document.getElementById("annExpiryDate");
+            var editingAnnouncementId = null;
+
+            function initAnnouncements() {
+                // Seed default announcements if none exist
+                var announcements = getAnnouncements();
+                if (announcements.length === 0) {
+                    announcements = [{
+                        id: "ann_1",
+                        title: "Welcome to Receiptly!",
+                        message: "We're excited to have you on board. Start creating receipts and invoices today.",
+                        type: "general",
+                        status: "published",
+                        audience: "all",
+                        createdBy: admin.name || "Admin",
+                        createdAt: new Date().toISOString(),
+                        publishDate: new Date(Date.now() - 86400000).toISOString(), // yesterday
+                        expiryDate: new Date(Date.now() + 30 * 86400000).toISOString(), // 30 days
+                        updatedAt: new Date().toISOString()
+                    }, {
+                        id: "ann_2",
+                        title: "New Pro Features Available",
+                        message: "Pro users can now customize receipt templates and access advanced analytics.",
+                        type: "update",
+                        status: "published",
+                        audience: "pro",
+                        createdBy: admin.name || "Admin",
+                        createdAt: new Date().toISOString(),
+                        publishDate: new Date(Date.now() - 2 * 86400000).toISOString(),
+                        expiryDate: new Date(Date.now() + 60 * 86400000).toISOString(),
+                        updatedAt: new Date().toISOString()
+                    }, {
+                        id: "ann_3",
+                        title: "Scheduled Maintenance",
+                        message: "The platform will be down for maintenance on September 10th from 2AM to 4AM UTC.",
+                        type: "maintenance",
+                        status: "scheduled",
+                        audience: "all",
+                        createdBy: admin.name || "Admin",
+                        createdAt: new Date().toISOString(),
+                        publishDate: new Date(Date.now() + 5 * 86400000).toISOString(),
+                        expiryDate: new Date(Date.now() + 7 * 86400000).toISOString(),
+                        updatedAt: new Date().toISOString()
+                    }, {
+                        id: "ann_4",
+                        title: "Summer Promotion: 20% Off Pro",
+                        message: "Use code SUMMER20 to get 20% off your first year of Pro subscription.",
+                        type: "promotion",
+                        status: "draft",
+                        audience: "all",
+                        createdBy: admin.name || "Admin",
+                        createdAt: new Date().toISOString(),
+                        publishDate: null,
+                        expiryDate: null,
+                        updatedAt: new Date().toISOString()
+                    }];
+                    saveAnnouncements(announcements);
+                }
+                allAnnouncements = announcements;
+
+                // Auto-update statuses based on dates
+                updateAnnouncementStatuses();
+
+                applyFilters();
+            }
+
+            function updateAnnouncementStatuses() {
+                var now = new Date();
+                var updated = false;
+                allAnnouncements.forEach(function(a) {
+                    if (a.status === "draft" || a.status === "archived") return;
+                    if (a.status === "scheduled" && a.publishDate) {
+                        var publishDate = new Date(a.publishDate);
+                        if (publishDate <= now) {
+                            a.status = "published";
+                            updated = true;
+                        }
+                    }
+                    if (a.status === "published" && a.expiryDate) {
+                        var expiryDate = new Date(a.expiryDate);
+                        if (expiryDate <= now) {
+                            a.status = "expired";
+                            updated = true;
+                        }
+                    }
+                });
+                if (updated) {
+                    saveAnnouncements(allAnnouncements);
+                }
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  9. FILTERS, SORT, PAGINATION
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function applyFilters() {
+                var search = searchInput.value.trim().toLowerCase();
+                var status = statusFilter.value;
+                var type = typeFilter.value;
+                var audience = audienceFilter.value;
+
+                filteredAnnouncements = allAnnouncements.filter(function(a) {
+                    var matchesSearch = !search ||
+                        a.title.toLowerCase().indexOf(search) !== -1 ||
+                        a.message.toLowerCase().indexOf(search) !== -1 ||
+                        a.id.toLowerCase().indexOf(search) !== -1;
+
+                    var matchesStatus = status === "all" || a.status === status;
+                    var matchesType = type === "all" || a.type === type;
+                    var matchesAudience = audience === "all" || a.audience === audience;
+
+                    return matchesSearch && matchesStatus && matchesType && matchesAudience;
+                });
+
+                // Sort
+                filteredAnnouncements.sort(function(a, b) {
+                    var valA, valB;
+                    switch (sortField) {
+                        case "title":
+                            valA = a.title.toLowerCase();
+                            valB = b.title.toLowerCase();
+                            break;
+                        case "type":
+                            valA = a.type.toLowerCase();
+                            valB = b.type.toLowerCase();
+                            break;
+                        case "status":
+                            valA = a.status.toLowerCase();
+                            valB = b.status.toLowerCase();
+                            break;
+                        case "audience":
+                            valA = a.audience.toLowerCase();
+                            valB = b.audience.toLowerCase();
+                            break;
+                        case "createdBy":
+                            valA = a.createdBy.toLowerCase();
+                            valB = b.createdBy.toLowerCase();
+                            break;
+                        case "createdAt":
+                            valA = new Date(a.createdAt).getTime();
+                            valB = new Date(b.createdAt).getTime();
+                            break;
+                        case "publishDate":
+                            valA = a.publishDate ? new Date(a.publishDate).getTime() : 0;
+                            valB = b.publishDate ? new Date(b.publishDate).getTime() : 0;
+                            break;
+                        case "expiryDate":
+                            valA = a.expiryDate ? new Date(a.expiryDate).getTime() : 0;
+                            valB = b.expiryDate ? new Date(b.expiryDate).getTime() : 0;
+                            break;
+                        default:
+                            valA = new Date(a.createdAt).getTime();
+                            valB = new Date(b.createdAt).getTime();
+                    }
+                    if (valA < valB) return sortDirection === "asc" ? -1 : 1;
+                    if (valA > valB) return sortDirection === "asc" ? 1 : -1;
+                    return 0;
+                });
+
+                renderStats();
+                renderTable();
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  10. RENDER STATS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function renderStats() {
+                var total = allAnnouncements.length;
+                var published = allAnnouncements.filter(function(a) { return a.status === "published"; }).length;
+                var drafts = allAnnouncements.filter(function(a) { return a.status === "draft"; }).length;
+                var scheduled = allAnnouncements.filter(function(a) { return a.status === "scheduled"; }).length;
+                var archived = allAnnouncements.filter(function(a) { return a.status === "archived"; }).length;
+
+                var stats = [
+                    { label: "Total Announcements", value: total, icon: "📢", iconClass: "stat-icon--purple" },
+                    { label: "Published", value: published, icon: "✅", iconClass: "stat-icon--green" },
+                    { label: "Drafts", value: drafts, icon: "✏️", iconClass: "stat-icon--blue" },
+                    { label: "Scheduled", value: scheduled, icon: "📅", iconClass: "stat-icon--orange" },
+                    { label: "Archived", value: archived, icon: "📁", iconClass: "stat-icon--red" },
+                ];
+
+                statsGrid.innerHTML = "";
+                stats.forEach(function(s) {
+                    var card = document.createElement("div");
+                    card.className = "stat-card";
+                    card.innerHTML =
+                        '<div class="stat-top">' +
+                        '<span class="stat-label">' + esc(s.label) + '</span>' +
+                        '<span class="stat-icon ' + s.iconClass + '">' + s.icon + '</span>' +
+                        '</div>' +
+                        '<div class="stat-value">' + s.value + '</div>';
+                    statsGrid.appendChild(card);
+                });
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  11. RENDER TABLE
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function renderTable() {
+                var start = (currentPage - 1) * perPage;
+                var end = Math.min(start + perPage, filteredAnnouncements.length);
+                var pageItems = filteredAnnouncements.slice(start, end);
+
+                tableBody.innerHTML = "";
+                emptyState.style.display = filteredAnnouncements.length === 0 ? "block" : "none";
+
+                if (filteredAnnouncements.length === 0) {
+                    paginationInfo.textContent = "Showing 0–0 of 0";
+                    paginationBtns.innerHTML = "";
+                    return;
+                }
+
+                pageItems.forEach(function(a) {
+                    var statusClass = "badge-status--" + a.status;
+                    var statusLabel = a.status.charAt(0).toUpperCase() + a.status.slice(1);
+                    var typeClass = "badge-type--" + a.type;
+                    var typeLabel = a.type.charAt(0).toUpperCase() + a.type.slice(1);
+                    var audienceLabel = a.audience === "all" ? "All Users" :
+                        a.audience === "free" ? "Free Users" :
+                        a.audience === "pro" ? "Pro Users" :
+                        a.audience === "trial" ? "Trial Users" :
+                        a.audience === "plan" ? "Specific Plan" : a.audience;
+
+                    var tr = document.createElement("tr");
+                    tr.innerHTML =
+                        '<td><div class="title-cell">' + esc(a.title) +
+                        '<div class="sub">' + esc(a.id.slice(0, 12)) + '…</div></div></td>' +
+                        '<td><span class="badge-type ' + typeClass + '">' + typeLabel + '</span></td>' +
+                        '<td><span class="badge-status ' + statusClass + '"><span class="dot"></span>' +
+                        statusLabel + '</span></td>' +
+                        '<td>' + esc(audienceLabel) + '</td>' +
+                        '<td>' + esc(a.createdBy) + '</td>' +
+                        '<td>' + fmtDate(a.createdAt) + '</td>' +
+                        '<td>' + (a.publishDate ? fmtDate(a.publishDate) : "—") + '</td>' +
+                        '<td>' + (a.expiryDate ? fmtDate(a.expiryDate) : "—") + '</td>' +
+                        '<td><div class="row-actions">' +
+                        '<button class="row-action-btn row-action-btn--view" data-action="view" data-id="' +
+                        esc(a.id) + '" title="View">👁</button>' +
+                        '<button class="row-action-btn row-action-btn--edit" data-action="edit" data-id="' +
+                        esc(a.id) + '" title="Edit">✎</button>' +
+                        (a.status === "draft" || a.status === "scheduled" ?
+                            '<button class="row-action-btn row-action-btn--publish" data-action="publish" data-id="' +
+                            esc(a.id) + '" title="Publish">📤</button>' :
+                            a.status === "published" || a.status === "expired" ?
+                            '<button class="row-action-btn row-action-btn--archive" data-action="archive" data-id="' +
+                            esc(a.id) + '" title="Archive">📁</button>' :
+                            '') +
+                        (a.status === "archived" ?
+                            '<button class="row-action-btn row-action-btn--publish" data-action="unarchive" data-id="' +
+                            esc(a.id) + '" title="Unarchive">↩️</button>' :
+                            '') +
+                        (a.status === "draft" || a.status === "archived" ?
+                            '<button class="row-action-btn row-action-btn--delete" data-action="delete" data-id="' +
+                            esc(a.id) + '" title="Delete">🗑</button>' :
+                            '') +
+                        '</div></td>';
+                    tableBody.appendChild(tr);
+                });
+
+                paginationInfo.textContent = "Showing " + (start + 1) + "–" + end + " of " + filteredAnnouncements
+                    .length;
+                renderPagination();
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  12. PAGINATION
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function renderPagination() {
+                var total = filteredAnnouncements.length;
+                var totalPages = Math.ceil(total / perPage);
+                paginationBtns.innerHTML = "";
+
+                if (totalPages <= 1) {
+                    var prevBtn = document.createElement("button");
+                    prevBtn.textContent = "‹";
+                    prevBtn.disabled = true;
+                    paginationBtns.appendChild(prevBtn);
+
+                    var currBtn = document.createElement("button");
+                    currBtn.textContent = "1";
+                    currBtn.className = "active";
+                    paginationBtns.appendChild(currBtn);
+
+                    var nextBtn = document.createElement("button");
+                    nextBtn.textContent = "›";
+                    nextBtn.disabled = true;
+                    paginationBtns.appendChild(nextBtn);
+                    return;
+                }
+
+                var prevBtn = document.createElement("button");
+                prevBtn.textContent = "‹";
+                prevBtn.disabled = currentPage === 1;
+                prevBtn.addEventListener("click", function() {
+                    if (currentPage > 1) { currentPage--;
+                        renderTable(); }
+                });
+                paginationBtns.appendChild(prevBtn);
+
+                var maxVisible = 5;
+                var startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+                var endPage = Math.min(totalPages, startPage + maxVisible - 1);
+                if (endPage - startPage < maxVisible - 1) {
+                    startPage = Math.max(1, endPage - maxVisible + 1);
+                }
+
+                if (startPage > 1) {
+                    var firstBtn = document.createElement("button");
+                    firstBtn.textContent = "1";
+                    firstBtn.addEventListener("click", function() { currentPage = 1;
+                        renderTable(); });
+                    paginationBtns.appendChild(firstBtn);
+                    if (startPage > 2) {
+                        var dots = document.createElement("button");
+                        dots.textContent = "…";
+                        dots.disabled = true;
+                        paginationBtns.appendChild(dots);
+                    }
+                }
+
+                for (var i = startPage; i <= endPage; i++) {
+                    var btn = document.createElement("button");
+                    btn.textContent = i;
+                    if (i === currentPage) btn.className = "active";
+                    btn.addEventListener("click", function(p) {
+                        return function() { currentPage = p;
+                            renderTable(); };
+                    }(i));
+                    paginationBtns.appendChild(btn);
+                }
+
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+                        var dots2 = document.createElement("button");
+                        dots2.textContent = "…";
+                        dots2.disabled = true;
+                        paginationBtns.appendChild(dots2);
+                    }
+                    var lastBtn = document.createElement("button");
+                    lastBtn.textContent = totalPages;
+                    lastBtn.addEventListener("click", function() { currentPage = totalPages;
+                        renderTable(); });
+                    paginationBtns.appendChild(lastBtn);
+                }
+
+                var nextBtn = document.createElement("button");
+                nextBtn.textContent = "›";
+                nextBtn.disabled = currentPage === totalPages;
+                nextBtn.addEventListener("click", function() {
+                    if (currentPage < totalPages) { currentPage++;
+                        renderTable(); }
+                });
+                paginationBtns.appendChild(nextBtn);
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  13. SORTING
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            document.querySelectorAll("#announcementTable th[data-sort]").forEach(function(th) {
+                th.addEventListener("click", function() {
+                    var field = this.dataset.sort;
+                    if (sortField === field) {
+                        sortDirection = sortDirection === "asc" ? "desc" : "asc";
+                    } else {
+                        sortField = field;
+                        sortDirection = "asc";
+                    }
+                    document.querySelectorAll("#announcementTable th[data-sort]").forEach(function(h) {
+                        h.classList.remove("sorted");
+                    });
+                    this.classList.add("sorted");
+                    currentPage = 1;
+                    applyFilters();
+                });
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  14. ACTIONS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            tableBody.addEventListener("click", function(e) {
+                var btn = e.target.closest("[data-action]");
+                if (!btn) return;
+                var action = btn.dataset.action;
+                var id = btn.dataset.id;
+
+                switch (action) {
+                    case "view":
+                        viewAnnouncement(id);
+                        break;
+                    case "edit":
+                        editAnnouncement(id);
+                        break;
+                    case "publish":
+                        publishAnnouncement(id);
+                        break;
+                    case "archive":
+                        archiveAnnouncement(id);
+                        break;
+                    case "unarchive":
+                        unarchiveAnnouncement(id);
+                        break;
+                    case "delete":
+                        deleteAnnouncement(id);
+                        break;
+                }
+            });
+
+            // ─── View ────────────────────────────────────────────────
+            function viewAnnouncement(id) {
+                var a = allAnnouncements.find(function(ann) { return ann.id === id; });
+                if (!a) { toast("Announcement not found.", "error"); return; }
+                // Show a simple modal with details
+                showModal(
+                    "Announcement Details",
+                    '<strong>Title:</strong> ' + esc(a.title) + '<br>' +
+                    '<strong>Message:</strong> ' + esc(a.message) + '<br>' +
+                    '<strong>Type:</strong> ' + esc(a.type) + '<br>' +
+                    '<strong>Status:</strong> ' + esc(a.status) + '<br>' +
+                    '<strong>Audience:</strong> ' + esc(a.audience) + '<br>' +
+                    '<strong>Created By:</strong> ' + esc(a.createdBy) + '<br>' +
+                    '<strong>Created:</strong> ' + fmtDateTime(a.createdAt) + '<br>' +
+                    (a.publishDate ? '<strong>Publish Date:</strong> ' + fmtDateTime(a.publishDate) + '<br>' :
+                        '') +
+                    (a.expiryDate ? '<strong>Expiry Date:</strong> ' + fmtDateTime(a.expiryDate) : ''),
+                    "📢",
+                    "Close",
+                    "btn--outline"
+                );
+            }
+
+            // ─── Edit ────────────────────────────────────────────────
+            function editAnnouncement(id) {
+                var a = allAnnouncements.find(function(ann) { return ann.id === id; });
+                if (!a) { toast("Announcement not found.", "error"); return; }
+                editingAnnouncementId = id;
+                annTitle.value = a.title;
+                annMessage.value = a.message;
+                annType.value = a.type;
+                annStatus.value = a.status;
+                annAudience.value = a.audience;
+                annPublishDate.value = a.publishDate ? a.publishDate.slice(0, 16) : "";
+                annExpiryDate.value = a.expiryDate ? a.expiryDate.slice(0, 16) : "";
+                document.getElementById("announcementModalTitle").textContent = "Edit Announcement";
+                document.getElementById("announcementModalMsg").textContent = "Update the announcement details.";
+                document.getElementById("announcementModalIcon").className = "modal-icon modal-icon--warning";
+                announcementModal.classList.add("is-visible");
+            }
+
+            // ─── Publish ─────────────────────────────────────────────
+            async function publishAnnouncement(id) {
+                var a = allAnnouncements.find(function(ann) { return ann.id === id; });
+                if (!a) { toast("Announcement not found.", "error"); return; }
+                var confirmed = await showModal(
+                    "Publish Announcement?",
+                    'This will publish <strong>' + esc(a.title) +
+                    '</strong>. It will become visible to the selected audience.',
+                    "💡",
+                    "Publish",
+                    "btn--success"
+                );
+                if (!confirmed) return;
+                a.status = "published";
+                a.publishDate = new Date().toISOString();
+                a.updatedAt = new Date().toISOString();
+                saveAnnouncements(allAnnouncements);
+                toast("Announcement published.", "success");
+                recordAdminAction("published_announcement", id, [a.title]);
+                applyFilters();
+            }
+
+            // ─── Archive ─────────────────────────────────────────────
+            async function archiveAnnouncement(id) {
+                var a = allAnnouncements.find(function(ann) { return ann.id === id; });
+                if (!a) { toast("Announcement not found.", "error"); return; }
+                var confirmed = await showModal(
+                    "Archive Announcement?",
+                    'This will archive <strong>' + esc(a.title) +
+                    '</strong>. It will no longer be visible to users.',
+                    "📁",
+                    "Archive",
+                    "btn--warning"
+                );
+                if (!confirmed) return;
+                a.status = "archived";
+                a.updatedAt = new Date().toISOString();
+                saveAnnouncements(allAnnouncements);
+                toast("Announcement archived.", "success");
+                recordAdminAction("archived_announcement", id, [a.title]);
+                applyFilters();
+            }
+
+            // ─── Unarchive ───────────────────────────────────────────
+            async function unarchiveAnnouncement(id) {
+                var a = allAnnouncements.find(function(ann) { return ann.id === id; });
+                if (!a) { toast("Announcement not found.", "error"); return; }
+                var confirmed = await showModal(
+                    "Unarchive Announcement?",
+                    'This will restore <strong>' + esc(a.title) +
+                    '</strong> to its previous status (draft).',
+                    "💡",
+                    "Unarchive",
+                    "btn--success"
+                );
+                if (!confirmed) return;
+                a.status = "draft";
+                a.updatedAt = new Date().toISOString();
+                saveAnnouncements(allAnnouncements);
+                toast("Announcement unarchived.", "success");
+                recordAdminAction("unarchived_announcement", id, [a.title]);
+                applyFilters();
+            }
+
+            // ─── Delete ──────────────────────────────────────────────
+            async function deleteAnnouncement(id) {
+                var a = allAnnouncements.find(function(ann) { return ann.id === id; });
+                if (!a) { toast("Announcement not found.", "error"); return; }
+                var confirmed = await showModal(
+                    "Delete Announcement?",
+                    'This will permanently delete <strong>' + esc(a.title) +
+                    '</strong>. This action cannot be undone.',
+                    "⚠️",
+                    "Delete",
+                    "btn--danger"
+                );
+                if (!confirmed) return;
+                allAnnouncements = allAnnouncements.filter(function(ann) { return ann.id !== id; });
+                saveAnnouncements(allAnnouncements);
+                toast("Announcement deleted.", "success");
+                recordAdminAction("deleted_announcement", id, [a.title]);
+                applyFilters();
+            }
+
+            // ─── Create / Edit Form ─────────────────────────────────
+            function openCreateModal() {
+                editingAnnouncementId = null;
+                annTitle.value = "";
+                annMessage.value = "";
+                annType.value = "general";
+                annStatus.value = "draft";
+                annAudience.value = "all";
+                annPublishDate.value = "";
+                annExpiryDate.value = "";
+                document.getElementById("announcementModalTitle").textContent = "Create Announcement";
+                document.getElementById("announcementModalMsg").textContent = "Create a new announcement for Receiptly users.";
+                document.getElementById("announcementModalIcon").className = "modal-icon modal-icon--success";
+                announcementModal.classList.add("is-visible");
+            }
+
+            function closeAnnouncementModal() {
+                announcementModal.classList.remove("is-visible");
+            }
+
+            announcementModal.addEventListener("click", function(e) {
+                if (e.target === announcementModal || e.target.closest('[data-action="cancel-ann"]')) {
+                    closeAnnouncementModal();
+                }
+            });
+
+            announcementForm.addEventListener("submit", function(e) {
+                e.preventDefault();
+                var title = annTitle.value.trim();
+                var message = annMessage.value.trim();
+                var type = annType.value;
+                var status = annStatus.value;
+                var audience = annAudience.value;
+                var publishDate = annPublishDate.value || null;
+                var expiryDate = annExpiryDate.value || null;
+
+                if (!title) { toast("Title is required.", "error"); return; }
+                if (!message) { toast("Message is required.", "error"); return; }
+
+                // Validate dates
+                if (publishDate && expiryDate && new Date(publishDate) > new Date(expiryDate)) {
+                    toast("Publish date cannot be after expiry date.", "error");
+                    return;
+                }
+
+                // If status is scheduled but no publish date, set to draft
+                if (status === "scheduled" && !publishDate) {
+                    toast("Scheduled announcements require a publish date.", "error");
+                    return;
+                }
+
+                if (editingAnnouncementId) {
+                    // Edit existing
+                    var a = allAnnouncements.find(function(ann) { return ann.id === editingAnnouncementId; });
+                    if (!a) { toast("Announcement not found.", "error"); return; }
+                    a.title = title;
+                    a.message = message;
+                    a.type = type;
+                    a.status = status;
+                    a.audience = audience;
+                    a.publishDate = publishDate;
+                    a.expiryDate = expiryDate;
+                    a.updatedAt = new Date().toISOString();
+                    saveAnnouncements(allAnnouncements);
+                    toast("Announcement updated.", "success");
+                    recordAdminAction("updated_announcement", editingAnnouncementId, [title]);
+                } else {
+                    // Create new
+                    var newAnn = {
+                        id: generateId(),
+                        title: title,
+                        message: message,
+                        type: type,
+                        status: status,
+                        audience: audience,
+                        createdBy: admin.name || "Admin",
+                        createdAt: new Date().toISOString(),
+                        publishDate: publishDate,
+                        expiryDate: expiryDate,
+                        updatedAt: new Date().toISOString()
+                    };
+                    allAnnouncements.push(newAnn);
+                    saveAnnouncements(allAnnouncements);
+                    toast("Announcement created.", "success");
+                    recordAdminAction("created_announcement", newAnn.id, [title]);
+                }
+
+                closeAnnouncementModal();
+                applyFilters();
+            });
+
+            createBtn.addEventListener("click", openCreateModal);
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  15. EXPORT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function exportAnnouncements() {
+                if (allAnnouncements.length === 0) {
+                    toast("No announcements to export.", "info");
+                    return;
+                }
+
+                var headers = ["Announcement ID", "Title", "Message", "Type", "Status", "Audience", "Created By",
+                    "Created Date", "Publish Date", "Expiry Date"
+                ];
+                var rows = allAnnouncements.map(function(a) {
+                    return [
+                        a.id,
+                        a.title,
+                        a.message,
+                        a.type,
+                        a.status,
+                        a.audience,
+                        a.createdBy,
+                        a.createdAt,
+                        a.publishDate || "",
+                        a.expiryDate || ""
+                    ];
+                });
+
+                var csv = headers.join(",") + "\n";
+                rows.forEach(function(row) {
+                    csv += row.map(function(cell) {
+                        var str = String(cell);
+                        if (str.indexOf(",") !== -1 || str.indexOf('"') !== -1) {
+                            return '"' + str.replace(/"/g, '""') + '"';
+                        }
+                        return str;
+                    }).join(",") + "\n";
+                });
+
+                var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+                var link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = "receiptly_announcements_" + new Date().toISOString().slice(0, 10) + ".csv";
+                link.click();
+                URL.revokeObjectURL(link.href);
+                toast("Announcements exported.", "success");
+            }
+
+            document.getElementById("exportBtn").addEventListener("click", exportAnnouncements);
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  16. REFRESH
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function refreshData() {
+                allAnnouncements = getAnnouncements();
+                updateAnnouncementStatuses();
+                applyFilters();
+                toast("Announcements refreshed.", "success");
+            }
+
+            document.getElementById("refreshBtn").addEventListener("click", refreshData);
+            document.getElementById("refreshBtnSmall").addEventListener("click", refreshData);
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  17. FILTER EVENT LISTENERS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            searchInput.addEventListener("input", function() { currentPage = 1;
+                applyFilters(); });
+            statusFilter.addEventListener("change", function() { currentPage = 1;
+                applyFilters(); });
+            typeFilter.addEventListener("change", function() { currentPage = 1;
+                applyFilters(); });
+            audienceFilter.addEventListener("change", function() { currentPage = 1;
+                applyFilters(); });
+            perPageSelect.addEventListener("change", function() {
+                perPage = parseInt(this.value);
+                currentPage = 1;
+                renderTable();
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  18. MODAL HELPERS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var confirmModal = document.getElementById("confirmModal");
+            var modalTitle = document.getElementById("modalTitle");
+            var modalMsg = document.getElementById("modalMsg");
+            var modalIcon = document.getElementById("modalIcon");
+            var modalConfirmBtn = document.getElementById("modalConfirmBtn");
+            var modalResolve = null;
+
+            function showModal(title, msg, icon, confirmText, confirmClass) {
+                return new Promise(function(resolve) {
+                    modalTitle.textContent = title;
+                    modalMsg.innerHTML = msg;
+                    modalIcon.textContent = icon || "⚠️";
+                    modalIcon.className = "modal-icon";
+                    if (icon === "⚠️") modalIcon.classList.add("modal-icon--danger");
+                    else if (icon === "💡") modalIcon.classList.add("modal-icon--warning");
+                    else if (icon === "📢") modalIcon.classList.add("modal-icon--success");
+                    else if (icon === "📁") modalIcon.classList.add("modal-icon--warning");
+                    else modalIcon.classList.add("modal-icon--success");
+
+                    modalConfirmBtn.textContent = confirmText || "Confirm";
+                    modalConfirmBtn.className = "btn " + (confirmClass || "btn--danger");
+
+                    modalResolve = resolve;
+                    confirmModal.classList.add("is-visible");
+                });
+            }
+
+            function closeModal() {
+                confirmModal.classList.remove("is-visible");
+            }
+
+            confirmModal.addEventListener("click", function(e) {
+                if (e.target === confirmModal || e.target.closest('[data-action="cancel"]')) {
+                    closeModal();
+                    if (modalResolve) modalResolve(false);
+                }
+                if (e.target.closest('[data-action="confirm"]')) {
+                    closeModal();
+                    if (modalResolve) modalResolve(true);
+                }
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  19. AUDIT LOG
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function recordAdminAction(action, targetId, details) {
+                try {
+                    var logs = JSON.parse(localStorage.getItem("receiptly_admin_audit") || "[]");
+                    logs.push({
+                        adminId: admin.id || "admin",
+                        adminName: admin.name || "Admin",
+                        action: action,
+                        targetId: targetId,
+                        details: details || [],
+                        timestamp: new Date().toISOString(),
+                    });
+                    if (logs.length > 500) logs = logs.slice(-500);
+                    localStorage.setItem("receiptly_admin_audit", JSON.stringify(logs));
+                } catch (_) {}
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  20. USER DASHBOARD INTEGRATION
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // This function is meant to be used by the user dashboard
+            // to fetch announcements visible to a specific user.
+            // It reads from the same storage and respects audience targeting.
+
+            window.getUserAnnouncements = function(userId) {
+                var user = getAllUsers().find(function(u) { return u.id === userId; });
+                if (!user) return [];
+
+                var now = new Date();
+                var announcements = getAnnouncements();
+
+                return announcements.filter(function(a) {
+                    // Status must be published or scheduled (if publish date passed)
+                    if (a.status === "draft" || a.status === "archived" || a.status === "expired") return false;
+                    if (a.status === "scheduled" && a.publishDate) {
+                        if (new Date(a.publishDate) > now) return false;
+                    }
+                    // Check audience
+                    if (a.audience === "all") return true;
+                    if (a.audience === "free" && user.plan === "Free") return true;
+                    if (a.audience === "pro" && user.plan === "Pro") return true;
+                    if (a.audience === "trial" && user.plan === "Trial") return true;
+                    if (a.audience === "plan" && user.plan === a.planId) return true;
+                    return false;
+                });
+            };
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  21. INIT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            initAnnouncements();
+
+        })();
+    </script>
+</body>
+</html>

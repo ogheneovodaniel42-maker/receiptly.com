@@ -1,0 +1,3157 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Permissions Management — Receiptly Owner</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ════════════════════════════════════════════════════════════
+               CSS VARIABLES & RESET (shared with admin-dashboard)
+               ════════════════════════════════════════════════════════════ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-display: "Fraunces", Georgia, serif;
+
+            --bg-body: #f1f5f9;
+            --bg-card: rgba(255, 255, 255, 0.78);
+            --bg-card-border: rgba(255, 255, 255, 0.30);
+            --bg-input: #f1f5f9;
+            --bg-input-hover: #e8edf5;
+            --bg-sidebar: rgba(255, 255, 255, 0.92);
+            --bg-header: rgba(255, 255, 255, 0.72);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --text-inverse: #ffffff;
+            --accent: #7c3aed;
+            --accent-dark: #6d28d9;
+            --accent-glow: rgba(124, 58, 237, 0.25);
+            --accent-soft: #ede9fe;
+            --accent-light: #d8b4fe;
+            --border-light: #e2e8f0;
+            --border-strong: #cbd5e1;
+            --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 8px 30px rgba(15, 23, 42, 0.06);
+            --shadow-lg: 0 20px 60px rgba(15, 23, 42, 0.10);
+            --shadow-input: 0 0 0 4px rgba(124, 58, 237, 0.10);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --blur-amount: 20px;
+            --sidebar-width: 260px;
+            --header-height: 64px;
+            --success: #059669;
+            --success-soft: #ecfdf5;
+            --error: #dc2626;
+            --error-soft: #fef2f2;
+            --orange: #d97706;
+            --orange-soft: #fffbeb;
+            --blue: #2563eb;
+            --blue-soft: #eff6ff;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0b1220;
+            --bg-card: rgba(17, 27, 46, 0.80);
+            --bg-card-border: rgba(255, 255, 255, 0.05);
+            --bg-input: #1e293b;
+            --bg-input-hover: #263348;
+            --bg-sidebar: rgba(15, 23, 42, 0.92);
+            --bg-header: rgba(11, 18, 32, 0.80);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent: #8b5cf6;
+            --accent-dark: #7c3aed;
+            --accent-glow: rgba(139, 92, 246, 0.20);
+            --accent-soft: rgba(139, 92, 246, 0.12);
+            --accent-light: #a78bfa;
+            --border-light: #1e293b;
+            --border-strong: #334155;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.35);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+            --shadow-input: 0 0 0 4px rgba(139, 92, 246, 0.15);
+            --success: #34d399;
+            --success-soft: #064e3b;
+            --error: #f87171;
+            --error-soft: #450a0a;
+            --orange: #fbbf24;
+            --orange-soft: #2a1f0f;
+            --blue: #60a5fa;
+            --blue-soft: #1e293b;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: var(--font-sans);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            transition: background var(--transition-slow), color var(--transition-slow);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        button {
+            font: inherit;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: inherit;
+        }
+        input,
+        select,
+        textarea {
+            font: inherit;
+            color: inherit;
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-strong);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* ─── APP LAYOUT ─────────────────────────────────────────── */
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ─── SIDEBAR ────────────────────────────────────────────── */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-right: 1px solid var(--bg-card-border);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition), background var(--transition-slow), border-color var(--transition-slow);
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-bottom: 20px;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 20px 16px;
+            border-bottom: 1px solid var(--border-light);
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand .brand-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 800;
+            flex-shrink: 0;
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+
+        .sidebar-brand .brand-text {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        .sidebar-brand .brand-text .accent {
+            color: var(--accent);
+        }
+        .sidebar-brand .brand-sub {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 1px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .sidebar-nav .nav-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            padding: 12px 14px 6px;
+        }
+
+        .sidebar-nav .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            width: 100%;
+            text-align: left;
+            position: relative;
+        }
+
+        .sidebar-nav .nav-item .nav-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            opacity: 0.6;
+            transition: opacity var(--transition);
+        }
+
+        .sidebar-nav .nav-item:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+        .sidebar-nav .nav-item:hover .nav-icon {
+            opacity: 1;
+        }
+        .sidebar-nav .nav-item.active {
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .sidebar-nav .nav-item.active .nav-icon {
+            opacity: 1;
+            color: var(--accent);
+        }
+        .sidebar-nav .nav-item.active::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 6px;
+            bottom: 6px;
+            width: 3px;
+            border-radius: 0 4px 4px 0;
+            background: var(--accent);
+        }
+
+        .sidebar-footer {
+            padding: 12px 12px 0;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            width: 100%;
+            text-align: left;
+        }
+        .sidebar-footer .nav-item .nav-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            opacity: 0.6;
+        }
+        .sidebar-footer .nav-item:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+        .sidebar-footer .nav-item.logout:hover {
+            color: var(--error);
+        }
+        .sidebar-footer .nav-item.logout:hover .nav-icon {
+            opacity: 1;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+            display: none;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .sidebar-overlay.open {
+            display: block;
+        }
+
+        /* ─── MAIN ───────────────────────────────────────────────── */
+        .main {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left var(--transition);
+        }
+        .main.sidebar-closed {
+            margin-left: 0;
+        }
+
+        /* ─── TOP HEADER ────────────────────────────────────────── */
+        .top-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-header);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-bottom: 1px solid var(--bg-card-border);
+            padding: 0 24px;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            transition: background var(--transition-slow), border-color var(--transition-slow);
+        }
+
+        .top-header__left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 4.5px;
+            padding: 6px;
+            border-radius: var(--radius-sm);
+            transition: background var(--transition);
+        }
+        .hamburger:hover {
+            background: var(--bg-input);
+        }
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2.5px;
+            background: var(--text-primary);
+            border-radius: 100px;
+            transition: all 0.3s ease;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        .top-header__title {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .top-header__title .sub {
+            font-weight: 400;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-left: 6px;
+        }
+
+        .top-header__right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .header-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            font-size: 1rem;
+        }
+        .header-btn:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+
+        .header-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 14px 4px 4px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+            transition: all var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+        .header-profile:hover {
+            border-color: var(--border-strong);
+            background: var(--bg-input);
+        }
+        .header-profile .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+        .header-profile .profile-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        .header-profile .profile-info .name {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .header-profile .profile-info .role {
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+        }
+        .header-profile .chevron {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            margin-left: 2px;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            min-width: 200px;
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            padding: 8px 0;
+            display: none;
+            z-index: 200;
+            overflow: hidden;
+        }
+        .profile-dropdown.open {
+            display: block;
+            animation: dropDown 0.2s ease;
+        }
+        @keyframes dropDown {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .profile-dropdown .drop-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 18px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            width: 100%;
+            text-align: left;
+        }
+        .profile-dropdown .drop-item:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+        .profile-dropdown .drop-item svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            opacity: 0.6;
+        }
+        .profile-dropdown .divider {
+            height: 1px;
+            background: var(--border-light);
+            margin: 4px 12px;
+        }
+        .profile-dropdown .drop-item.logout {
+            color: var(--error);
+        }
+        .profile-dropdown .drop-item.logout:hover {
+            background: var(--error-soft);
+        }
+
+        /* ─── PAGE CONTENT ──────────────────────────────────────── */
+        .page-content {
+            flex: 1;
+            padding: 24px 24px 40px;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+        .page-header h1 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        .page-header h1 .highlight {
+            background: linear-gradient(135deg, var(--accent), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            margin-top: 2px;
+        }
+
+        .page-header .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .page-header .last-updated {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .page-header .last-updated .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+        .page-header .last-updated .dot.saving {
+            animation: pulse-dot 1s infinite;
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 20px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.82rem;
+            transition: all var(--transition);
+            border: 1px solid transparent;
+        }
+        .btn--primary {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn--primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+        .btn--primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .btn--outline {
+            border-color: var(--border-light);
+            color: var(--text-secondary);
+            background: transparent;
+        }
+        .btn--outline:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+        .btn--success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn--success:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25);
+        }
+        .btn--danger {
+            background: var(--error);
+            color: #fff;
+        }
+        .btn--danger:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25);
+        }
+        .btn--warning {
+            background: var(--orange);
+            color: #fff;
+        }
+        .btn--warning:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(217, 119, 6, 0.25);
+        }
+        .btn .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            border-top-color: #fff;
+            border-radius: 50%;
+            display: none;
+            animation: spin 0.7s linear infinite;
+        }
+        .btn .spinner.show {
+            display: inline-block;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+            font-size: 0.9rem;
+        }
+        .btn-icon:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+
+        /* ─── STATS ──────────────────────────────────────────────── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            transition: all var(--transition);
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--border-strong);
+        }
+        .stat-card .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 4px;
+        }
+        .stat-card .stat-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+        }
+        .stat-card .stat-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1rem;
+        }
+        .stat-card .stat-icon--purple {
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+        .stat-card .stat-icon--blue {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+        .stat-card .stat-icon--green {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .stat-card .stat-icon--orange {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .stat-card .stat-icon--red {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .stat-card .stat-value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: var(--text-primary);
+        }
+        .stat-card .stat-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* ─── ROLE SELECTOR ──────────────────────────────────────── */
+        .role-selector-section {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            transition: all var(--transition);
+        }
+        .role-selector-section:hover {
+            border-color: var(--border-strong);
+        }
+
+        .role-selector-section .section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .role-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .role-selector .role-chip {
+            padding: 8px 18px;
+            border-radius: var(--radius-full);
+            border: 1.5px solid var(--border-light);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: all var(--transition);
+            cursor: pointer;
+        }
+        .role-selector .role-chip:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+        .role-selector .role-chip.active {
+            background: var(--accent-soft);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .role-selector .role-chip .chip-badge {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 700;
+            background: var(--bg-input);
+            color: var(--text-muted);
+            padding: 0 8px;
+            border-radius: var(--radius-full);
+            margin-left: 6px;
+        }
+        .role-selector .role-chip.active .chip-badge {
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        .selected-role-info {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 16px 24px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .selected-role-info .role-name {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .selected-role-info .role-desc {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+        .selected-role-info .role-stats {
+            display: flex;
+            gap: 16px;
+            margin-left: auto;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+        .selected-role-info .role-stats .stat-num {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .selected-role-info .role-stats .stat-num.active {
+            color: var(--success);
+        }
+        .selected-role-info .role-stats .stat-num.restricted {
+            color: var(--error);
+        }
+
+        /* ─── SEARCH ──────────────────────────────────────────────── */
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-bar .search-wrap {
+            flex: 1;
+            min-width: 180px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            padding: 7px 16px;
+            transition: all var(--transition);
+        }
+        .search-bar .search-wrap:focus-within {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-input);
+            background: var(--bg-card);
+        }
+        .search-bar .search-wrap svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        .search-bar .search-wrap input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 0.82rem;
+            padding: 4px 0;
+            width: 100%;
+            color: var(--text-primary);
+        }
+        .search-bar .search-wrap input::placeholder {
+            color: var(--text-muted);
+        }
+        .search-bar .search-wrap .clear-search {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0 4px;
+            display: none;
+        }
+        .search-bar .search-wrap .clear-search.visible {
+            display: block;
+        }
+        .search-bar .search-wrap .clear-search:hover {
+            color: var(--text-primary);
+        }
+
+        /* ─── PERMISSION MATRIX ──────────────────────────────────── */
+        .perm-matrix-wrapper {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all var(--transition);
+        }
+        .perm-matrix-wrapper:hover {
+            border-color: var(--border-strong);
+        }
+
+        .perm-matrix-wrapper .matrix-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 14px 20px;
+            background: var(--bg-input);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .perm-matrix-wrapper .matrix-toolbar .matrix-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .perm-matrix-wrapper .matrix-toolbar .matrix-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .perm-matrix-wrapper .matrix-toolbar .matrix-actions .btn-sm {
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: transparent;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            cursor: pointer;
+        }
+        .perm-matrix-wrapper .matrix-toolbar .matrix-actions .btn-sm:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+        .perm-matrix-wrapper .matrix-toolbar .matrix-actions .btn-sm.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+        .perm-matrix-wrapper .matrix-toolbar .matrix-actions .btn-sm.primary:hover {
+            background: var(--accent-dark);
+        }
+        .perm-matrix-wrapper .matrix-toolbar .matrix-actions .btn-sm.danger:hover {
+            border-color: var(--error);
+            color: var(--error);
+            background: var(--error-soft);
+        }
+        .perm-matrix-wrapper .matrix-toolbar .matrix-actions .btn-sm.success:hover {
+            border-color: var(--success);
+            color: var(--success);
+            background: var(--success-soft);
+        }
+
+        .perm-matrix-wrapper .matrix-scroll {
+            overflow-x: auto;
+            padding: 0 4px 4px 4px;
+        }
+
+        .perm-matrix {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            min-width: 720px;
+        }
+
+        .perm-matrix thead th {
+            text-align: left;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-light);
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            z-index: 2;
+        }
+
+        .perm-matrix thead th .perm-header-check {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+        .perm-matrix thead th .perm-header-check input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .perm-matrix tbody tr {
+            border-bottom: 1px solid var(--border-light);
+            transition: background var(--transition);
+        }
+        .perm-matrix tbody tr:last-child {
+            border-bottom: none;
+        }
+        .perm-matrix tbody tr:hover {
+            background: var(--bg-input);
+        }
+        .perm-matrix tbody tr .perm-label-cell {
+            padding: 8px 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+        .perm-matrix tbody tr .perm-label-cell .perm-module {
+            font-weight: 400;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            display: block;
+        }
+        .perm-matrix tbody tr .perm-label-cell .sensitive-badge {
+            display: inline-block;
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 1px 8px;
+            border-radius: var(--radius-full);
+            background: var(--error-soft);
+            color: var(--error);
+            margin-left: 6px;
+        }
+        .perm-matrix tbody tr td {
+            padding: 8px 14px;
+            vertical-align: middle;
+            text-align: center;
+        }
+        .perm-matrix tbody tr td .perm-toggle {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .perm-matrix tbody tr td .perm-toggle:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .perm-group-header {
+            background: var(--bg-input);
+            cursor: pointer;
+            transition: background var(--transition);
+            user-select: none;
+        }
+        .perm-group-header:hover {
+            background: var(--bg-input-hover);
+        }
+        .perm-group-header td {
+            padding: 8px 14px !important;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-align: left !important;
+        }
+        .perm-group-header td .group-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .perm-group-header td .group-toggle .group-chevron {
+            display: inline-block;
+            transition: transform var(--transition);
+            font-size: 0.6rem;
+            color: var(--text-muted);
+        }
+        .perm-group-header td .group-toggle .group-chevron.open {
+            transform: rotate(180deg);
+        }
+        .perm-group-header td .group-count {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-left: 8px;
+        }
+        .perm-group-header td .group-select-all {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 12px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+        .perm-group-header td .group-select-all input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .perm-group-body.hidden {
+            display: none;
+        }
+
+        /* ─── EMPTY STATE ────────────────────────────────────────── */
+        .empty-perms {
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        .empty-perms svg {
+            width: 48px;
+            height: 48px;
+            opacity: 0.3;
+            margin-bottom: 12px;
+        }
+        .empty-perms p {
+            font-size: 0.9rem;
+        }
+        .empty-perms .sub {
+            font-size: 0.78rem;
+            margin-top: 4px;
+        }
+
+        /* ─── TOAST ──────────────────────────────────────────────── */
+        .toast-host {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 380px;
+            width: 100%;
+        }
+
+        .toast {
+            padding: 12px 18px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast.hide {
+            transform: translateX(120%);
+            opacity: 0;
+        }
+        .toast .t-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+        .toast.error .t-icon {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .toast.success .t-icon {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .toast.info .t-icon {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+        .toast .t-msg {
+            flex: 1;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .toast .t-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0 4px;
+            transition: color var(--transition);
+            line-height: 1;
+        }
+        .toast .t-close:hover {
+            color: var(--text-primary);
+        }
+
+        /* ─── MODALS ─────────────────────────────────────────────── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .modal-overlay.is-visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            max-width: 520px;
+            width: 100%;
+            padding: 28px 30px;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(12px) scale(0.98);
+            transition: transform var(--transition);
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal-overlay.is-visible .modal {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: color var(--transition);
+            line-height: 1;
+            padding: 4px;
+        }
+        .modal .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .modal .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+        .modal .modal-icon--danger {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+        .modal .modal-icon--warning {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        .modal .modal-icon--success {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+        .modal .modal-icon--info {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+
+        .modal .modal-title {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 4px;
+        }
+        .modal .modal-msg {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .modal .modal-msg strong {
+            color: var(--text-primary);
+        }
+
+        .modal .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* ─── SKELETON ───────────────────────────────────────────── */
+        .skeleton {
+            background: var(--bg-input);
+            border-radius: 6px;
+            animation: pulse 1.5s ease-in-out infinite;
+            height: 20px;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+        .skeleton-text {
+            height: 14px;
+            margin-bottom: 4px;
+        }
+        .skeleton-text.w-75 {
+            width: 75%;
+        }
+        .skeleton-text.w-50 {
+            width: 50%;
+        }
+        .skeleton-text.w-25 {
+            width: 25%;
+        }
+        .skeleton-line {
+            height: 18px;
+            margin-bottom: 6px;
+        }
+
+        /* ─── RESPONSIVE ─────────────────────────────────────────── */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main {
+                margin-left: 0;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .top-header {
+                padding: 0 16px;
+            }
+            .page-content {
+                padding: 16px 16px 32px;
+            }
+            .header-profile .profile-info {
+                display: none;
+            }
+            .header-profile .chevron {
+                display: none;
+            }
+            .header-profile {
+                padding: 4px;
+                border: none;
+                background: transparent;
+            }
+            .header-profile:hover {
+                background: transparent;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            }
+            .selected-role-info .role-stats {
+                margin-left: 0;
+                width: 100%;
+            }
+            .perm-matrix {
+                min-width: 600px;
+            }
+            .modal {
+                max-width: 100%;
+                margin: 12px;
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .stat-card {
+                padding: 12px 14px;
+            }
+            .stat-card .stat-value {
+                font-size: 1.2rem;
+            }
+            .top-header__title .sub {
+                display: none;
+            }
+            .page-content {
+                padding: 12px 12px 24px;
+            }
+            .role-selector-section {
+                padding: 14px 16px;
+            }
+            .role-selector {
+                gap: 6px;
+            }
+            .role-selector .role-chip {
+                padding: 6px 14px;
+                font-size: 0.75rem;
+            }
+            .selected-role-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .search-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .perm-matrix-wrapper .matrix-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .perm-matrix-wrapper .matrix-toolbar .matrix-actions {
+                justify-content: flex-start;
+            }
+            .perm-matrix {
+                min-width: 480px;
+                font-size: 0.75rem;
+            }
+            .perm-matrix thead th,
+            .perm-matrix tbody td {
+                padding: 6px 10px;
+            }
+            .modal {
+                padding: 16px;
+                max-height: 90vh;
+                margin: 8px;
+            }
+            .modal .modal-close {
+                top: 12px;
+                right: 12px;
+            }
+            .toast-host {
+                bottom: 16px;
+                right: 16px;
+                left: 16px;
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .stat-card {
+                padding: 8px 10px;
+            }
+            .stat-card .stat-value {
+                font-size: 1rem;
+            }
+            .stat-card .stat-label {
+                font-size: 0.6rem;
+            }
+            .stat-card .stat-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 0.8rem;
+            }
+            .page-header h1 {
+                font-size: 1.2rem;
+            }
+            .btn {
+                font-size: 0.7rem;
+                padding: 6px 12px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .sidebar {
+                transition: none;
+            }
+            .toast {
+                transition: none;
+            }
+            .modal {
+                transition: none;
+            }
+            .skeleton {
+                animation: none;
+                opacity: 0.4;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ════════════════════════════════════════════════════════════
+    SIDEBAR
+    ════════════════════════════════════════════════════════════ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <span class="brand-icon">R</span>
+            <div class="brand-text">
+                Receipt<span class="accent">ly</span>
+                <span class="brand-sub">Owner Panel</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-label">Main</div>
+            <a class="nav-item" href="admin-dashboard.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a class="nav-item" href="admin-analytics.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M4 20l16-16"/></svg>
+                Analytics
+            </a>
+
+            <div class="nav-label">Management</div>
+            <a class="nav-item" href="admin-users.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Users
+            </a>
+
+            <div class="nav-label">Finance</div>
+            <a class="nav-item" href="admin-payments.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                Payments
+            </a>
+
+            <div class="nav-label">Content</div>
+            <a class="nav-item" href="admin-templates.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+                Templates
+            </a>
+            <a class="nav-item" href="admin-announcements.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                Announcements
+            </a>
+
+            <div class="nav-label">Communication</div>
+            <a class="nav-item" href="admin-support.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Support
+            </a>
+            <a class="nav-item" href="admin-messages.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Messages
+                <span id="msgNavBadge" style="margin-left:auto;background:#dc2626;color:#fff;font-size:0.65rem;font-weight:800;border-radius:999px;padding:1px 6px;min-width:16px;text-align:center;display:none;">0</span>
+            </a>
+            <a class="nav-item" href="admin-reports.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Reports
+            </a>
+
+            <div class="nav-label">Administration</div>
+            <a class="nav-item" href="admin-settings.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Settings
+            </a>
+            <a class="nav-item" href="admin-roles.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Roles
+            </a>
+            <a class="nav-item active" href="admin-permissions.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Permissions
+            </a>
+            <a class="nav-item" href="admin-sessions.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Sessions
+            </a>
+            <a class="nav-item" href="admin-security.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Security
+            </a>
+            <a class="nav-item" href="company-profile.html">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Company Profile
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="nav-item logout" id="logoutBtn">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+                Logout
+            </button>
+        </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    MAIN CONTENT
+    ════════════════════════════════════════════════════════════ -->
+    <div class="main" id="mainContent">
+        <!-- TOP HEADER -->
+        <header class="top-header">
+            <div class="top-header__left">
+                <button class="hamburger" id="hamburger" aria-label="Toggle sidebar">
+                    <span></span><span></span><span></span>
+                </button>
+                <div class="top-header__title">
+                    Permissions
+                    <span class="sub">Access control</span>
+                </div>
+            </div>
+
+            <div class="top-header__right">
+                <button class="header-btn" id="themeToggleBtn" aria-label="Toggle theme">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                </button>
+
+                <div class="header-profile" id="profileBtn">
+                    <div class="avatar" id="headerAvatar">A</div>
+                    <div class="profile-info">
+                        <span class="name" id="headerName">Admin</span>
+                        <span class="role">Super Admin</span>
+                    </div>
+                    <span class="chevron">▾</span>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <button class="drop-item" data-page="account-profile.html">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            My Account
+                        </button>
+                        <button class="drop-item" data-page="admin-settings.html">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                            Settings
+                        </button>
+                        <div class="divider"></div>
+                        <button class="drop-item logout" id="dropdownLogout">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- PAGE CONTENT -->
+        <div class="page-content" id="pageContent">
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1>Permissions Management</h1>
+                    <p>Control what each administrator role can access and manage across Receiptly.</p>
+                </div>
+                <div class="action-bar">
+                    <div class="last-updated" id="lastUpdated">
+                        <span class="dot" id="statusDot"></span>
+                        <span id="lastUpdatedText">Loaded</span>
+                    </div>
+                    <button class="btn btn--outline" id="resetBtn">↺ Reset</button>
+                    <button class="btn btn--primary" id="saveBtn">
+                        <span class="spinner" id="saveSpinner"></span>
+                        <span id="saveText">Save Changes</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ─── STATS ──────────────────────────────────────────── -->
+            <div class="stats-grid" id="statsGrid">
+                <!-- populated by JS -->
+            </div>
+
+            <!-- ─── ROLE SELECTOR ──────────────────────────────────── -->
+            <div class="role-selector-section">
+                <div class="section-label">Select Role</div>
+                <div class="role-selector" id="roleSelector">
+                    <!-- populated by JS -->
+                </div>
+                <div class="selected-role-info" id="selectedRoleInfo">
+                    <!-- populated by JS -->
+                </div>
+            </div>
+
+            <!-- ─── SEARCH ──────────────────────────────────────────── -->
+            <div class="search-bar">
+                <div class="search-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="permSearch" placeholder="Search permissions..." />
+                    <button class="clear-search" id="clearSearch">&times;</button>
+                </div>
+            </div>
+
+            <!-- ─── PERMISSION MATRIX ──────────────────────────────── -->
+            <div class="perm-matrix-wrapper">
+                <div class="matrix-toolbar">
+                    <span class="matrix-title">Permission Matrix</span>
+                    <div class="matrix-actions">
+                        <button class="btn-sm success" id="enableAllBtn">Enable All</button>
+                        <button class="btn-sm danger" id="disableAllBtn">Disable All</button>
+                    </div>
+                </div>
+                <div class="matrix-scroll" id="matrixScroll">
+                    <div id="permMatrixContainer">
+                        <!-- populated by JS -->
+                    </div>
+                </div>
+                <div class="empty-perms" id="emptyPerms" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    <p>No permissions found</p>
+                    <div class="sub">Try adjusting your search terms.</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    TOAST HOST
+    ════════════════════════════════════════════════════════════ -->
+    <div class="toast-host" id="toastHost"></div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    MODALS
+    ════════════════════════════════════════════════════════════ -->
+    <!-- Confirm Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <button class="modal-close" data-action="close-confirm">&times;</button>
+            <div class="modal-icon" id="confirmIcon">⚠️</div>
+            <h3 class="modal-title" id="confirmTitle">Are you sure?</h3>
+            <p class="modal-msg" id="confirmMsg"></p>
+            <div class="modal-actions">
+                <button class="btn btn--outline" data-action="cancel-confirm">Cancel</button>
+                <button class="btn btn--danger" id="confirmOkBtn" data-action="ok-confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sensitive Permission Modal -->
+    <div class="modal-overlay" id="sensitiveModal">
+        <div class="modal">
+            <button class="modal-close" data-action="close-sensitive">&times;</button>
+            <div class="modal-icon modal-icon--warning">🔒</div>
+            <h3 class="modal-title">Sensitive Permission</h3>
+            <p class="modal-msg" id="sensitiveMsg">This is a sensitive action. Are you sure you want to enable this permission?</p>
+            <div class="modal-actions">
+                <button class="btn btn--outline" data-action="cancel-sensitive">Cancel</button>
+                <button class="btn btn--warning" id="sensitiveOkBtn" data-action="ok-sensitive">Enable</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unsaved Changes Modal -->
+    <div class="modal-overlay" id="unsavedModal">
+        <div class="modal">
+            <button class="modal-close" data-action="close-unsaved">&times;</button>
+            <div class="modal-icon modal-icon--warning">💡</div>
+            <h3 class="modal-title">Unsaved Changes</h3>
+            <p class="modal-msg">You have unsaved permission changes. Are you sure you want to leave?</p>
+            <div class="modal-actions">
+                <button class="btn btn--outline" data-action="stay">Stay</button>
+                <button class="btn btn--danger" id="leaveBtn" data-action="leave">Leave</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════
+    SCRIPTS
+    ════════════════════════════════════════════════════════════ -->
+    <script src="../js/security.js"></script>
+    <script src="../js/sessions.js"></script>
+    <script src="../js/roles.js"></script>
+    <script src="../js/admin-auth.js">
+    </script>
+    <script src="../js/ui-popup.js"></script>
+    <script src="../js/storage.js"></script>
+    <script>
+        (function() {
+            "use strict";
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  1. AUTH GUARD
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            if (typeof AdminAuth === "undefined") {
+                window.location.href = "../admin-login.html";
+                return;
+            }
+            var admin = AdminAuth.requireAdmin ? AdminAuth.requireAdmin("admin-login.html") : null;
+            if (!admin) {
+                var session = AdminAuth.getSession ? AdminAuth.getSession() : null;
+                if (!session) {
+                    window.location.href = "../admin-login.html";
+                    return;
+                }
+                admin = session;
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  2. HELPERS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var ACCOUNT_ID = admin.id || admin.email || "default_account";
+
+            // Centralized: this page used to keep its own permission
+            // matrix in a separate "receiptly_permissions_<id>" key with a
+            // different (dot-notation) permission taxonomy than
+            // admin-roles.html's role.permissions array — meaning toggles
+            // made here never affected real access. It now reads/writes
+            // role.permissions directly via js/roles.js, using the same
+            // canonical permission keys as every other admin page.
+            function getRoles() {
+                return (typeof Roles !== "undefined") ? Roles.getAll() : [];
+            }
+
+            // Returns { roleId: { permKey: true|false, ... } }, derived
+            // live from each role's real permissions array.
+            function getPermissions() {
+                var map = {};
+                getRoles().forEach(function(role) {
+                    var granted = {};
+                    (role.permissions || []).forEach(function(p) { granted[p] = true; });
+                    map[role.id] = granted;
+                });
+                return map;
+            }
+
+            // Persists the in-memory boolean maps back into each role's
+            // real permissions array via Roles.save() — the SAME store
+            // admin-roles.html reads and AdminAuth.hasPermission() checks.
+            function savePermissions(perms) {
+                if (typeof Roles === "undefined") return;
+                Object.keys(perms || {}).forEach(function(roleId) {
+                    var grantedMap = perms[roleId] || {};
+                    var grantedArray = Object.keys(grantedMap).filter(function(k) { return !!grantedMap[k]; });
+                    Roles.save({ id: roleId, permissions: grantedArray });
+                });
+            }
+
+            function esc(str) {
+                if (!str) return "";
+                return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g,
+                    "&quot;");
+            }
+
+            function fmtDate(d) {
+                if (!d) return "—";
+                var date = new Date(d);
+                if (isNaN(date)) return "—";
+                return date.toLocaleDateString(undefined, { day: "2-digit", month: "short", year: "numeric" });
+            }
+
+            function fmtDateTime(d) {
+                if (!d) return "—";
+                var date = new Date(d);
+                if (isNaN(date)) return "—";
+                return date.toLocaleString(undefined, { day: "2-digit", month: "short", year: "numeric",
+                    hour: "2-digit", minute: "2-digit" });
+            }
+
+            function initials(name) {
+                if (!name) return "U";
+                return name.trim().split(/\s+/).slice(0, 2).map(function(w) { return w[0]; }).join("").toUpperCase();
+            }
+
+            function getAdminName() {
+                return admin.name || "Admin";
+            }
+
+            function getAdminId() {
+                return admin.id || "admin_" + (admin.name || "Admin").toLowerCase().replace(/\s+/g, "_");
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  3. PERMISSION DEFINITIONS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            // Sourced from the centralized js/roles.js taxonomy (flat
+            // permission-key strings, shared with admin-roles.html) and
+            // wrapped into {id,label,sensitive} objects for this page's
+            // richer checkbox display. This replaces a second, independent
+            // dot-notation permission list that used to live only here.
+            function humanizePermLabel(key) {
+                return key.replace(/_/g, " ").replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+            }
+            var SENSITIVE_PATTERN = /delete|revoke|refund|approve|manage_permissions|cancel_pos_transactions/;
+            var PERMISSION_GROUPS = ((typeof Roles !== "undefined") ? Roles.PERMISSION_GROUPS : []).map(function(g) {
+                return {
+                    name: g.name,
+                    permissions: g.permissions.map(function(key) {
+                        return { id: key, label: humanizePermLabel(key), sensitive: SENSITIVE_PATTERN.test(key) };
+                    })
+                };
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  4. ROLE TEMPLATES (for default permissions)
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var ROLE_PERMISSION_DEFAULTS = {
+                "Super Administrator": function() {
+                    var all = {};
+                    PERMISSION_GROUPS.forEach(function(g) {
+                        g.permissions.forEach(function(p) {
+                            all[p.id] = true;
+                        });
+                    });
+                    return all;
+                },
+                "Administrator": function() {
+                    var perms = {};
+                    var sensitiveExclude = [
+                        "manage_permissions", "view_activity_logs", "view_sessions",
+                        "revoke_sessions", "edit_security_settings"
+                    ];
+                    PERMISSION_GROUPS.forEach(function(g) {
+                        g.permissions.forEach(function(p) {
+                            if (sensitiveExclude.indexOf(p.id) === -1) {
+                                perms[p.id] = true;
+                            }
+                        });
+                    });
+                    return perms;
+                },
+                "Manager": function() {
+                    var include = [
+                        "view_dashboard", "view_dashboard", "view_dashboard",
+                        "view_customers", "add_customers", "edit_customers",
+                        "view_products", "add_products", "edit_products",
+                        "view_receipts", "create_receipts", "edit_receipts", "print_receipts",
+                        "view_invoices", "create_invoices", "edit_invoices", "send_invoices",
+                        "view_payments", "add_payments",
+                        "view_expenses", "add_expenses",
+                        "view_sales", "create_sales",
+                        "access_pos", "process_pos_sales", "apply_pos_discounts",
+                        "view_reports", "generate_reports", "export_reports"
+                    ];
+                    var perms = {};
+                    include.forEach(function(id) { perms[id] = true; });
+                    return perms;
+                },
+                "Accountant": function() {
+                    var include = [
+                        "view_dashboard", "view_dashboard",
+                        "view_receipts", "print_receipts",
+                        "view_invoices", "send_invoices",
+                        "view_payments", "add_payments", "edit_payments", "refund_payments",
+                        "view_expenses", "add_expenses", "edit_expenses", "approve_expenses",
+                        "view_sales",
+                        "view_reports", "generate_reports", "export_reports", "download_reports",
+                        "view_analytics", "view_financial_analytics"
+                    ];
+                    var perms = {};
+                    include.forEach(function(id) { perms[id] = true; });
+                    return perms;
+                },
+                "Sales Staff": function() {
+                    var include = [
+                        "view_dashboard", "view_dashboard",
+                        "view_customers", "add_customers", "edit_customers",
+                        "view_products", "add_products", "edit_products",
+                        "view_receipts", "create_receipts", "print_receipts",
+                        "view_invoices", "create_invoices", "send_invoices",
+                        "view_payments", "add_payments",
+                        "view_sales", "create_sales",
+                        "access_pos", "process_pos_sales", "apply_pos_discounts",
+                        "view_reports"
+                    ];
+                    var perms = {};
+                    include.forEach(function(id) { perms[id] = true; });
+                    return perms;
+                },
+                "Support Staff": function() {
+                    var include = [
+                        "view_dashboard",
+                        "view_customers",
+                        "view_receipts", "print_receipts",
+                        "view_invoices",
+                        "view_payments",
+                        "view_sales",
+                        "view_reports"
+                    ];
+                    var perms = {};
+                    include.forEach(function(id) { perms[id] = true; });
+                    return perms;
+                }
+            };
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  5. TOAST SYSTEM
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function toast(message, type) {
+                type = type || "info";
+                var host = document.getElementById("toastHost");
+                var el = document.createElement("div");
+                el.className = "toast " + type;
+                var icon = type === "error" ? "✕" : type === "success" ? "✓" : "ⓘ";
+                el.innerHTML =
+                    '<span class="t-icon">' + icon + '</span>' +
+                    '<span class="t-msg">' + esc(message) + '</span>' +
+                    '<button class="t-close">&times;</button>';
+                host.appendChild(el);
+
+                requestAnimationFrame(function() {
+                    el.classList.add("show");
+                });
+
+                el.querySelector(".t-close").addEventListener("click", function() {
+                    dismissToast(el);
+                });
+
+                setTimeout(function() {
+                    dismissToast(el);
+                }, 4000);
+
+                return el;
+            }
+
+            function dismissToast(el) {
+                if (!el || el.classList.contains("hide")) return;
+                el.classList.remove("show");
+                el.classList.add("hide");
+                setTimeout(function() {
+                    if (el.parentNode) el.remove();
+                }, 400);
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  6. THEME
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function getTheme() {
+                return localStorage.getItem("receiptly_theme") || "dark";
+            }
+
+            function setTheme(theme) {
+                document.documentElement.setAttribute("data-theme", theme);
+                localStorage.setItem("receiptly_theme", theme);
+                var icon = document.querySelector("#themeToggleBtn svg");
+                if (theme === "dark") {
+                    icon.innerHTML =
+                        '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+                } else {
+                    icon.innerHTML =
+                        '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+                }
+            }
+
+            setTheme(getTheme());
+
+            document.getElementById("themeToggleBtn").addEventListener("click", function() {
+                var current = document.documentElement.getAttribute("data-theme");
+                setTheme(current === "dark" ? "light" : "dark");
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  7. SIDEBAR / HEADER
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var sidebar = document.getElementById("sidebar");
+            var overlay = document.getElementById("sidebarOverlay");
+            var hamburger = document.getElementById("hamburger");
+
+            function toggleSidebar() {
+                sidebar.classList.toggle("open");
+                hamburger.classList.toggle("active");
+                overlay.classList.toggle("open");
+            }
+
+            hamburger.addEventListener("click", toggleSidebar);
+            overlay.addEventListener("click", toggleSidebar);
+
+            // Profile dropdown
+            var profileBtn = document.getElementById("profileBtn");
+            var profileDropdown = document.getElementById("profileDropdown");
+            var dropdownOpen = false;
+
+            profileBtn.addEventListener("click", function(e) {
+                e.stopPropagation();
+                dropdownOpen = !dropdownOpen;
+                profileDropdown.classList.toggle("open", dropdownOpen);
+            });
+
+            document.addEventListener("click", function(e) {
+                if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                    profileDropdown.classList.remove("open");
+                    dropdownOpen = false;
+                }
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  8. LOGOUT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            function handleLogout() {
+                if (AdminAuth.logout) {
+                    AdminAuth.logout();
+                } else {
+                    localStorage.removeItem("receiptly_admin_session");
+                }
+                window.location.href = "../admin-login.html";
+            }
+
+            document.getElementById("logoutBtn").addEventListener("click", handleLogout);
+            document.getElementById("dropdownLogout").addEventListener("click", handleLogout);
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  9. HEADER ADMIN INFO
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            document.getElementById("headerName").textContent = getAdminName();
+            document.getElementById("headerAvatar").textContent = initials(getAdminName());
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  10. PERMISSION DATA MANAGEMENT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var allRoles = [];
+            var allPermissions = {};
+            var selectedRole = null;
+            var currentPerms = {};
+            var originalPerms = {};
+            var hasUnsavedChanges = false;
+            var searchQuery = "";
+            var isSaving = false;
+            var isResetting = false;
+            var isDirty = false;
+
+            // DOM refs
+            var statsGrid = document.getElementById("statsGrid");
+            var roleSelector = document.getElementById("roleSelector");
+            var selectedRoleInfo = document.getElementById("selectedRoleInfo");
+            var permSearch = document.getElementById("permSearch");
+            var clearSearch = document.getElementById("clearSearch");
+            var permMatrixContainer = document.getElementById("permMatrixContainer");
+            var emptyPerms = document.getElementById("emptyPerms");
+            var saveBtn = document.getElementById("saveBtn");
+            var saveText = document.getElementById("saveText");
+            var saveSpinner = document.getElementById("saveSpinner");
+            var resetBtn = document.getElementById("resetBtn");
+            var enableAllBtn = document.getElementById("enableAllBtn");
+            var disableAllBtn = document.getElementById("disableAllBtn");
+            var lastUpdatedText = document.getElementById("lastUpdatedText");
+            var statusDot = document.getElementById("statusDot");
+
+            // ─── Load Data ───────────────────────────────────────────
+            function loadData() {
+                allRoles = getRoles();
+                allPermissions = getPermissions();
+
+                // Ensure all roles have permission entries
+                allRoles.forEach(function(role) {
+                    if (!allPermissions[role.id]) {
+                        // Check if we have a template for this role name
+                        var defaultFn = ROLE_PERMISSION_DEFAULTS[role.name];
+                        if (defaultFn) {
+                            allPermissions[role.id] = defaultFn();
+                        } else {
+                            allPermissions[role.id] = {};
+                        }
+                    }
+                });
+
+                // Also ensure all role IDs in permissions exist (cleanup)
+                var roleIds = allRoles.map(function(r) { return r.id; });
+                Object.keys(allPermissions).forEach(function(key) {
+                    if (roleIds.indexOf(key) === -1) {
+                        delete allPermissions[key];
+                    }
+                });
+
+                savePermissions(allPermissions);
+
+                // Select first role if none selected
+                if (!selectedRole && allRoles.length > 0) {
+                    selectedRole = allRoles[0];
+                }
+
+                renderStats();
+                renderRoleSelector();
+                renderSelectedRoleInfo();
+                renderPermissions();
+
+                // Update last updated
+                updateLastUpdated();
+
+                // Reset unsaved state
+                hasUnsavedChanges = false;
+                updateSaveButton();
+            }
+
+            // ─── Render Stats ──────────────────────────────────────
+            function renderStats() {
+                var totalRoles = allRoles.length;
+                var totalPerms = PERMISSION_GROUPS.reduce(function(acc, g) { return acc + g.permissions.length; }, 0);
+
+                var activePerms = 0;
+                var restrictedPerms = 0;
+                if (selectedRole && allPermissions[selectedRole.id]) {
+                    var perms = allPermissions[selectedRole.id];
+                    Object.keys(perms).forEach(function(key) {
+                        if (perms[key]) {
+                            activePerms++;
+                            // Check if this permission is sensitive
+                            var isSensitive = PERMISSION_GROUPS.some(function(g) {
+                                return g.permissions.some(function(p) { return p.id === key && p
+                                        .sensitive; });
+                            });
+                            if (isSensitive) restrictedPerms++;
+                        }
+                    });
+                }
+
+                var stats = [
+                    { label: "Total Roles", value: totalRoles, icon: "👥", iconClass: "stat-icon--purple",
+                        sub: "Administrator roles" },
+                    { label: "Total Permissions", value: totalPerms, icon: "🔑", iconClass: "stat-icon--blue",
+                        sub: "Across all modules" },
+                    { label: "Active Permissions", value: activePerms, icon: "✅", iconClass: "stat-icon--green",
+                        sub: "Enabled for " + (selectedRole ? selectedRole.name : "selected role") },
+                    { label: "Restricted Permissions", value: restrictedPerms, icon: "🔒", iconClass: "stat-icon--red",
+                        sub: "Sensitive actions" },
+                ];
+
+                statsGrid.innerHTML = "";
+                stats.forEach(function(s) {
+                    var card = document.createElement("div");
+                    card.className = "stat-card";
+                    card.innerHTML =
+                        '<div class="stat-top">' +
+                        '<span class="stat-label">' + esc(s.label) + '</span>' +
+                        '<span class="stat-icon ' + s.iconClass + '">' + s.icon + '</span>' +
+                        '</div>' +
+                        '<div class="stat-value">' + s.value + '</div>' +
+                        '<div class="stat-sub">' + esc(s.sub) + '</div>';
+                    statsGrid.appendChild(card);
+                });
+            }
+
+            // ─── Render Role Selector ──────────────────────────────
+            function renderRoleSelector() {
+                if (allRoles.length === 0) {
+                    roleSelector.innerHTML =
+                        '<span style="color:var(--text-muted);font-size:0.82rem;">No roles found. <a href="admin-roles.html" style="color:var(--accent);font-weight:600;">Create a role</a></span>';
+                    return;
+                }
+
+                roleSelector.innerHTML = "";
+                allRoles.forEach(function(role) {
+                    var chip = document.createElement("button");
+                    chip.className = "role-chip" + (selectedRole && selectedRole.id === role.id ? " active" :
+                        "");
+                    chip.dataset.roleId = role.id;
+                    var permCount = allPermissions[role.id] ? Object.keys(allPermissions[role.id]).filter(
+                        function(k) { return allPermissions[role.id][k]; }).length : 0;
+                    chip.innerHTML = esc(role.name) + ' <span class="chip-badge">' + permCount + '</span>';
+                    chip.addEventListener("click", function() {
+                        selectRole(role.id);
+                    });
+                    roleSelector.appendChild(chip);
+                });
+            }
+
+            // ─── Select Role ────────────────────────────────────────
+            function selectRole(roleId) {
+                if (hasUnsavedChanges) {
+                    // Prompt to save or discard
+                    showUnsavedModal(function(proceed) {
+                        if (proceed) {
+                            // Discard changes
+                            hasUnsavedChanges = false;
+                            updateSaveButton();
+                            doSelectRole(roleId);
+                        }
+                    });
+                    return;
+                }
+                doSelectRole(roleId);
+            }
+
+            function doSelectRole(roleId) {
+                var role = allRoles.find(function(r) { return r.id === roleId; });
+                if (!role) return;
+                selectedRole = role;
+                // Store current permissions as original
+                if (allPermissions[role.id]) {
+                    originalPerms = JSON.parse(JSON.stringify(allPermissions[role.id]));
+                    currentPerms = JSON.parse(JSON.stringify(allPermissions[role.id]));
+                } else {
+                    originalPerms = {};
+                    currentPerms = {};
+                }
+                hasUnsavedChanges = false;
+                updateSaveButton();
+
+                renderRoleSelector();
+                renderSelectedRoleInfo();
+                renderPermissions();
+                renderStats();
+                updateLastUpdated();
+
+                // Reset search
+                permSearch.value = "";
+                searchQuery = "";
+                clearSearch.classList.remove("visible");
+            }
+
+            // ─── Render Selected Role Info ─────────────────────────
+            function renderSelectedRoleInfo() {
+                if (!selectedRole) {
+                    selectedRoleInfo.innerHTML = '<span style="color:var(--text-muted);font-size:0.82rem;">Select a role to manage permissions.</span>';
+                    return;
+                }
+
+                var perms = allPermissions[selectedRole.id] || {};
+                var activeCount = Object.keys(perms).filter(function(k) { return perms[k]; }).length;
+                var totalCount = PERMISSION_GROUPS.reduce(function(acc, g) { return acc + g.permissions.length; },
+                0);
+                var restrictedCount = 0;
+                Object.keys(perms).forEach(function(k) {
+                    if (perms[k]) {
+                        var isSensitive = PERMISSION_GROUPS.some(function(g) {
+                            return g.permissions.some(function(p) { return p.id === k && p.sensitive; });
+                        });
+                        if (isSensitive) restrictedCount++;
+                    }
+                });
+
+                selectedRoleInfo.innerHTML =
+                    '<span class="role-name">' + esc(selectedRole.name) + '</span>' +
+                    '<span class="role-desc">' + (selectedRole.description || "No description") + '</span>' +
+                    '<div class="role-stats">' +
+                    '<span>Active: <span class="stat-num active">' + activeCount + '</span></span>' +
+                    '<span>Restricted: <span class="stat-num restricted">' + restrictedCount +
+                    '</span></span>' +
+                    '<span>Total: <span class="stat-num">' + totalCount + '</span></span>' +
+                    '</div>';
+            }
+
+            // ─── Render Permissions ────────────────────────────────
+            function renderPermissions() {
+                if (!selectedRole) {
+                    permMatrixContainer.innerHTML =
+                        '<div class="empty-perms"><p>Select a role to view permissions.</p></div>';
+                    emptyPerms.style.display = "none";
+                    return;
+                }
+
+                var perms = currentPerms || {};
+                var search = searchQuery.toLowerCase().trim();
+
+                // Check if we have any permissions
+                var allPerms = PERMISSION_GROUPS;
+                var hasResults = false;
+
+                // Build matrix HTML
+                var html = '<table class="perm-matrix">';
+                html += '<thead><tr>';
+                html += '<th style="min-width:160px;">Permission</th>';
+                html += '<th style="text-align:center;width:60px;">View</th>';
+                html += '<th style="text-align:center;width:60px;">Create</th>';
+                html += '<th style="text-align:center;width:60px;">Edit</th>';
+                html += '<th style="text-align:center;width:60px;">Delete</th>';
+                html += '<th style="text-align:center;width:60px;">Export</th>';
+                html += '</tr></thead>';
+                html += '<tbody>';
+
+                // Determine which actions each permission maps to
+                var actionMap = {
+                    "view": ["view", "view_analytics", "view_notifications", "view_reports", "view_sessions",
+                        "view_activity_logs", "view_dashboard", "view_statistics", "view_charts",
+                        "view_recent_activity", "view_users", "view_roles", "view_customers", "view_products",
+                        "view_receipts", "view_invoices", "view_payments", "view_expenses", "view_sales",
+                        "access_pos", "view_pos_reports", "view_reports", "view_analytics", "view_financial_analytics",
+                        "view_sales_analytics", "view_customer_analytics", "view_gallery", "view_notifications",
+                        "view_settings", "view_administrators", "view_store", "view_pos_history"
+                    ],
+                    "create": ["create", "add_administrators", "create_roles", "create_customers",
+                        "create_products", "create_receipts", "create_invoices", "create_payments",
+                        "create_expenses", "create_sales", "send_notifications"
+                    ],
+                    "edit": ["edit", "edit_administrators", "edit_roles", "edit_customers", "edit_products",
+                        "edit_receipts", "edit_invoices", "edit_payments", "edit_expenses", "edit_sales",
+                        "edit_settings", "company_profile", "payment_methods", "tax_settings",
+                        "notification_settings", "edit_images", "manage_categories", "manage_tags"
+                    ],
+                    "delete": ["delete", "delete_administrators", "delete_roles", "delete_customers",
+                        "delete_products", "delete_receipts", "delete_invoices", "delete_payments",
+                        "delete_expenses", "delete_sales", "delete_notifications", "delete_images",
+                        "suspend_users"
+                    ],
+                    "export": ["export", "export_users", "export_customers", "export_products", "export_receipts",
+                        "export_invoices", "export_payments", "export_expenses", "export_sales",
+                        "export_reports", "download_reports"
+                    ]
+                };
+
+                // Also include sensitive actions that don't fit the above
+                var sensitiveActions = ["refund_payments", "approve_expenses", "cancel_transactions",
+                    "void_receipts", "manage_permissions", "manage_sessions", "manage_security_settings",
+                    "send_invoices"
+                ];
+
+                allPerms.forEach(function(group) {
+                    var groupPerms = group.permissions;
+                    // Filter by search
+                    var matchedPerms = groupPerms.filter(function(p) {
+                        if (!search) return true;
+                        return p.label.toLowerCase().indexOf(search) !== -1 ||
+                            p.id.toLowerCase().indexOf(search) !== -1 ||
+                            group.name.toLowerCase().indexOf(search) !== -1;
+                    });
+
+                    if (matchedPerms.length === 0) return;
+
+                    hasResults = true;
+
+                    // Group header row
+                    var groupId = "group_" + group.name.replace(/\s+/g, "_");
+                    var allGroupChecked = matchedPerms.every(function(p) {
+                        return perms[p.id] === true;
+                    });
+                    var someGroupChecked = matchedPerms.some(function(p) {
+                        return perms[p.id] === true;
+                    });
+
+                    html += '<tr class="perm-group-header" data-group="' + esc(group.name) + '">';
+                    html += '<td colspan="6">';
+                    html += '<span class="group-toggle" data-group="' + esc(group.name) + '">';
+                    html += '<span class="group-chevron open" data-group="' + esc(group.name) + '">▾</span>';
+                    html += esc(group.name);
+                    html += '<span class="group-count">' + matchedPerms.length + ' permissions</span>';
+                    html += '</span>';
+                    html += '<span class="group-select-all" data-group="' + esc(group.name) + '">';
+                    html += '<input type="checkbox" class="group-checkbox" data-group="' + esc(group.name) +
+                        '" ' + (allGroupChecked && matchedPerms.length > 0 ? 'checked' : '') + ' ' +
+                        (someGroupChecked && !allGroupChecked && matchedPerms.length > 0 ?
+                            'data-indeterminate="true"' : '') + ' />';
+                    html += 'Select All';
+                    html += '</span>';
+                    html += '</td>';
+                    html += '</tr>';
+
+                    // Permission rows
+                    matchedPerms.forEach(function(p) {
+                        var isSensitive = p.sensitive;
+                        var permId = p.id;
+                        var isChecked = perms[permId] === true;
+
+                        // Determine which action this permission falls under
+                        var actionType = "view";
+                        if (actionMap.create.some(function(a) { return permId.indexOf(a) !== -1; }))
+                            actionType = "create";
+                        else if (actionMap.edit.some(function(a) { return permId.indexOf(a) !== -1; }))
+                            actionType = "edit";
+                        else if (actionMap.delete.some(function(a) { return permId.indexOf(a) !== -1; }))
+                            actionType = "delete";
+                        else if (actionMap.export.some(function(a) { return permId.indexOf(a) !== -1; }))
+                            actionType = "export";
+                        else if (sensitiveActions.some(function(a) { return permId.indexOf(a) !== -1; }))
+                            actionType = "sensitive";
+
+                        var actionCols = {
+                            "view": 0,
+                            "create": 1,
+                            "edit": 2,
+                            "delete": 3,
+                            "export": 4,
+                            "sensitive": 0
+                        };
+
+                        html += '<tr class="perm-row" data-perm="' + esc(permId) + '" data-group="' + esc(
+                            group.name) + '">';
+                        html += '<td class="perm-label-cell">';
+                        html += esc(p.label);
+                        if (isSensitive) {
+                            html += ' <span class="sensitive-badge">Sensitive</span>';
+                        }
+                        html += '<span class="perm-module">' + esc(group.name) + '</span>';
+                        html += '</td>';
+
+                        // Generate action cells
+                        var actionCells = [
+                            { label: "View", checked: isChecked && actionType === "view" },
+                            { label: "Create", checked: isChecked && actionType === "create" },
+                            { label: "Edit", checked: isChecked && actionType === "edit" },
+                            { label: "Delete", checked: isChecked && actionType === "delete" },
+                            { label: "Export", checked: isChecked && actionType === "export" },
+                        ];
+
+                        // For sensitive permissions, put the checkbox in the first cell
+                        if (actionType === "sensitive") {
+                            actionCells = [
+                                { label: "Allow", checked: isChecked },
+                                { label: "", checked: false },
+                                { label: "", checked: false },
+                                { label: "", checked: false },
+                                { label: "", checked: false },
+                            ];
+                        }
+
+                        actionCells.forEach(function(cell, idx) {
+                            if (idx === 0 && cell.label === "Allow") {
+                                html += '<td><input type="checkbox" class="perm-toggle" data-perm="' +
+                                    esc(permId) + '" ' + (cell.checked ? 'checked' : '') +
+                                    ' data-sensitive="' + (isSensitive ? 'true' : 'false') +
+                                    '" /></td>';
+                            } else if (cell.label) {
+                                html += '<td><input type="checkbox" class="perm-toggle" data-perm="' +
+                                    esc(permId) + '" ' + (cell.checked ? 'checked' : '') +
+                                    ' data-sensitive="' + (isSensitive ? 'true' : 'false') +
+                                    '" /></td>';
+                            } else {
+                                html += '<td></td>';
+                            }
+                        });
+
+                        html += '</tr>';
+                    });
+                });
+
+                html += '</tbody></table>';
+
+                permMatrixContainer.innerHTML = html;
+                emptyPerms.style.display = hasResults ? "none" : "block";
+
+                if (!hasResults) {
+                    permMatrixContainer.innerHTML = "";
+                    emptyPerms.style.display = "block";
+                }
+
+                // ─── Attach event listeners ──────────────────────────
+
+                // Group toggle click
+                permMatrixContainer.querySelectorAll(".group-toggle").forEach(function(el) {
+                    el.addEventListener("click", function(e) {
+                        e.stopPropagation();
+                        var groupName = this.dataset.group;
+                        var rows = permMatrixContainer.querySelectorAll(
+                            '.perm-row[data-group="' + esc(groupName) + '"]');
+                        var chevron = permMatrixContainer.querySelector('.group-chevron[data-group="' +
+                            esc(groupName) + '"]');
+                        var isHidden = rows.length > 0 && rows[0].style.display === "none";
+                        rows.forEach(function(row) {
+                            row.style.display = isHidden ? "" : "none";
+                        });
+                        if (chevron) chevron.classList.toggle("open");
+                    });
+                });
+
+                // Group select-all checkbox
+                permMatrixContainer.querySelectorAll(".group-checkbox").forEach(function(cb) {
+                    cb.addEventListener("change", function() {
+                        var groupName = this.dataset.group;
+                        var checked = this.checked;
+                        var rows = permMatrixContainer.querySelectorAll('.perm-row[data-group="' + esc(
+                            groupName) + '"]');
+                        rows.forEach(function(row) {
+                            var toggle = row.querySelector(".perm-toggle");
+                            if (toggle) {
+                                toggle.checked = checked;
+                                toggle.dispatchEvent(new Event("change"));
+                            }
+                        });
+                    });
+                });
+
+                // Individual permission toggles
+                permMatrixContainer.querySelectorAll(".perm-toggle").forEach(function(toggle) {
+                    toggle.addEventListener("change", function() {
+                        var permId = this.dataset.perm;
+                        var checked = this.checked;
+                        var isSensitive = this.dataset.sensitive === "true";
+
+                        // If enabling a sensitive permission, show confirmation
+                        if (checked && isSensitive) {
+                            // Store the intended state
+                            var self = this;
+                            showSensitiveModal(function(confirmed) {
+                                if (confirmed) {
+                                    setPermission(permId, true);
+                                    self.checked = true;
+                                } else {
+                                    self.checked = false;
+                                }
+                                updateGroupCheckboxes();
+                            });
+                            // Temporarily uncheck until confirmed
+                            this.checked = false;
+                            return;
+                        }
+
+                        setPermission(permId, checked);
+                        updateGroupCheckboxes();
+                    });
+                });
+
+                // Update group checkbox states
+                updateGroupCheckboxes();
+
+                // Ensure group rows visibility
+                permMatrixContainer.querySelectorAll(".perm-row").forEach(function(row) {
+                    row.style.display = "";
+                });
+            }
+
+            // ─── Set Permission ─────────────────────────────────────
+            function setPermission(permId, value) {
+                if (!selectedRole) return;
+
+                if (!currentPerms[selectedRole.id]) {
+                    currentPerms[selectedRole.id] = {};
+                }
+                currentPerms[selectedRole.id][permId] = value;
+
+                // Also update allPermissions for saving later
+                if (!allPermissions[selectedRole.id]) {
+                    allPermissions[selectedRole.id] = {};
+                }
+                allPermissions[selectedRole.id][permId] = value;
+
+                // Check if changed from original
+                var originalValue = originalPerms[permId] === true;
+                if (originalValue !== value) {
+                    hasUnsavedChanges = true;
+                } else {
+                    // Check if any other changes exist
+                    hasUnsavedChanges = false;
+                    Object.keys(currentPerms[selectedRole.id] || {}).forEach(function(key) {
+                        if ((currentPerms[selectedRole.id][key] === true) !== (originalPerms[key] ===
+                            true)) {
+                            hasUnsavedChanges = true;
+                        }
+                    });
+                }
+
+                updateSaveButton();
+                renderStats();
+                renderSelectedRoleInfo();
+                updateLastUpdated();
+            }
+
+            // ─── Update Group Checkboxes ───────────────────────────
+            function updateGroupCheckboxes() {
+                if (!selectedRole) return;
+
+                var perms = currentPerms[selectedRole.id] || {};
+
+                permMatrixContainer.querySelectorAll(".group-checkbox").forEach(function(cb) {
+                    var groupName = cb.dataset.group;
+                    var group = PERMISSION_GROUPS.find(function(g) { return g.name === groupName; });
+                    if (!group) return;
+
+                    var rows = permMatrixContainer.querySelectorAll('.perm-row[data-group="' + esc(
+                        groupName) + '"]');
+                    var toggles = [];
+                    rows.forEach(function(row) {
+                        var toggle = row.querySelector(".perm-toggle");
+                        if (toggle) toggles.push(toggle);
+                    });
+
+                    if (toggles.length === 0) return;
+
+                    var allChecked = toggles.every(function(t) { return t.checked; });
+                    var someChecked = toggles.some(function(t) { return t.checked; });
+
+                    cb.checked = allChecked;
+                    cb.indeterminate = someChecked && !allChecked;
+                });
+            }
+
+            // ─── Update Save Button ─────────────────────────────────
+            function updateSaveButton() {
+                if (isSaving) {
+                    saveBtn.disabled = true;
+                    saveText.textContent = "Saving...";
+                    saveSpinner.classList.add("show");
+                    return;
+                }
+
+                var hasChanges = hasUnsavedChanges;
+                saveBtn.disabled = !hasChanges;
+                saveText.textContent = hasChanges ? "Save Changes*" : "Save Changes";
+                saveSpinner.classList.remove("show");
+
+                // Update status dot
+                if (hasChanges) {
+                    statusDot.className = "dot saving";
+                    lastUpdatedText.textContent = "Unsaved changes";
+                } else {
+                    statusDot.className = "dot";
+                    lastUpdatedText.textContent = "All saved";
+                }
+            }
+
+            // ─── Update Last Updated ────────────────────────────────
+            function updateLastUpdated() {
+                if (hasUnsavedChanges) {
+                    statusDot.className = "dot saving";
+                    lastUpdatedText.textContent = "Unsaved changes";
+                    return;
+                }
+                statusDot.className = "dot";
+                lastUpdatedText.textContent = "All saved";
+            }
+
+            // ─── Save Changes ──────────────────────────────────────
+            function saveChanges() {
+                if (isSaving) return;
+                if (!selectedRole) {
+                    toast("No role selected.", "error");
+                    return;
+                }
+
+                isSaving = true;
+                updateSaveButton();
+
+                // Validate
+                if (!allPermissions[selectedRole.id]) {
+                    allPermissions[selectedRole.id] = {};
+                }
+
+                // Copy current perms to allPermissions
+                if (currentPerms[selectedRole.id]) {
+                    allPermissions[selectedRole.id] = JSON.parse(JSON.stringify(currentPerms[selectedRole.id]));
+                }
+
+                savePermissions(allPermissions);
+
+                // Update original
+                originalPerms = JSON.parse(JSON.stringify(allPermissions[selectedRole.id]));
+
+                hasUnsavedChanges = false;
+                isSaving = false;
+                updateSaveButton();
+
+                // Update stats
+                renderStats();
+                renderSelectedRoleInfo();
+                updateLastUpdated();
+
+                // Activity log
+                logActivity("permissions_updated", selectedRole.id);
+
+                toast("Permissions saved successfully.", "success");
+            }
+
+            // ─── Reset Changes ──────────────────────────────────────
+            function resetChanges() {
+                if (!selectedRole) return;
+                if (!hasUnsavedChanges) {
+                    toast("No unsaved changes to reset.", "info");
+                    return;
+                }
+
+                showConfirmModal(
+                    "Reset permissions?",
+                    "All unsaved changes for <strong>" + esc(selectedRole.name) +
+                    "</strong> will be discarded.",
+                    "⚠️",
+                    "Reset Changes",
+                    "btn--warning",
+                    function() {
+                        if (originalPerms) {
+                            if (!currentPerms[selectedRole.id]) {
+                                currentPerms[selectedRole.id] = {};
+                            }
+                            currentPerms[selectedRole.id] = JSON.parse(JSON.stringify(originalPerms));
+                            allPermissions[selectedRole.id] = JSON.parse(JSON.stringify(originalPerms));
+                        }
+                        hasUnsavedChanges = false;
+                        updateSaveButton();
+                        renderPermissions();
+                        renderStats();
+                        renderSelectedRoleInfo();
+                        updateLastUpdated();
+                        toast("Permissions reset.", "success");
+                    }
+                );
+            }
+
+            // ─── Enable All ─────────────────────────────────────────
+            function enableAll() {
+                if (!selectedRole) {
+                    toast("No role selected.", "error");
+                    return;
+                }
+
+                showConfirmModal(
+                    "Enable all permissions?",
+                    "This will enable all permissions for <strong>" + esc(selectedRole.name) + "</strong>.",
+                    "💡",
+                    "Enable All",
+                    "btn--success",
+                    function() {
+                        var perms = currentPerms[selectedRole.id] || {};
+                        PERMISSION_GROUPS.forEach(function(group) {
+                            group.permissions.forEach(function(p) {
+                                perms[p.id] = true;
+                            });
+                        });
+                        currentPerms[selectedRole.id] = perms;
+                        allPermissions[selectedRole.id] = JSON.parse(JSON.stringify(perms));
+                        hasUnsavedChanges = true;
+                        updateSaveButton();
+                        renderPermissions();
+                        renderStats();
+                        renderSelectedRoleInfo();
+                        updateLastUpdated();
+                        toast("All permissions enabled.", "success");
+                    }
+                );
+            }
+
+            // ─── Disable All ────────────────────────────────────────
+            function disableAll() {
+                if (!selectedRole) {
+                    toast("No role selected.", "error");
+                    return;
+                }
+
+                showConfirmModal(
+                    "Disable all permissions?",
+                    "This will disable all permissions for <strong>" + esc(selectedRole.name) + "</strong>.",
+                    "⚠️",
+                    "Disable All",
+                    "btn--danger",
+                    function() {
+                        var perms = currentPerms[selectedRole.id] || {};
+                        PERMISSION_GROUPS.forEach(function(group) {
+                            group.permissions.forEach(function(p) {
+                                perms[p.id] = false;
+                            });
+                        });
+                        currentPerms[selectedRole.id] = perms;
+                        allPermissions[selectedRole.id] = JSON.parse(JSON.stringify(perms));
+                        hasUnsavedChanges = true;
+                        updateSaveButton();
+                        renderPermissions();
+                        renderStats();
+                        renderSelectedRoleInfo();
+                        updateLastUpdated();
+                        toast("All permissions disabled.", "success");
+                    }
+                );
+            }
+
+            // ─── Search ─────────────────────────────────────────────
+            function handleSearch() {
+                searchQuery = permSearch.value;
+                if (searchQuery.length > 0) {
+                    clearSearch.classList.add("visible");
+                } else {
+                    clearSearch.classList.remove("visible");
+                }
+                renderPermissions();
+            }
+
+            function clearSearchInput() {
+                permSearch.value = "";
+                searchQuery = "";
+                clearSearch.classList.remove("visible");
+                renderPermissions();
+            }
+
+            // ─── Activity Log ───────────────────────────────────────
+            function logActivity(action, roleId) {
+                try {
+                    var logs = JSON.parse(localStorage.getItem("receiptly_activity_logs") || "[]");
+                    logs.push({
+                        adminId: getAdminId(),
+                        adminName: getAdminName(),
+                        action: action,
+                        roleId: roleId,
+                        timestamp: new Date().toISOString(),
+                    });
+                    if (logs.length > 500) logs = logs.slice(-500);
+                    localStorage.setItem("receiptly_activity_logs", JSON.stringify(logs));
+                } catch (_) {}
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  11. MODAL HELPERS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            var confirmModal = document.getElementById("confirmModal");
+            var confirmIcon = document.getElementById("confirmIcon");
+            var confirmTitle = document.getElementById("confirmTitle");
+            var confirmMsg = document.getElementById("confirmMsg");
+            var confirmOkBtn = document.getElementById("confirmOkBtn");
+            var confirmResolve = null;
+
+            function showConfirmModal(title, msg, icon, confirmText, confirmClass, onConfirm) {
+                confirmIcon.textContent = icon || "⚠️";
+                confirmIcon.className = "modal-icon";
+                if (icon === "⚠️") confirmIcon.classList.add("modal-icon--danger");
+                else if (icon === "💡") confirmIcon.classList.add("modal-icon--warning");
+                else if (icon === "✅") confirmIcon.classList.add("modal-icon--success");
+                else confirmIcon.classList.add("modal-icon--info");
+
+                confirmTitle.textContent = title;
+                confirmMsg.innerHTML = msg;
+                confirmOkBtn.textContent = confirmText || "Confirm";
+                confirmOkBtn.className = "btn " + (confirmClass || "btn--danger");
+
+                confirmModal.classList.add("is-visible");
+
+                return new Promise(function(resolve) {
+                    confirmResolve = resolve;
+                }).then(function(result) {
+                    if (result && onConfirm) onConfirm();
+                });
+            }
+
+            function closeConfirmModal() {
+                confirmModal.classList.remove("is-visible");
+                if (confirmResolve) confirmResolve(false);
+                confirmResolve = null;
+            }
+
+            confirmModal.addEventListener("click", function(e) {
+                if (e.target === confirmModal || e.target.closest('[data-action="close-confirm"]') || e.target
+                    .closest('[data-action="cancel-confirm"]')) {
+                    closeConfirmModal();
+                }
+                if (e.target.closest('[data-action="ok-confirm"]')) {
+                    confirmModal.classList.remove("is-visible");
+                    if (confirmResolve) confirmResolve(true);
+                    confirmResolve = null;
+                }
+            });
+
+            // ─── Sensitive Modal ────────────────────────────────────
+            var sensitiveModal = document.getElementById("sensitiveModal");
+            var sensitiveMsg = document.getElementById("sensitiveMsg");
+            var sensitiveResolve = null;
+
+            function showSensitiveModal(onConfirm) {
+                sensitiveMsg.textContent =
+                    "This is a sensitive action. Are you sure you want to enable this permission?";
+                sensitiveModal.classList.add("is-visible");
+
+                return new Promise(function(resolve) {
+                    sensitiveResolve = resolve;
+                }).then(function(result) {
+                    if (result && onConfirm) onConfirm();
+                });
+            }
+
+            function closeSensitiveModal() {
+                sensitiveModal.classList.remove("is-visible");
+                if (sensitiveResolve) sensitiveResolve(false);
+                sensitiveResolve = null;
+            }
+
+            sensitiveModal.addEventListener("click", function(e) {
+                if (e.target === sensitiveModal || e.target.closest('[data-action="close-sensitive"]') || e
+                    .target.closest('[data-action="cancel-sensitive"]')) {
+                    closeSensitiveModal();
+                }
+                if (e.target.closest('[data-action="ok-sensitive"]')) {
+                    sensitiveModal.classList.remove("is-visible");
+                    if (sensitiveResolve) sensitiveResolve(true);
+                    sensitiveResolve = null;
+                }
+            });
+
+            // ─── Unsaved Modal ──────────────────────────────────────
+            var unsavedModal = document.getElementById("unsavedModal");
+            var unsavedResolve = null;
+
+            function showUnsavedModal(onResult) {
+                unsavedModal.classList.add("is-visible");
+                return new Promise(function(resolve) {
+                    unsavedResolve = resolve;
+                }).then(function(result) {
+                    if (onResult) onResult(result);
+                });
+            }
+
+            function closeUnsavedModal() {
+                unsavedModal.classList.remove("is-visible");
+                if (unsavedResolve) unsavedResolve(false);
+                unsavedResolve = null;
+            }
+
+            unsavedModal.addEventListener("click", function(e) {
+                if (e.target === unsavedModal || e.target.closest('[data-action="close-unsaved"]') || e.target
+                    .closest('[data-action="stay"]')) {
+                    closeUnsavedModal();
+                }
+                if (e.target.closest('[data-action="leave"]')) {
+                    unsavedModal.classList.remove("is-visible");
+                    if (unsavedResolve) unsavedResolve(true);
+                    unsavedResolve = null;
+                    // Allow navigation by resetting state
+                    hasUnsavedChanges = false;
+                    updateSaveButton();
+                }
+            });
+
+            // ─── Before unload ──────────────────────────────────────
+            window.addEventListener("beforeunload", function(e) {
+                if (hasUnsavedChanges) {
+                    e.preventDefault();
+                    e.returnValue = "You have unsaved permission changes. Are you sure you want to leave?";
+                    return e.returnValue;
+                }
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  12. EVENT LISTENERS
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            // Save
+            saveBtn.addEventListener("click", saveChanges);
+
+            // Reset
+            resetBtn.addEventListener("click", resetChanges);
+
+            // Enable All
+            enableAllBtn.addEventListener("click", enableAll);
+
+            // Disable All
+            disableAllBtn.addEventListener("click", disableAll);
+
+            // Search
+            permSearch.addEventListener("input", handleSearch);
+            clearSearch.addEventListener("click", clearSearchInput);
+
+            // Keyboard shortcut: Ctrl+S to save
+            document.addEventListener("keydown", function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+                    e.preventDefault();
+                    if (!saveBtn.disabled) {
+                        saveChanges();
+                    }
+                }
+            });
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  13. INIT
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            loadData();
+
+            // If no roles, show a message
+            if (allRoles.length === 0) {
+                toast("No roles found. Please create a role first.", "info");
+            }
+
+        })();
+    </script>
+</body>
+</html>

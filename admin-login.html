@@ -1,0 +1,1416 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Owner Admin — Receiptly</title>
+
+    <!-- ─── Google Fonts ───────────────────────────────────────── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ── Inline critical styles for fast paint ────────────── */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --font-display: "Fraunces", Georgia, serif;
+            --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+            /* Light theme */
+            --bg-body: #f1f5f9;
+            --bg-card: rgba(255, 255, 255, 0.72);
+            --bg-card-border: rgba(255, 255, 255, 0.35);
+            --bg-input: #f1f5f9;
+            --bg-input-hover: #e8edf5;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --text-inverse: #ffffff;
+            --accent: #7c3aed;
+            --accent-dark: #6d28d9;
+            --accent-glow: rgba(124, 58, 237, 0.30);
+            --accent-soft: #ede9fe;
+            --border-light: #e2e8f0;
+            --border-strong: #cbd5e1;
+            --shadow-card: 0 25px 60px rgba(15, 23, 42, 0.18), 0 8px 20px rgba(15, 23, 42, 0.05);
+            --shadow-input: 0 0 0 4px rgba(124, 58, 237, 0.12);
+            --error: #dc2626;
+            --error-soft: #fee2e2;
+            --success: #059669;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 24px;
+            --radius-full: 9999px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            --blur-amount: 24px;
+            --preloader-bg: #0f172a;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0b1220;
+            --bg-card: rgba(17, 27, 46, 0.78);
+            --bg-card-border: rgba(255, 255, 255, 0.06);
+            --bg-input: #1e293b;
+            --bg-input-hover: #263348;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent: #8b5cf6;
+            --accent-dark: #7c3aed;
+            --accent-glow: rgba(139, 92, 246, 0.30);
+            --accent-soft: rgba(139, 92, 246, 0.14);
+            --border-light: #1e293b;
+            --border-strong: #334155;
+            --shadow-card: 0 25px 60px rgba(0, 0, 0, 0.55), 0 8px 20px rgba(0, 0, 0, 0.25);
+            --shadow-input: 0 0 0 4px rgba(139, 92, 246, 0.18);
+            --error: #f87171;
+            --error-soft: rgba(248, 113, 113, 0.12);
+            --preloader-bg: #060a14;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: var(--bg-body);
+            transition: background var(--transition-slow), color var(--transition-slow);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ── Animated background ───────────────────────────────── */
+        .bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .bg-canvas .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.35;
+            animation: orbFloat 20s ease-in-out infinite alternate;
+            will-change: transform;
+        }
+
+        .bg-canvas .orb:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            top: -12%;
+            left: -10%;
+            background: var(--accent-glow);
+            animation-delay: 0s;
+        }
+
+        .bg-canvas .orb:nth-child(2) {
+            width: 420px;
+            height: 420px;
+            bottom: -14%;
+            right: -8%;
+            background: rgba(59, 130, 246, 0.22);
+            animation-delay: -7s;
+        }
+
+        .bg-canvas .orb:nth-child(3) {
+            width: 320px;
+            height: 320px;
+            top: 42%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(236, 72, 153, 0.14);
+            animation-delay: -14s;
+            animation-duration: 26s;
+        }
+
+        @keyframes orbFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(40px, -30px) scale(1.08);
+            }
+            66% {
+                transform: translate(-20px, 40px) scale(0.92);
+            }
+            100% {
+                transform: translate(30px, -10px) scale(1.04);
+            }
+        }
+
+        /* ── Preloader ──────────────────────────────────────────── */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--preloader-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+            gap: 28px;
+        }
+
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .preloader-ring {
+            position: relative;
+            width: 72px;
+            height: 72px;
+        }
+
+        .preloader-ring svg {
+            width: 100%;
+            height: 100%;
+            animation: spin 1.2s linear infinite;
+        }
+
+        .preloader-ring .track {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.06);
+            stroke-width: 3;
+        }
+
+        .preloader-ring .progress {
+            fill: none;
+            stroke: url(#preloaderGrad);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 200;
+            stroke-dashoffset: 160;
+            animation: preloaderDash 1.8s ease-in-out infinite alternate;
+        }
+
+        @keyframes preloaderDash {
+            0% {
+                stroke-dashoffset: 200;
+                transform: rotate(0deg);
+            }
+            100% {
+                stroke-dashoffset: 20;
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .preloader-logo {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.02em;
+            opacity: 0.85;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preloader-logo span {
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .preloader-bar {
+            width: 160px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: -4px;
+        }
+
+        .preloader-bar-inner {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #8b5cf6, #3b82f6, #8b5cf6);
+            background-size: 200% 100%;
+            border-radius: 4px;
+            animation: barShimmer 1.4s linear infinite;
+            transition: width 0.3s ease;
+        }
+
+        @keyframes barShimmer {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .preloader-status {
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.30);
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* ── Theme toggle ───────────────────────────────────────── */
+        .theme-toggle {
+            position: fixed;
+            top: 22px;
+            right: 22px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-full);
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.06);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            color: var(--text-primary);
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+            transition: transform var(--transition);
+        }
+
+        .theme-toggle:hover svg {
+            transform: rotate(30deg);
+        }
+
+        /* ── Card ────────────────────────────────────────────────── */
+        .card {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 420px;
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--bg-card-border);
+            box-shadow: var(--shadow-card);
+            padding: 40px 36px 34px;
+            transition: all var(--transition-slow);
+            animation: cardFadeUp 0.8s ease forwards;
+            opacity: 0;
+            transform: translateY(24px);
+        }
+
+        @keyframes cardFadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Badge ───────────────────────────────────────────────── */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 5px 14px 5px 12px;
+            border-radius: var(--radius-full);
+            margin-bottom: 18px;
+            border: 1px solid rgba(124, 58, 237, 0.10);
+            transition: all var(--transition);
+        }
+
+        .badge svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        /* ── Logo / Brand ───────────────────────────────────────── */
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 800;
+            flex-shrink: 0;
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+
+        .brand-name {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-name .accent {
+            background: linear-gradient(135deg, var(--accent), #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ── Typography ──────────────────────────────────────────── */
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-top: 14px;
+            margin-bottom: 2px;
+            color: var(--text-primary);
+        }
+
+        .card-sub {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            margin-bottom: 28px;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        /* ── Form ────────────────────────────────────────────────── */
+        .field {
+            margin-bottom: 18px;
+            position: relative;
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            letter-spacing: 0.01em;
+            transition: color var(--transition);
+        }
+
+        .field .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--bg-input);
+            border: 1.5px solid transparent;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .field .input-wrapper::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-sm);
+            padding: 1.5px;
+            background: linear-gradient(135deg, var(--accent), rgba(139, 92, 246, 0.40));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity var(--transition);
+            pointer-events: none;
+        }
+
+        .field .input-wrapper:focus-within::before {
+            opacity: 1;
+        }
+
+        .field .input-wrapper:focus-within {
+            background: var(--bg-secondary);
+            box-shadow: var(--shadow-input);
+        }
+
+        .field .input-wrapper input {
+            flex: 1;
+            width: 100%;
+            padding: 13px 16px;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: color var(--transition);
+        }
+
+        .field .input-wrapper input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+
+        .field .input-wrapper .input-icon {
+            padding: 0 0 0 14px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            transition: color var(--transition);
+        }
+
+        .field .input-wrapper:focus-within .input-icon {
+            color: var(--accent);
+        }
+
+        .field .input-wrapper .input-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .field .input-wrapper .toggle-pw {
+            padding: 0 14px 0 0;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color var(--transition);
+            flex-shrink: 0;
+        }
+
+        .field .input-wrapper .toggle-pw:hover {
+            color: var(--text-secondary);
+        }
+
+        .field .input-wrapper .toggle-pw svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .field.has-error .input-wrapper {
+            border-color: var(--error);
+            background: var(--error-soft);
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.08);
+        }
+
+        .field.has-error .input-wrapper::before {
+            opacity: 0;
+        }
+
+        .field-error {
+            font-size: 0.76rem;
+            color: var(--error);
+            margin-top: 6px;
+            display: none;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+        }
+
+        .field.has-error .field-error {
+            display: block;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            20% {
+                transform: translateX(-6px);
+            }
+            40% {
+                transform: translateX(6px);
+            }
+            60% {
+                transform: translateX(-4px);
+            }
+            80% {
+                transform: translateX(4px);
+            }
+        }
+
+        /* ── Form extras ────────────────────────────────────────── */
+        .form-extras {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 4px 0 22px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .form-extras label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-weight: 500;
+            transition: color var(--transition);
+            user-select: none;
+        }
+
+        .form-extras label:hover {
+            color: var(--text-primary);
+        }
+
+        .form-extras input[type="checkbox"] {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border-strong);
+            border-radius: 5px;
+            background: var(--bg-input);
+            cursor: pointer;
+            transition: all var(--transition);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .form-extras input[type="checkbox"]:checked {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .form-extras input[type="checkbox"]:checked::after {
+            content: "✓";
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .form-extras input[type="checkbox"]:focus-visible {
+            box-shadow: var(--shadow-input);
+            outline: none;
+        }
+
+        .form-extras .forgot-link {
+            font-size: 0.82rem;
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color var(--transition);
+        }
+
+        .form-extras .forgot-link:hover {
+            color: var(--accent-dark);
+            text-decoration: underline;
+        }
+
+        /* ── Button ───────────────────────────────────────────────── */
+        .btn-primary {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 18px var(--accent-glow);
+        }
+
+        .btn-primary::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent 60%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .btn-primary:hover:not(:disabled)::after {
+            opacity: 1;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px var(--accent-glow);
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(0px) scale(0.98);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10);
+        }
+
+        .btn-primary .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2.5px solid rgba(255, 255, 255, 0.25);
+            border-top-color: #fff;
+            border-radius: 50%;
+            display: none;
+            animation: spin 0.7s linear infinite;
+            flex-shrink: 0;
+        }
+
+        .btn-primary .btn-arrow {
+            transition: transform var(--transition);
+            display: inline-block;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary:hover:not(:disabled) .btn-arrow {
+            transform: translateX(4px);
+        }
+
+        /* ── Toast ───────────────────────────────────────────────── */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 380px;
+            width: 100%;
+        }
+
+        .toast {
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--bg-card-border);
+            box-shadow: var(--shadow-card);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: toastIn 0.4s ease forwards;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all var(--transition);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .toast.hide {
+            transform: translateX(120%);
+            opacity: 0;
+        }
+
+        .toast .toast-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .toast.error .toast-icon {
+            background: var(--error-soft);
+            color: var(--error);
+        }
+
+        .toast.success .toast-icon {
+            background: rgba(5, 150, 105, 0.12);
+            color: var(--success);
+        }
+
+        .toast .toast-msg {
+            flex: 1;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .toast .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0 4px;
+            transition: color var(--transition);
+            line-height: 1;
+        }
+
+        .toast .toast-close:hover {
+            color: var(--text-primary);
+        }
+
+        @keyframes toastIn {
+            from {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ── Footer ─────────────────────────────────────────────── */
+        .footer-note {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-light);
+            padding-top: 20px;
+            transition: border-color var(--transition);
+        }
+
+        .footer-note a {
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .footer-note a:hover {
+            color: var(--accent-dark);
+            text-decoration: underline;
+        }
+
+        .footer-note a svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* ── Responsive overrides ───────────────────────────────── */
+        @media (max-width: 480px) {
+            .card {
+                padding: 28px 20px 24px;
+            }
+
+            .card-title {
+                font-size: 1.3rem;
+            }
+
+            .theme-toggle {
+                top: 14px;
+                right: 14px;
+                width: 38px;
+                height: 38px;
+            }
+
+            .theme-toggle svg {
+                width: 17px;
+                height: 17px;
+            }
+
+            .field .input-wrapper input {
+                padding: 11px 14px;
+                font-size: 0.9rem;
+            }
+
+            .btn-primary {
+                padding: 12px 16px;
+                font-size: 0.9rem;
+            }
+
+            .form-extras {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .bg-canvas .orb {
+                filter: blur(60px);
+            }
+
+            .bg-canvas .orb:nth-child(1) {
+                width: 300px;
+                height: 300px;
+            }
+
+            .bg-canvas .orb:nth-child(2) {
+                width: 250px;
+                height: 250px;
+            }
+
+            .bg-canvas .orb:nth-child(3) {
+                width: 200px;
+                height: 200px;
+            }
+
+            .brand-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 0.95rem;
+            }
+
+            .brand-name {
+                font-size: 1.05rem;
+            }
+
+            .toast-container {
+                bottom: 16px;
+                right: 16px;
+                left: 16px;
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .card {
+                padding: 20px 14px 18px;
+            }
+
+            .badge {
+                font-size: 0.58rem;
+                padding: 4px 10px 4px 8px;
+            }
+
+            .card-title {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* ── Reduced motion ─────────────────────────────────────── */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            #preloader {
+                transition: none;
+            }
+
+            .card {
+                animation: none;
+                opacity: 1;
+                transform: none;
+            }
+
+            .bg-canvas .orb {
+                animation: none;
+            }
+
+            .toast {
+                animation: none;
+                transform: none;
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ─── PRELOADER ─────────────────────────────────────────── -->
+    <div id="preloader" role="status" aria-label="Loading Receiptly">
+        <div class="preloader-ring">
+            <svg viewBox="0 0 80 80">
+                <defs>
+                    <linearGradient id="preloaderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#8b5cf6" />
+                        <stop offset="100%" stop-color="#3b82f6" />
+                    </linearGradient>
+                </defs>
+                <circle class="track" cx="40" cy="40" r="34" />
+                <circle class="progress" cx="40" cy="40" r="34" />
+            </svg>
+        </div>
+        <div class="preloader-logo">
+            <span>Receiptly</span>
+        </div>
+        <div class="preloader-bar">
+            <div class="preloader-bar-inner" id="preloaderBar"></div>
+        </div>
+        <div class="preloader-status" id="preloaderStatus">Loading</div>
+    </div>
+
+    <!-- ─── THEME TOGGLE ──────────────────────────────────────── -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+    </button>
+
+    <!-- ─── ANIMATED BACKGROUND ──────────────────────────────── -->
+    <div class="bg-canvas" aria-hidden="true">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <!-- ─── TOAST CONTAINER ───────────────────────────────────── -->
+    <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+    <!-- ─── CARD ───────────────────────────────────────────────── -->
+    <div class="card">
+        <!-- Badge -->
+        <span class="badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5z" />
+                <path d="M12 12l2 2 4-4" />
+            </svg>
+            Owner Administration
+        </span>
+
+        <!-- Brand -->
+        <div class="brand">
+            <div class="brand-icon">R</div>
+            <span class="brand-name">Receipt<span class="accent">ly</span></span>
+        </div>
+
+        <!-- Heading -->
+        <h1 class="card-title">Welcome back, Admin</h1>
+        <p class="card-sub">Sign in to manage your Receiptly platform.</p>
+        <p class="card-sub" style="margin-top:-20px;font-size:0.78rem;opacity:0.75;">Default admin: <strong>admin@receiptpro.local</strong> / <strong>Admin@2025</strong></p>
+
+        <!-- ─── FORM ────────────────────────────────────────────── -->
+        <form id="adminLoginForm" novalidate>
+            <!-- Email -->
+            <div class="field" id="idField">
+                <label for="identifier">Admin email</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <polyline points="22,6 12,13 2,6" />
+                        </svg>
+                    </span>
+                    <input type="email" id="identifier" placeholder="admin@receiptpro.local" autocomplete="username" aria-describedby="idError" />
+                </div>
+                <div class="field-error" id="idError">Please enter a valid admin email address.</div>
+            </div>
+
+            <!-- Password -->
+            <div class="field" id="pwField">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                    </span>
+                    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" aria-describedby="pwError" />
+                    <button type="button" class="toggle-pw" id="togglePw" aria-label="Toggle password visibility" tabindex="-1">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="field-error" id="pwError">Incorrect email or password.</div>
+            </div>
+
+            <!-- Extras -->
+            <div class="form-extras">
+                <label for="rememberMe">
+                    <input type="checkbox" id="rememberMe" checked />
+                    Remember me
+                </label>
+                <a href="#" class="forgot-link" id="forgotLink">Forgot password?</a>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn-primary" id="loginBtn">
+                <span id="btnText">Sign In</span>
+                <span class="spinner" id="btnSpinner"></span>
+                <span class="btn-arrow">→</span>
+            </button>
+        </form>
+
+        <!-- Footer -->
+        <p class="footer-note">
+            <a href="login.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5" />
+                    <path d="M12 19l-7-7 7-7" />
+                </svg>
+                Back to customer sign in
+            </a>
+        </p>
+    </div>
+
+    <!-- ─── ADMIN AUTH JS ──────────────────────────────────────── -->
+    <!-- Uses the SAME shared admin-auth.js that admin-dashboard.html (and
+         every other admin/*.html page) checks against, instead of a private
+         copy — otherwise a session created here is invisible to those pages
+         and you get bounced straight back to this login screen. -->
+    <script src="js/ui-popup.js"></script>
+    <script src="js/two-factor.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/security.js"></script>
+    <script src="js/sessions.js"></script>
+    <script src="js/roles.js"></script>
+    <script src="js/admin-auth.js"></script>
+    <script>
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  Page Controller
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        (function() {
+            "use strict";
+
+            /* ── Preloader ─────────────────────────────────────── */
+            const preloader = document.getElementById("preloader");
+            const preloaderBar = document.getElementById("preloaderBar");
+            const preloaderStatus = document.getElementById("preloaderStatus");
+
+            let loadProgress = 0;
+            const loadInterval = setInterval(function() {
+                loadProgress += Math.random() * 12 + 4;
+                if (loadProgress > 95) loadProgress = 95;
+                preloaderBar.style.width = loadProgress + "%";
+                const msgs = ["Loading", "Preparing", "Connecting", "Almost ready"];
+                const idx = Math.min(Math.floor(loadProgress / 25), msgs.length - 1);
+                preloaderStatus.textContent = msgs[idx] + (loadProgress < 95 ? "…" : "");
+            }, 120);
+
+            function hidePreloader() {
+                clearInterval(loadInterval);
+                preloaderBar.style.width = "100%";
+                preloaderStatus.textContent = "Ready";
+                setTimeout(function() {
+                    preloader.classList.add("hidden");
+                }, 400);
+            }
+
+            /* ── Theme ─────────────────────────────────────────── */
+            const themeToggle = document.getElementById("themeToggle");
+            const htmlEl = document.documentElement;
+
+            function getStoredTheme() {
+                return localStorage.getItem("receiptly_theme") || "dark";
+            }
+
+            function setTheme(theme) {
+                htmlEl.setAttribute("data-theme", theme);
+                localStorage.setItem("receiptly_theme", theme);
+                const icon = themeToggle.querySelector("svg");
+                if (theme === "dark") {
+                    icon.innerHTML =
+                        '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />';
+                } else {
+                    icon.innerHTML =
+                        '<circle cx="12" cy="12" r="5" /><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />';
+                }
+            }
+
+            setTheme(getStoredTheme());
+
+            themeToggle.addEventListener("click", function() {
+                const current = htmlEl.getAttribute("data-theme");
+                setTheme(current === "dark" ? "light" : "dark");
+            });
+
+            /* ── Toast ──────────────────────────────────────────── */
+            const toastContainer = document.getElementById("toastContainer");
+
+            function showToast(message, type) {
+                type = type || "error";
+                const toast = document.createElement("div");
+                toast.className = "toast " + type;
+                const icon = type === "error" ? "✕" : "✓";
+                toast.innerHTML = `
+                    <span class="toast-icon">${icon}</span>
+                    <span class="toast-msg">${message}</span>
+                    <button class="toast-close" aria-label="Dismiss notification">&times;</button>
+                `;
+                toastContainer.appendChild(toast);
+
+                // Trigger show
+                requestAnimationFrame(() => {
+                    toast.classList.add("show");
+                });
+
+                // Close button
+                toast.querySelector(".toast-close").addEventListener("click", function() {
+                    dismissToast(toast);
+                });
+
+                // Auto-dismiss after 5s
+                setTimeout(() => {
+                    dismissToast(toast);
+                }, 5000);
+
+                return toast;
+            }
+
+            function dismissToast(toast) {
+                if (!toast || toast.classList.contains("hide")) return;
+                toast.classList.remove("show");
+                toast.classList.add("hide");
+                setTimeout(() => {
+                    if (toast.parentNode) toast.remove();
+                }, 400);
+            }
+
+            /* ── Password toggle ───────────────────────────────── */
+            const togglePw = document.getElementById("togglePw");
+            const pwInput = document.getElementById("password");
+            let pwVisible = false;
+
+            togglePw.addEventListener("click", function() {
+                pwVisible = !pwVisible;
+                pwInput.type = pwVisible ? "text" : "password";
+                const svg = togglePw.querySelector("svg");
+                if (pwVisible) {
+                    svg.innerHTML =
+                        '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><path d="M1 1l22 22" />';
+                } else {
+                    svg.innerHTML =
+                        '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />';
+                }
+            });
+
+            /* ── Forgot password ────────────────────────────────── */
+            document.getElementById("forgotLink").addEventListener("click", function(e) {
+                e.preventDefault();
+                showToast("Contact your system administrator to reset your password.", "error");
+            });
+
+            /* ── Auto-redirect if already authenticated ────────── */
+            if (AdminAuth.getSession() !== null) {
+                hidePreloader();
+                window.location.href = "admin/admin-dashboard.html";
+                return;
+            }
+
+            /* ── Remembered email (this page's own concern, not
+                   AdminAuth's — kept as a plain localStorage value) ── */
+            const REMEMBER_KEY = "receiptpro_admin_remember_email";
+            const rememberMe = document.getElementById("rememberMe");
+            const idInput = document.getElementById("identifier");
+            const remembered = localStorage.getItem(REMEMBER_KEY);
+            if (remembered) {
+                idInput.value = remembered;
+                rememberMe.checked = true;
+            }
+
+            /* ── Form submission ───────────────────────────────── */
+            const form = document.getElementById("adminLoginForm");
+            const idField = document.getElementById("idField");
+            const pwField = document.getElementById("pwField");
+            const pwError = document.getElementById("pwError");
+            const loginBtn = document.getElementById("loginBtn");
+            const btnText = document.getElementById("btnText");
+            const btnSpinner = document.getElementById("btnSpinner");
+
+            function validateEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            form.addEventListener("submit", function(e) {
+                e.preventDefault();
+
+                // Reset errors
+                idField.classList.remove("has-error");
+                pwField.classList.remove("has-error");
+                pwError.textContent = "Incorrect email or password.";
+
+                const email = idInput.value.trim();
+                const password = pwInput.value;
+
+                // Validation
+                if (!email) {
+                    idField.classList.add("has-error");
+                    idInput.focus();
+                    return;
+                }
+
+                if (!validateEmail(email)) {
+                    idField.classList.add("has-error");
+                    idInput.focus();
+                    // Override error message for invalid format
+                    document.getElementById("idError").textContent = "Please enter a valid email address.";
+                    return;
+                }
+                // Reset email error message
+                document.getElementById("idError").textContent = "Please enter a valid admin email address.";
+
+                if (!password) {
+                    pwField.classList.add("has-error");
+                    pwInput.focus();
+                    pwError.textContent = "Please enter your password.";
+                    return;
+                }
+
+                // Show loading state
+                loginBtn.disabled = true;
+                btnText.textContent = "Signing in";
+                btnSpinner.style.display = "inline-block";
+
+                function resetLoginBtn() {
+                    loginBtn.disabled = false;
+                    btnText.textContent = "Sign In";
+                    btnSpinner.style.display = "none";
+                }
+
+                function finishLogin(admin) {
+                    AdminAuth.completeLogin(admin);
+                    // Handle "Remember me"
+                    if (rememberMe.checked) {
+                        localStorage.setItem(REMEMBER_KEY, email);
+                    } else {
+                        localStorage.removeItem(REMEMBER_KEY);
+                    }
+                    // Success — redirect to dashboard
+                    window.location.href = "admin/admin-dashboard.html";
+                }
+
+                // Simulate network delay (prevents UI flash)
+                setTimeout(function() {
+                    // Real lockout gate BEFORE checking credentials, using
+                    // js/security.js — the same config the Security page edits.
+                    if (typeof Security !== "undefined") {
+                        var gate = Security.checkLoginAllowed(email);
+                        if (!gate.allowed) {
+                            var mins = Math.ceil((gate.lockedUntil - Date.now()) / 60000);
+                            resetLoginBtn();
+                            showToast("Too many failed attempts. Try again in " + Math.max(1, mins) +
+                                " minute(s).", "error");
+                            return;
+                        }
+                    }
+
+                    // Check credentials only — session isn't created yet,
+                    // so a two-step verification prompt (if this admin has
+                    // it turned on) can still stop the login here.
+                    const admin = AdminAuth.verifyCredentials(email, password);
+
+                    if (!admin) {
+                        var after = typeof Security !== "undefined" ? Security.recordFailedLogin(email) : null;
+                        // Incorrect credentials
+                        pwField.classList.add("has-error");
+                        pwError.textContent = "Incorrect email or password. Please try again.";
+                        resetLoginBtn();
+                        pwInput.focus();
+                        pwInput.select();
+
+                        // Show error toast
+                        var failMsg = (after && !after.allowed) ?
+                            "Too many failed attempts. This account is now temporarily locked." :
+                            "Incorrect email or password. Please try again.";
+                        showToast(failMsg, "error");
+                        return;
+                    }
+
+                    if (typeof Security !== "undefined") {
+                        Security.recordSuccessfulLogin(email);
+                    }
+
+                    if (typeof TwoFactor !== "undefined" && TwoFactor.isEnabledForAdmin(admin)) {
+                        resetLoginBtn();
+                        TwoFactor.verify(admin.twoFactorCode).then(function(ok) {
+                            if (!ok) return;
+                            loginBtn.disabled = true;
+                            btnText.textContent = "Signing in";
+                            btnSpinner.style.display = "inline-block";
+                            finishLogin(admin);
+                        });
+                        return;
+                    }
+
+                    finishLogin(admin);
+                }, 700);
+            });
+
+            /* ── Handle Enter key on password field ────────────── */
+            pwInput.addEventListener("keydown", function(e) {
+                if (e.key === "Enter") {
+                    form.dispatchEvent(new Event("submit"));
+                }
+            });
+
+            /* ── Hide preloader when ready ────────────────────── */
+            if (document.readyState === "complete") {
+                hidePreloader();
+            } else {
+                window.addEventListener("load", hidePreloader);
+            }
+
+            /* ── Check for direct dashboard access protection ──── */
+            // This page itself doesn't need to protect the dashboard,
+            // but the dashboard page should redirect here if not authenticated.
+            // That's handled in admin-dashboard.html.
+
+        })();
+    </script>
+</body>
+</html>

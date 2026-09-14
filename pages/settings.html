@@ -1,0 +1,2425 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings — Receiptly</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ============================================================
+           CSS VARIABLES & RESET (matching dashboard)
+           ============================================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+            /* Light theme — Blue primary */
+            --paper-raised: #ffffff;
+            --paper-sunken: #f8fafc;
+            --line: #e2e8f0;
+            --line-strong: #cbd5e1;
+            --ink: #0f172a;
+            --ink-soft: #475569;
+            --muted: #94a3b8;
+
+            --primary: #2563eb;
+            --primary-soft: #eff6ff;
+            --primary-glow: rgba(37, 99, 235, 0.15);
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+
+            --secondary-blue: #3b82f6;
+            --secondary-blue-soft: #e0f2fe;
+
+            --success: #059669;
+            --success-soft: #ecfdf5;
+            --red: #dc2626;
+            --red-soft: #fef2f2;
+            --orange: #d97706;
+            --orange-soft: #fffbeb;
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 40px 80px rgba(0, 0, 0, 0.10), 0 12px 32px rgba(0, 0, 0, 0.05);
+
+            --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-slow: 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+            --accent: #2563eb;
+            --accent-soft: #eff6ff;
+            --accent-glow: rgba(37, 99, 235, 0.15);
+            --accent-dark: #1d4ed8;
+
+            --green: #059669;
+            --green-soft: #ecfdf5;
+            --red: #dc2626;
+            --red-soft: #fef2f2;
+            --orange: #d97706;
+            --orange-soft: #fffbeb;
+
+            --nav-height: 60px;
+            --sidebar-width: 260px;
+        }
+
+        [data-theme="dark"] {
+            --paper-raised: #1e293b;
+            --paper-sunken: #0f172a;
+            --line: #334155;
+            --line-strong: #475569;
+            --ink: #f8fafc;
+            --ink-soft: #cbd5e1;
+            --muted: #94a3b8;
+
+            --primary: #3b82f6;
+            --primary-soft: #1e3a5f;
+            --primary-glow: rgba(59, 130, 246, 0.12);
+            --primary-dark: #2563eb;
+            --primary-light: #1e3a5f;
+
+            --secondary-blue: #60a5fa;
+            --secondary-blue-soft: #1e293b;
+
+            --success: #34d399;
+            --success-soft: #064e3b;
+            --red: #f87171;
+            --red-soft: #450a0a;
+            --orange: #fbbf24;
+            --orange-soft: #2a1f0f;
+        }
+
+        [data-theme="dark"] {
+            --paper-raised: #1d1a17;
+            --paper-sunken: #12100e;
+            --line: #2d2924;
+            --line-strong: #4a4540;
+            --ink: #f0ece6;
+            --ink-soft: #c5bfb7;
+            --muted: #8a8580;
+            --ledger-green: #4ade80;
+            --ledger-green-soft: #1a2a1a;
+            --stamp-red: #f87171;
+            --stamp-red-soft: #3d1a1a;
+            --gold: #fbbf24;
+            --gold-soft: #2a241a;
+            --accent-soft: #1a2a44;
+            --accent-glow: rgba(74, 143, 245, 0.12);
+            --red-soft: #3d1a1a;
+            --orange-soft: #2a1f0f;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-sans);
+            background: var(--paper-sunken);
+            color: var(--ink);
+            transition: background var(--transition), color var(--transition);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        button {
+            font: inherit;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: inherit;
+        }
+        input,
+        select,
+        textarea {
+            font: inherit;
+            color: inherit;
+        }
+
+        /* ============================================================
+           APP LAYOUT
+           ============================================================ */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ============================================================
+           SIDEBAR
+           ============================================================ */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--paper-raised);
+            border-right: 1px solid var(--line);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            overflow-y: auto;
+            transition: transform 0.3s ease, background var(--transition), border-color var(--transition);
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 24px 20px 20px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.02em;
+            border-bottom: 1px solid var(--line);
+        }
+        .sidebar-brand .brand-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--ink-soft);
+            transition: all var(--transition);
+            position: relative;
+        }
+        .sidebar-nav a .nav-icon {
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .sidebar-nav a:hover {
+            background: var(--paper-sunken);
+            color: var(--ink);
+        }
+        .sidebar-nav a.active {
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .sidebar-nav a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            border-radius: 0 4px 4px 0;
+            background: var(--accent);
+        }
+
+        .sidebar-footer {
+            padding: 16px 12px;
+            border-top: 1px solid var(--line);
+        }
+        .sidebar-footer a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--ink-soft);
+            transition: all var(--transition);
+        }
+        .sidebar-footer a .nav-icon {
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .sidebar-footer a:hover {
+            background: var(--paper-sunken);
+            color: var(--stamp-red);
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--line-strong);
+            border-radius: 100px;
+        }
+
+        /* ============================================================
+           MAIN CONTENT
+           ============================================================ */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ============================================================
+           HEADER
+           ============================================================ */
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 24px 14px 0;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 1px solid var(--line);
+            background: var(--paper-sunken);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            transition: background var(--transition), border-color var(--transition);
+            min-height: 60px;
+        }
+
+        .dash-header__left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            padding: 6px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: background var(--transition);
+        }
+        .hamburger:hover {
+            background: var(--paper-raised);
+        }
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2.5px;
+            background: var(--ink);
+            border-radius: 100px;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(6.5px) rotate(45deg);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-6.5px) rotate(-45deg);
+        }
+
+        .dash-header__greeting {
+            font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            line-height: 1.2;
+        }
+        .dash-header__greeting .highlight {
+            color: var(--accent);
+        }
+        .dash-header__sub {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+        .dash-header__sub .business-name {
+            font-weight: 600;
+            color: var(--ink-soft);
+        }
+
+        .dash-header__right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+
+        .dash-header__date {
+            font-size: 0.72rem;
+            color: var(--muted);
+            background: var(--paper-raised);
+            padding: 4px 12px;
+            border-radius: 100px;
+            border: 1px solid var(--line);
+            white-space: nowrap;
+        }
+
+        .dash-header__notif {
+            width: 36px;
+            height: 36px;
+            border-radius: 100px;
+            background: var(--paper-raised);
+            border: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            transition: all var(--transition);
+            position: relative;
+            color: var(--ink-soft);
+        }
+        .dash-header__notif:hover {
+            border-color: var(--line-strong);
+            background: var(--paper-sunken);
+        }
+        .dash-header__notif .dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 7px;
+            height: 7px;
+            border-radius: 100px;
+            background: var(--red);
+        }
+
+        .dash-header__theme-toggle {
+            width: 36px;
+            height: 36px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            background: var(--paper-raised);
+            border: 1px solid var(--line);
+            transition: all var(--transition);
+            color: var(--ink-soft);
+        }
+        .dash-header__theme-toggle:hover {
+            background: var(--paper-sunken);
+            border-color: var(--line-strong);
+            color: var(--ink);
+        }
+
+        .dash-header__avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 100px;
+            background: var(--accent);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            border: 2px solid transparent;
+            flex-shrink: 0;
+        }
+        .dash-header__avatar:hover {
+            border-color: var(--accent);
+            transform: scale(1.04);
+        }
+
+        /* ============================================================
+           OVERLAY
+           ============================================================ */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+        }
+        .sidebar-overlay.open {
+            display: block;
+        }
+
+        /* ============================================================
+           MAIN CONTENT WRAPPER
+           ============================================================ */
+        #appLayout {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 0 24px 40px;
+            width: 100%;
+        }
+
+        /* ============================================================
+           PAGE HEADER
+           ============================================================ */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .page-header h1 {
+            font-size: clamp(1.3rem, 2vw, 1.6rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .page-header p {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        /* ============================================================
+           CARD
+           ============================================================ */
+        .card {
+            background: var(--paper-raised);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: all var(--transition);
+        }
+        .card:hover {
+            border-color: var(--line-strong);
+        }
+
+        .card__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px 10px;
+            border-bottom: 1px solid var(--line);
+        }
+        .card__header h3 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .card__body {
+            padding: 16px 18px 18px;
+        }
+
+        /* ============================================================
+           SETTINGS GRID
+           ============================================================ */
+        .settings-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* ============================================================
+           FORM FIELDS
+           ============================================================ */
+        .field {
+            margin-bottom: 16px;
+        }
+        .field label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.78rem;
+            margin-bottom: 4px;
+            color: var(--ink-soft);
+        }
+        .field .input {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--paper-sunken);
+            border: 1.5px solid var(--line);
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            color: var(--ink);
+            transition: all var(--transition);
+            outline: none;
+            min-height: 44px;
+            font-family: var(--font-sans);
+        }
+        .field .input::placeholder {
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+        .field .input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+            background: var(--paper-raised);
+        }
+        .field textarea.input {
+            min-height: 70px;
+            resize: vertical;
+            padding: 10px 12px;
+        }
+        .field .error-msg {
+            font-size: 0.72rem;
+            color: var(--red);
+            margin-top: 3px;
+            display: none;
+        }
+        .field.has-error .input {
+            border-color: var(--red);
+            background: var(--red-soft);
+        }
+        .field.has-error .input:focus {
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+        }
+        .field.has-error .error-msg {
+            display: block;
+        }
+        .field.has-success .input {
+            border-color: var(--green);
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .mt-24 {
+            margin-top: 24px;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .text-muted {
+            color: var(--muted);
+        }
+
+        /* ============================================================
+           LOGO UPLOAD
+           ============================================================ */
+        .logo-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .logo-preview {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            background: var(--paper-sunken);
+            object-fit: cover;
+            border: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: var(--muted);
+            flex-shrink: 0;
+        }
+        .logo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        .logo-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* ============================================================
+           DANGER ZONE
+           ============================================================ */
+        .danger-zone {
+            border: 1px solid var(--stamp-red-soft);
+            background: var(--stamp-red-soft);
+            border-radius: var(--radius-lg);
+            padding: 20px 22px;
+            transition: background var(--transition), border-color var(--transition);
+        }
+        .danger-zone h3 {
+            color: var(--stamp-red);
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+        .danger-zone p {
+            color: var(--ink-soft);
+            font-size: 0.85rem;
+            margin: 0 0 16px;
+        }
+
+        .btn--danger {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            background: var(--stamp-red);
+            color: #fff;
+            border: 1.5px solid var(--stamp-red);
+            transition: all var(--transition);
+        }
+        .btn--danger:hover {
+            background: var(--red);
+            border-color: var(--red);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.2);
+        }
+
+        .btn--primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            background: var(--accent);
+            color: #fff;
+            border: 1.5px solid var(--accent);
+            transition: all var(--transition);
+        }
+        .btn--primary:hover {
+            background: var(--accent-dark);
+            border-color: var(--accent-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+
+        .btn--outline {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            background: transparent;
+            color: var(--ink-soft);
+            border: 1.5px solid var(--line);
+            transition: all var(--transition);
+        }
+        .btn--outline:hover {
+            background: var(--paper-sunken);
+            border-color: var(--line-strong);
+            color: var(--ink);
+        }
+
+        /* ============================================================
+           TOAST
+           ============================================================ */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 380px;
+            width: 100%;
+            pointer-events: none;
+        }
+        .toast-container .toast {
+            pointer-events: auto;
+            background: var(--paper-raised);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: slideInRight 0.4s ease;
+            transition: all var(--transition);
+        }
+        .toast-container .toast--success {
+            border-left: 4px solid var(--green);
+        }
+        .toast-container .toast--error {
+            border-left: 4px solid var(--red);
+        }
+        .toast-container .toast--info {
+            border-left: 4px solid var(--accent);
+        }
+        .toast-container .toast__icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .toast-container .toast__content {
+            flex: 1;
+        }
+        .toast-container .toast__title {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .toast-container .toast__message {
+            font-size: 0.8rem;
+            color: var(--ink-soft);
+        }
+        .toast-container .toast__close {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 0 4px;
+            transition: color var(--transition);
+        }
+        .toast-container .toast__close:hover {
+            color: var(--ink);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 1024px) {
+            #appLayout {
+                padding: 0 16px 32px;
+            }
+            .dash-header {
+                padding: 10px 16px 10px 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                transform: translateX(-100%);
+                box-shadow: var(--shadow-lg);
+                z-index: 1000;
+                width: 280px;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .dash-header {
+                padding: 8px 0 8px 0;
+                flex-wrap: wrap;
+            }
+            .dash-header__right {
+                gap: 6px;
+            }
+            .dash-header__date {
+                display: none;
+            }
+            .dash-header__notif,
+            .dash-header__theme-toggle,
+            .dash-header__avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
+            }
+            .dash-header__greeting {
+                font-size: 0.9rem;
+            }
+            .dash-header__sub {
+                font-size: 0.65rem;
+            }
+
+            .sidebar-overlay.open {
+                display: block;
+            }
+
+            .input-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .page-header {
+                padding: 12px 0 10px;
+            }
+            .page-header h1 {
+                font-size: 1.1rem;
+            }
+            .page-header p {
+                font-size: 0.75rem;
+            }
+
+            #appLayout {
+                padding: 0 8px 24px;
+            }
+
+            .card__body {
+                padding: 12px 14px 14px;
+            }
+            .card__header {
+                padding: 10px 14px 8px;
+            }
+            .card__header h3 {
+                font-size: 0.78rem;
+            }
+
+            .logo-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .logo-actions {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dash-header__sub {
+                display: none;
+            }
+            .dash-header__greeting {
+                font-size: 0.8rem;
+            }
+            .dash-header__notif,
+            .dash-header__theme-toggle,
+            .dash-header__avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 0.7rem;
+            }
+
+            .page-header h1 {
+                font-size: 0.95rem;
+            }
+
+            .danger-zone {
+                padding: 16px;
+            }
+            .danger-zone h3 {
+                font-size: 0.9rem;
+            }
+            .danger-zone p {
+                font-size: 0.78rem;
+            }
+            .btn--danger {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .flex-between {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .flex-between .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .toast-container {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: 100%;
+            }
+        }
+
+        
+
+        /* ----- DEMO BACKGROUND (behind preloader) ----- */
+        .demo-bg {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.02);
+            font-weight: 300;
+            letter-spacing: 0.04em;
+            line-height: 1.8;
+        }
+        .demo-bg h1 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: clamp(2.8rem, 10vw, 6rem);
+            color: rgba(255, 255, 255, 0.02);
+            letter-spacing: -0.02em;
+        }
+        .demo-bg p {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.02);
+        }
+        /* ---------- Billing: bank/card payment popups ---------- */
+        .billing-modal-overlay {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.55);
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px; z-index: 400;
+        }
+        .billing-modal {
+            background: var(--paper-raised); border-radius: var(--radius-lg, 20px);
+            padding: 24px; width: 100%; max-width: 420px;
+            box-shadow: var(--shadow-lg); max-height: 90vh; overflow-y: auto;
+        }
+        .billing-modal__head {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        .billing-modal__head h3 { font-size: 1.05rem; }
+        .billing-modal__close {
+            background: none; border: none; font-size: 1.4rem; line-height: 1;
+            cursor: pointer; color: var(--muted); padding: 4px;
+        }
+        .billing-account-box {
+            border: 1px solid var(--line); border-radius: var(--radius-sm, 10px);
+            padding: 12px 14px; background: var(--paper-sunken);
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .billing-account-box div { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
+        .billing-account-box span { color: var(--muted); }
+        .btn--outline:disabled { opacity: 0.55; cursor: not-allowed; }
+    .msg-nav-badge{margin-left:auto;background:#dc2626;color:#fff;font-size:.68rem;font-weight:800;border-radius:999px;padding:1px 6px;min-width:18px;text-align:center;line-height:1.4;}
+      /* ===== PRISM PRELOADER ===== */
+      #preloader {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #0b1628;
+        transition: opacity 0.9s cubic-bezier(0.65, 0, 0.35, 1),
+          visibility 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+        will-change: opacity, visibility;
+        user-select: none;
+        padding: 1.5rem;
+      }
+      #preloader.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      .prism-loader {
+        position: relative;
+        width: 320px;
+        height: 320px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .prism-loader canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        border-radius: 50%;
+      }
+      .prism-loader .prism-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        user-select: none;
+        z-index: 2;
+        background: radial-gradient(circle at center, rgba(11, 22, 40, 0.7) 0%, transparent 60%);
+        padding: 20px 30px;
+        border-radius: 50%;
+      }
+      .prism-loader .prism-percentage {
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #e8edf5;
+        opacity: 0.95;
+        font-variant-numeric: tabular-nums;
+        text-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+        animation: prismFadeIn 1s ease 0.2s both;
+      }
+      .prism-loader .prism-label {
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 3.5px;
+        text-transform: uppercase;
+        color: rgba(212, 175, 55, 0.5);
+        margin-top: 4px;
+        animation: prismFadeIn 1s ease 0.4s both;
+      }
+      @keyframes prismFadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(10px) scale(0.95);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      @media (max-width: 480px) {
+        .prism-loader {
+          width: 260px;
+          height: 260px;
+        }
+        .prism-loader .prism-percentage {
+          font-size: 28px;
+        }
+        .prism-loader .prism-label {
+          font-size: 9px;
+          letter-spacing: 2.5px;
+        }
+      }
+</style>
+    <script src="../js/ui-popup.js"></script>
+    <script src="../js/two-factor.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/currency.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/user-scope.js"></script>
+    <script src="../js/plan-access.js"></script>
+</head>
+
+<body>
+    <script>(function () { if (typeof Scope !== "undefined" && !Scope.currentUserId()) { window.location.href = "../login.html"; } })();</script>
+
+
+    <!-- ============================================================
+    TOAST CONTAINER
+    ============================================================ -->
+    <div class="toast-container" id="toastContainer" role="status" aria-live="polite"></div>
+
+    <!-- ============================================================
+    APP CONTAINER
+    ============================================================ -->
+    <div class="app-container">
+
+        <!-- ============================================================
+        SIDEBAR
+        ============================================================ -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <span class="brand-icon">R</span>
+                <span>Receiptly</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg></span> Dashboard</a>
+                <a href="create-receipt.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54h3.58l-4.08 5.25L8 11.29h-3.58L10 6.25z"/></svg></span> New Receipt</a>
+                <a href="receipts.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-8-6z"/></svg></span> Receipts</a>
+                <a href="customers.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em"
+                            height="1em" fill="currentColor">
+                            <path
+                                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                        </svg></span> Customers</a>
+                <a href="analytics.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M16 6l2.29 2.29-4.71 4.71-4-4L2 16.59 3.41 18 9 12.41l4 4 6-6V6z"/></svg></span> Analytics</a>
+
+                <a href="expenses.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M16 18l2.29-2.29-4.71-4.71-4 4L2 7.41 3.41 6 9 11.59l4-4 6 6V6h2v12z"/></svg></span> Expenses</a>
+                <a href="verify-receipt.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></span> Verify</a>
+          <a href="payments.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span> Payments</a>
+          <a href="reports.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 17v-4M12 17v-7M16 17v-2"/></svg></span> Reports</a>
+          <a href="audit-log.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v6h6M12 7v5l3 2"/></svg></span> Audit Log</a>
+                <a href="messages.html"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></span> Messages<span class="msg-nav-badge" id="msgNavBadge" style="display:none;">0</span></a><a href="settings.html" class="active"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.62l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.48.1.62l2.03 1.58c-.05.3-.07.62-.07.94 0 .33.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.62l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.47.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.48-.1-.62l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>️</span> Settings</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="../login.html" id="logoutLink"><span class="nav-icon"><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M19 19V5c0-1.1-.9-2-2-2H7c-1.1 0-2 .9-2 2v14H3v2h18v-2h-2zM9 7h6v5H9V7z"/></svg></span> Logout</a>
+            </div>
+        </aside>
+
+        <!-- Overlay for mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- ============================================================
+        MAIN CONTENT
+        ============================================================ -->
+        <main class="main-content">
+
+            <!-- ==================== HEADER ==================== -->
+            <header class="dash-header">
+                <div class="dash-header__left">
+                    <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <div>
+                        <div class="dash-header__greeting" id="greeting">
+                            <span class="highlight">Settings</span>
+                        </div>
+                        <div class="dash-header__sub">
+                            <span class="business-name" id="businessNameHeader">Your Business</span> — customize your experience
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dash-header__right">
+                    <span class="dash-header__date" id="currentDate">Loading...</span>
+                    <button class="dash-header__notif" aria-label="Notifications" id="notifBtn">
+                        <svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                        <span class="dot" id="notifDot" style="display:none;"></span>
+                    </button>
+                    <button class="dash-header__theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                        <span id="themeIcon">☀️</span>
+                    </button>
+                    <div class="dash-header__avatar" id="avatar" aria-label="User menu" tabindex="0">
+                        <img id="avatarLogo" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                        <span id="avatarInitials">U</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ==================== MAIN CONTENT ==================== -->
+            <div id="appLayout">
+
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div>
+                        <h1>Settings</h1>
+                        <p>Manage your business profile, receipt defaults, and app preferences.</p>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                SETTINGS GRID
+                ============================================================ -->
+                <div class="settings-grid">
+
+                    <!-- Business Profile -->
+                    <div class="card">
+                        <div class="card__header"><h3>🏢 Business Profile</h3></div>
+                        <div class="card__body">
+                            <form id="profileForm" novalidate>
+                                <div class="field">
+                                    <label>Business logo</label>
+                                    <div class="logo-row">
+                                        <div class="logo-preview" id="logoPreviewContainer">
+                                            <img id="logoPreview" src="" alt="Logo" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:12px;" />
+                                            <span id="logoPlaceholder" style="font-size:0.7rem;color:var(--muted);">No logo</span>
+                                        </div>
+                                        <div class="logo-actions">
+                                            <label class="btn--outline" style="cursor:pointer;padding:8px 16px;font-size:0.75rem;">
+                                                Choose Image
+                                                <input type="file" id="logoInput" accept="image/*" style="display:none;">
+                                            </label>
+                                            <button type="button" id="removeLogoBtn" class="btn--danger" style="padding:6px 14px;font-size:0.7rem;background:var(--red-soft);color:var(--red);border-color:transparent;">Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label for="businessName">Business name</label>
+                                    <input id="businessName" class="input" placeholder="Your business name" />
+                                    <div class="error-msg">Enter your business name.</div>
+                                </div>
+                                <div class="input-row">
+                                    <div class="field">
+                                        <label for="phone">Phone number</label>
+                                        <input id="phone" class="input" placeholder="Phone number" />
+                                    </div>
+                                    <div class="field">
+                                        <label for="pEmail">Email</label>
+                                        <input id="pEmail" type="email" class="input" placeholder="Email address" />
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label for="address">Address</label>
+                                    <input id="address" class="input" placeholder="Business address" />
+                                </div>
+                                <div class="field">
+                                    <label for="website">Website (optional)</label>
+                                    <input id="website" class="input" placeholder="https://..." />
+                                </div>
+                                <div class="field" style="margin-bottom:0;">
+                                    <label for="footerMessage">Receipt footer message</label>
+                                    <textarea id="footerMessage" class="input" rows="2" placeholder="Thank you for your business!"></textarea>
+                                </div>
+                                <button type="submit" class="btn--primary mt-24">Save Business Profile</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Receipt Defaults -->
+                    <div class="card">
+                        <div class="card__header"><h3><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54h3.58l-4.08 5.25L8 11.29h-3.58L10 6.25z"/></svg> Receipt Defaults</h3></div>
+                        <div class="card__body">
+                            <form id="defaultsForm" novalidate>
+                                <div class="input-row">
+                                    <div class="field" style="margin-bottom:0;">
+                                        <label for="currency">Currency</label>
+                                        <select id="currency" class="input"></select>
+                                        <small class="text-muted" id="currencyRateNote" style="display:block;margin-top:4px;"></small>
+                                    </div>
+                                    <div class="field" style="margin-bottom:0;">
+                                        <label for="defaultTax">Default tax rate (%)</label>
+                                        <input id="defaultTax" type="number" min="0" step="0.1" class="input" placeholder="0" />
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn--primary mt-24">Save Defaults</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Appearance -->
+                    <div class="card">
+                        <div class="card__header"><h3>🎨 Appearance</h3></div>
+                        <div class="card__body flex-between">
+                            <div>
+                                <strong style="font-size:0.9rem;">Dark mode</strong>
+                                <p class="text-muted" style="font-size:0.8rem;margin:2px 0 0;">Switch between light and dark themes.</p>
+                            </div>
+                            <button class="btn--outline" id="themeToggleSettings" style="min-width:140px;">Toggle Theme</button>
+                        </div>
+                    </div>
+
+                    <!-- Billing & Subscription -->
+                    <div class="card" id="billingCard">
+                        <div class="card__header"><h3>💳 Billing &amp; Subscription</h3></div>
+                        <div class="card__body">
+
+                            <div id="billingLockedNotice" style="display:none;margin-bottom:14px;padding:10px 12px;border-radius:var(--radius-sm, 10px);background:var(--red-soft);color:var(--red);font-size:0.8rem;font-weight:600;">
+                                ⚠️ Your account access is limited because your subscription payment is due. Choose a plan and submit payment below to restore full access.
+                            </div>
+
+                            <div id="billingStatusRow" style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid var(--line);border-radius:var(--radius-sm, 10px);background:var(--paper-sunken);margin-bottom:16px;">
+                                <div>
+                                    <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);margin-bottom:2px;">Current Plan</div>
+                                    <div id="billingPlanLabel" style="font-size:1rem;font-weight:700;">—</div>
+                                </div>
+                                <div>
+                                    <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);margin-bottom:2px;">Status</div>
+                                    <span id="billingStatusBadge" style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:0.72rem;font-weight:700;">—</span>
+                                </div>
+                                <div>
+                                    <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);margin-bottom:2px;">Renews / Due</div>
+                                    <div id="billingRenewsLabel" style="font-size:0.9rem;font-weight:600;">—</div>
+                                </div>
+                            </div>
+
+                            <form id="billingForm" novalidate>
+                                <div class="field">
+                                    <label>Choose a plan</label>
+                                    <div class="input-row" style="gap:12px;">
+                                        <label style="flex:1;display:block;padding:14px;border:2px solid var(--line);border-radius:var(--radius-sm, 10px);cursor:pointer;" id="planOptionNormal">
+                                            <input type="radio" name="billingPlan" value="Normal" style="margin-right:8px;">
+                                            <strong>Normal</strong>
+                                            <div class="text-muted" style="font-size:0.78rem;margin-top:4px;"><span id="planNormalPriceText">—</span> / month — core receipts &amp; customer tools <span id="planNormalConverted" style="font-style:italic;"></span></div>
+                                        </label>
+                                        <label style="flex:1;display:block;padding:14px;border:2px solid var(--line);border-radius:var(--radius-sm, 10px);cursor:pointer;" id="planOptionPro">
+                                            <input type="radio" name="billingPlan" value="Pro" style="margin-right:8px;">
+                                            <strong>Pro</strong>
+                                            <div class="text-muted" style="font-size:0.78rem;margin-top:4px;"><span id="planProPriceText">—</span> / month — analytics, templates &amp; priority support <span id="planProConverted" style="font-style:italic;"></span></div>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label>Payment method</label>
+                                    <div class="input-row" style="gap:12px;">
+                                        <button type="button" class="btn--outline" id="payViaBankBtn" style="flex:1;">🏦 Bank Transfer</button>
+                                        <button type="button" class="btn--outline" id="payViaCardBtn" style="flex:1;">💳 Pay with Card</button>
+                                    </div>
+                                    <p class="text-muted" style="font-size:0.75rem;margin-top:8px;">Cash isn't accepted through this page — please contact support if you need to arrange an in-person payment.</p>
+                                </div>
+                                <div id="billingFormError" style="display:none;margin-top:6px;padding:9px 11px;border-radius:var(--radius-sm, 10px);background:var(--red-soft);color:var(--red);font-size:0.78rem;"></div>
+                                <p class="text-muted" style="font-size:0.75rem;margin-top:8px;">After you submit, an admin will confirm your payment before your account is reactivated.</p>
+                            </form>
+
+                            <!-- Bank Transfer modal -->
+                            <div id="bankTransferModal" class="billing-modal-overlay" style="display:none;">
+                                <div class="billing-modal">
+                                    <div class="billing-modal__head">
+                                        <h3>🏦 Pay by Bank Transfer</h3>
+                                        <button type="button" class="billing-modal__close" id="bankModalClose">&times;</button>
+                                    </div>
+                                    <p class="text-muted" style="font-size:0.82rem;margin-bottom:14px;">Transfer <strong id="bankModalAmount">—</strong> <span id="bankModalConverted" style="font-style:italic;"></span> to the account below, then confirm once it's done.</p>
+                                    <div class="billing-account-box">
+                                        <div><span>Bank Name</span><strong>Guaranty Trust Bank</strong></div>
+                                        <div><span>Account Name</span><strong>Receiptly Technologies Ltd</strong></div>
+                                        <div><span>Account Number</span><strong>0123456789</strong></div>
+                                    </div>
+                                    <div class="field" style="margin-top:14px;">
+                                        <label for="bankReference">Payment reference / transaction ID</label>
+                                        <input id="bankReference" class="input" placeholder="e.g. TRX-2049123" autocomplete="off" />
+                                        <div class="error-msg" id="bankReferenceError">Enter the transaction reference from your bank so admin can verify it.</div>
+                                    </div>
+                                    <button type="button" class="btn--primary mt-24" id="confirmBankTransferBtn" style="width:100%;">I've made the transfer — Confirm</button>
+                                </div>
+                            </div>
+
+                            <!-- Card payment modal -->
+                            <div id="cardPaymentModal" class="billing-modal-overlay" style="display:none;">
+                                <div class="billing-modal">
+                                    <div class="billing-modal__head">
+                                        <h3>💳 Pay with Card</h3>
+                                        <button type="button" class="billing-modal__close" id="cardModalClose">&times;</button>
+                                    </div>
+                                    <p class="text-muted" style="font-size:0.82rem;margin-bottom:14px;">Amount due: <strong id="cardModalAmount">—</strong> <span id="cardModalConverted" style="font-style:italic;"></span></p>
+                                    <div class="field">
+                                        <label for="cardName">Name on card</label>
+                                        <input id="cardName" class="input" placeholder="e.g. Daniel Okon" autocomplete="cc-name" />
+                                    </div>
+                                    <div class="field">
+                                        <label for="cardNumber">Card number</label>
+                                        <input id="cardNumber" class="input" placeholder="1234 5678 9012 3456" inputmode="numeric" maxlength="19" autocomplete="cc-number" />
+                                    </div>
+                                    <div class="input-row">
+                                        <div class="field">
+                                            <label for="cardExpiry">Expiry (MM/YY)</label>
+                                            <input id="cardExpiry" class="input" placeholder="MM/YY" maxlength="5" autocomplete="cc-exp" />
+                                        </div>
+                                        <div class="field">
+                                            <label for="cardCvv">CVV</label>
+                                            <input id="cardCvv" class="input" placeholder="123" inputmode="numeric" maxlength="4" autocomplete="cc-csc" />
+                                        </div>
+                                    </div>
+                                    <div class="error-msg" id="cardFormError" style="display:none;margin-top:6px;padding:9px 11px;border-radius:var(--radius-sm, 10px);background:var(--red-soft);color:var(--red);font-size:0.78rem;"></div>
+                                    <button type="button" class="btn--primary mt-24" id="confirmCardPaymentBtn" style="width:100%;">Pay Now</button>
+                                </div>
+                            </div>
+
+                            <div id="billingHistoryWrap" style="margin-top:18px;padding-top:14px;border-top:1px solid var(--line);display:none;">
+                                <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);margin-bottom:8px;">Recent Payment Submissions</div>
+                                <ul id="billingHistoryList" style="list-style:none;display:flex;flex-direction:column;gap:8px;"></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="twoFaCard">
+                        <div class="card__header"><h3>🔐 Two-Step Verification</h3></div>
+                        <div class="card__body flex-between">
+                            <div>
+                                <strong id="twoFaStatusLabel">Two-step verification is off</strong>
+                                <p class="text-muted" style="font-size:0.8rem;margin-top:4px;max-width:420px;">When it's on, you'll be asked for a secret code right after your password every time you sign in.</p>
+                            </div>
+                            <button type="button" class="btn--outline" id="twoFaToggleBtn" style="min-width:140px;">Turn On</button>
+                        </div>
+                    </div>
+
+                    <!-- Danger Zone -->
+                    <div class="danger-zone">
+                        <h3><svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>️ Danger Zone</h3>
+                        <p>Permanently delete all receipts, customers, expenses, and your business profile from this browser. This cannot be undone.</p>
+                        <button class="btn--danger" id="clearAllDataBtn">🗑️ Clear All Data</button>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <!-- /#appLayout -->
+
+        </main>
+        <!-- /.main-content -->
+
+    </div>
+    <!-- /.app-container -->
+
+        <!-- ===== PRISM PRELOADER ===== -->
+    <div id="preloader" role="status" aria-label="Loading">
+      <div class="prism-loader" id="prismLoader">
+        <canvas id="prismCanvas"></canvas>
+        <div class="prism-center">
+          <div class="prism-percentage" id="percentDisplay">0%</div>
+          <div class="prism-label">Loading</div>
+        </div>
+      </div>
+    </div>
+
+
+  
+    <script>
+      (function prismPreloader() {
+        'use strict';
+
+        const preloader = document.getElementById('preloader');
+        const wrap = document.getElementById('prismLoader');
+        const canvas = document.getElementById('prismCanvas');
+        const percentDisplay = document.getElementById('percentDisplay');
+        if (!preloader || !wrap || !canvas || !percentDisplay) return;
+        const ctx = canvas.getContext('2d');
+
+        // ── Sizing (Retina ready) ──
+        const dpr = window.devicePixelRatio || 1;
+        const rect = wrap.getBoundingClientRect();
+        const displayWidth = rect.width || 320;
+        const displayHeight = rect.height || 320;
+
+        canvas.width = displayWidth * dpr;
+        canvas.height = displayHeight * dpr;
+        canvas.style.width = displayWidth + 'px';
+        canvas.style.height = displayHeight + 'px';
+
+        const W = canvas.width;
+        const H = canvas.height;
+        const cx = W / 2;
+        const cy = H / 2;
+        const baseRadius = Math.min(W, H) * 0.36;
+
+        ctx.scale(dpr, dpr);
+
+        // ── Config ──
+        const DURATION = 5000; // 5 seconds
+        const SIDES = 6; // hexagon
+        const BEAM_COUNT = 12;
+
+        let startTime = null;
+        let frameId = null;
+        let finished = false;
+
+        function easeInOut(t) {
+          return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+
+        function drawPolygon(cx, cy, radius, sides, rotation, strokeColor, lineWidth, shadowBlur) {
+          if (sides < 3) return;
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(rotation);
+          ctx.beginPath();
+          for (let i = 0; i < sides; i++) {
+            const angle = (i / sides) * Math.PI * 2 - Math.PI / 2;
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.closePath();
+          if (strokeColor) {
+            ctx.strokeStyle = strokeColor;
+            ctx.lineWidth = lineWidth || 3;
+            ctx.shadowColor = 'rgba(212, 175, 55, 0.3)';
+            ctx.shadowBlur = shadowBlur || 25;
+            ctx.stroke();
+          }
+          ctx.restore();
+        }
+
+        function drawScene(p) {
+          const eased = easeInOut(Math.min(p, 1));
+          const angle = eased * Math.PI * 2;
+
+          ctx.clearRect(0, 0, W, H);
+
+          for (let i = 0; i < 6; i++) {
+            const r = (i / 6) * baseRadius * 1.5;
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(255,255,255,${0.02 + 0.01 * eased})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+
+          const prismRadius = baseRadius * 0.85;
+          const rot = angle * 0.6;
+          const mix = eased;
+          const r1 = 10, g1 = 26, b1 = 58;
+          const r2 = 212, g2 = 175, b2 = 55;
+          const r = Math.round(r1 + (r2 - r1) * mix);
+          const g = Math.round(g1 + (g2 - g1) * mix);
+          const b = Math.round(b1 + (b2 - b1) * mix);
+          const strokeColor = `rgb(${r}, ${g}, ${b})`;
+
+          drawPolygon(cx, cy, prismRadius, SIDES, rot, strokeColor, 5, 35);
+          drawPolygon(cx, cy, prismRadius * 0.7, SIDES, -rot * 0.8, strokeColor, 2.5, 15);
+
+          const beamLength = baseRadius * (0.6 + 0.3 * eased);
+          for (let i = 0; i < BEAM_COUNT; i++) {
+            const beamAngle = (i / BEAM_COUNT) * Math.PI * 2 + angle * 0.3 + performance.now() / 5000;
+            const x1 = cx + Math.cos(beamAngle) * 10;
+            const y1 = cy + Math.sin(beamAngle) * 10;
+            const x2 = cx + Math.cos(beamAngle) * beamLength;
+            const y2 = cy + Math.sin(beamAngle) * beamLength;
+            const alpha = 0.08 + 0.1 * (1 - Math.abs(Math.sin(beamAngle * 2 + eased * 2)));
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.strokeStyle = `rgba(212, 175, 55, ${alpha * (0.5 + 0.5 * eased)})`;
+            ctx.lineWidth = 1.8;
+            ctx.shadowColor = 'rgba(212, 175, 55, 0.1)';
+            ctx.shadowBlur = 12;
+            ctx.stroke();
+          }
+
+          const orbitRadius = prismRadius * 1.15;
+          for (let i = 0; i < 8; i++) {
+            const t = (i / 8) * Math.PI * 2 + performance.now() / 2000 + angle;
+            const x = cx + Math.cos(t) * orbitRadius;
+            const y = cy + Math.sin(t) * orbitRadius;
+            const size = 2 + 2 * (0.5 + 0.5 * Math.sin(t * 2));
+            const alpha = 0.3 + 0.3 * (0.5 + 0.5 * Math.sin(t * 2 + eased));
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(212, 175, 55, ${alpha})`;
+            ctx.shadowColor = 'rgba(212, 175, 55, 0.15)';
+            ctx.shadowBlur = 8;
+            ctx.fill();
+          }
+
+          const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, baseRadius * 0.25);
+          coreGrad.addColorStop(0, `rgba(212, 175, 55, ${0.15 + 0.2 * eased})`);
+          coreGrad.addColorStop(0.5, `rgba(212, 175, 55, ${0.05 + 0.1 * eased})`);
+          coreGrad.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = coreGrad;
+          ctx.beginPath();
+          ctx.arc(cx, cy, baseRadius * 0.25, 0, Math.PI * 2);
+          ctx.fill();
+
+          const percent = Math.round(eased * 100);
+          percentDisplay.textContent = percent + '%';
+        }
+
+        function finishLoading() {
+          if (finished) return;
+          finished = true;
+          if (frameId) cancelAnimationFrame(frameId);
+          drawScene(1);
+          percentDisplay.textContent = '100%';
+          setTimeout(() => {
+            preloader.classList.add('hidden');
+            document.dispatchEvent(new CustomEvent('preloader:complete', { detail: { duration: DURATION } }));
+          }, 200);
+        }
+
+        function tick(timestamp) {
+          if (finished) return;
+          if (startTime === null) startTime = timestamp;
+          const elapsed = timestamp - startTime;
+          const progress = Math.min(elapsed / DURATION, 1);
+
+          drawScene(progress);
+
+          if (progress < 1) {
+            frameId = requestAnimationFrame(tick);
+          } else {
+            finishLoading();
+          }
+        }
+
+        window.__printerPreloader = {
+          finish: finishLoading,
+          getProgress: () => (finished ? 100 : Math.round(easeInOut(Math.min((performance.now() - (startTime || performance.now())) / DURATION, 1)) * 100)),
+          setProgress: () => {},
+        };
+
+        frameId = requestAnimationFrame(tick);
+
+        window.addEventListener('beforeunload', () => {
+          if (frameId) cancelAnimationFrame(frameId);
+        });
+
+        function handleResize() {
+          if (startTime !== null && !finished) {
+            const now = performance.now();
+            const elapsed = now - startTime;
+            const p = Math.min(elapsed / DURATION, 1);
+            drawScene(p);
+          }
+        }
+        window.addEventListener('resize', handleResize);
+      })();
+    </script>
+  
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ============================================================
+            // SIDEBAR / HAMBURGER
+            // ============================================================
+            const hamburger = document.getElementById('hamburger');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function toggleSidebar() {
+                const isOpen = sidebar.classList.toggle('open');
+                hamburger.classList.toggle('active');
+                if (overlay) overlay.classList.toggle('open');
+                document.body.style.overflow = isOpen ? 'hidden' : '';
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                hamburger.classList.remove('active');
+                if (overlay) overlay.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            if (hamburger) {
+                hamburger.addEventListener('click', toggleSidebar);
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', closeSidebar);
+            }
+
+            document.querySelectorAll('.sidebar-nav a, .sidebar-footer a').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        closeSidebar();
+                    }
+                });
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+                    closeSidebar();
+                }
+            });
+
+            // ============================================================
+            // THEME
+            // ============================================================
+            function getTheme() {
+                return document.documentElement.getAttribute('data-theme') || 'light';
+            }
+
+            function setTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                const icon = document.getElementById('themeIcon');
+                if (icon) icon.textContent = theme === 'dark' ? '🌙' : '☀️';
+                localStorage.setItem('receiptpro-theme', theme);
+            }
+
+            const savedTheme = localStorage.getItem('receiptpro-theme') || 'light';
+            setTheme(savedTheme);
+
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    const current = getTheme();
+                    setTheme(current === 'light' ? 'dark' : 'light');
+                });
+            }
+
+            // Settings page theme toggle button
+            document.getElementById('themeToggleSettings').addEventListener('click', function() {
+                const current = getTheme();
+                setTheme(current === 'light' ? 'dark' : 'light');
+            });
+
+            // ============================================================
+            // HEADER: USER INFO & DATE
+            // ============================================================
+            function updateHeader() {
+                // Scope (js/user-scope.js) is the single source of truth for the
+          // current session and user; it is loaded on every page.
+          const session = Scope.getSession();
+          const user = Scope.currentUser();
+                
+                let profile = null;
+                try {
+                    const pKey = Scope.key("receiptly_profile");
+                    const p = localStorage.getItem(pKey);
+                    if (p) profile = JSON.parse(p);
+                } catch (e) {}
+
+                const avatarEl = document.getElementById('avatarInitials');
+                const avatarLogoEl = document.getElementById('avatarLogo');
+                if (avatarEl) {
+                    const name = user ? (user.fullName || user.name || user.email || 'User') : 'User';
+                    const parts = name.split(' ');
+                    let initials = parts[0] ? parts[0][0] : 'U';
+                    if (parts.length > 1) initials += parts[1][0] || '';
+                    avatarEl.textContent = initials.toUpperCase();
+                }
+                if (avatarLogoEl) {
+                    if (profile && profile.logo) {
+                        avatarLogoEl.src = profile.logo;
+                        avatarLogoEl.style.display = 'block';
+                        if (avatarEl) avatarEl.style.display = 'none';
+                    } else {
+                        avatarLogoEl.style.display = 'none';
+                        if (avatarEl) avatarEl.style.display = '';
+                    }
+                }
+
+                const businessNameEl = document.getElementById('businessNameHeader');
+                if (businessNameEl) {
+                    const biz = profile && profile.businessName ? profile.businessName :
+                        (user && user.businessName ? user.businessName : 'your business');
+                    businessNameEl.textContent = biz;
+                }
+
+                const dateEl = document.getElementById('currentDate');
+                if (dateEl) {
+                    const now = new Date();
+                    const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+                    dateEl.textContent = now.toLocaleDateString('en-US', options);
+                }
+
+                const greetingEl = document.getElementById('greeting');
+                if (greetingEl) {
+                    greetingEl.innerHTML = `<span class="highlight">Settings</span>`;
+                }
+            }
+
+            updateHeader();
+
+            // ============================================================
+            // TOAST SYSTEM
+            // ============================================================
+            const toastContainer = document.getElementById('toastContainer');
+
+            function showToast(title, message, type = 'success') {
+                const toast = document.createElement('div');
+                toast.className = `toast toast--${type}`;
+                toast.setAttribute('role', 'alert');
+                const icon = type === 'success' ? '<svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>' : type === 'error' ? '<svg class="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>' : 'ℹ️';
+                toast.innerHTML = `
+                    <span class="toast__icon">${icon}</span>
+                    <div class="toast__content">
+                        <div class="toast__title">${title}</div>
+                        <div class="toast__message">${message}</div>
+                    </div>
+                    <button class="toast__close" aria-label="Dismiss notification">&times;</button>
+                `;
+                toastContainer.appendChild(toast);
+
+                toast.querySelector('.toast__close').addEventListener('click', function() {
+                    toast.remove();
+                });
+
+                setTimeout(function() {
+                    if (toast.parentNode) {
+                        toast.style.opacity = '0';
+                        toast.style.transform = 'translateX(20px)';
+                        setTimeout(function() { toast.remove(); }, 300);
+                    }
+                }, 5000);
+            }
+
+            // ============================================================
+            // SETTINGS LOGIC (adapted from original)
+            // ============================================================
+
+            // Central storage: routed through the shared DB object
+            // (js/storage.js) so this page reads/writes the exact same
+            // per-account keys as every other page and Admin's views.
+            function scopedKey(base) {
+                return Scope.key(base);
+            }
+            const AppDB = (typeof DB !== 'undefined') ? DB : {
+                // Defensive fallback only — storage.js should always be
+                // loaded on this page. Mirrors DB's per-account behavior
+                // if it somehow isn't.
+                getProfile: function() { try { return JSON.parse(localStorage.getItem(scopedKey('receiptly_profile'))) || {}; } catch (e) { return {}; } },
+                saveProfile: function(p) { try { localStorage.setItem(scopedKey('receiptly_profile'), JSON.stringify(p)); return true; } catch (e) { console.error('saveProfile failed', e); return false; } },
+                getSettings: function() { try { return JSON.parse(localStorage.getItem(scopedKey('receiptly_settings'))) || {}; } catch (e) { return {}; } },
+                saveSettings: function(s) { try { localStorage.setItem(scopedKey('receiptly_settings'), JSON.stringify(s)); return true; } catch (e) { console.error('saveSettings failed', e); return false; } },
+                getSession: function() { return (typeof Scope !== 'undefined') ? Scope.getSession() : null; },
+                setSession: function(s) { if (typeof Scope !== 'undefined') Scope.setSession(s); },
+                clearData: function() {}
+            };
+
+            // Populate the currency dropdown from the single shared
+            // Currency list (js/currency.js) — one definition, used by
+            // both Admin's base-currency picker and this per-user one.
+            function populateCurrencySelect() {
+                const select = document.getElementById('currency');
+                select.innerHTML = '';
+                Currency.list().forEach(function(c) {
+                    const opt = document.createElement('option');
+                    opt.value = c.code;
+                    const flag = Currency.flagForCurrency ? Currency.flagForCurrency(c.code) : '';
+                    opt.textContent = (flag ? flag + '  ' : '') + c.code + ' (' + c.symbol + ') — ' + c.name;
+                    select.appendChild(opt);
+                });
+            }
+
+            // Resolves a saved profile.currency value (a proper code, or
+            // a legacy raw symbol from before this dropdown existed) to
+            // a code that exists in the dropdown.
+            function resolveCurrencyCode(raw) {
+                if (!raw) return null;
+                const found = Currency.findByCode(raw);
+                if (found) return found.code;
+                return Currency.codeFromSymbol(raw);
+            }
+
+            // Small hint under the dropdown: this only affects display —
+            // it doesn't change the currency subscription prices are
+            // billed in (that's set by Admin).
+            function updateCurrencyRateNote() {
+                const note = document.getElementById('currencyRateNote');
+                if (!note) return;
+                const selected = document.getElementById('currency').value;
+                const platform = Currency.getPlatformCurrency();
+                note.textContent = (selected === platform)
+                    ? 'Receipts, totals and your subscription price will all show in this currency.'
+                    : 'Receipts and totals will show in this currency. Subscription prices are billed in ' + platform + ' with a live-converted estimate shown alongside.';
+            }
+            document.getElementById('currency').addEventListener('change', function() {
+                updateCurrencyRateNote();
+                if (typeof renderPlanPrices === 'function') renderPlanPrices();
+            });
+
+            // Load profile form
+            function loadProfileForm() {
+                const p = AppDB.getProfile();
+                document.getElementById('businessName').value = p.businessName || '';
+                document.getElementById('phone').value = p.phone || '';
+                document.getElementById('pEmail').value = p.email || '';
+                document.getElementById('address').value = p.address || '';
+                document.getElementById('website').value = p.website || '';
+                document.getElementById('footerMessage').value = p.footerMessage || '';
+                populateCurrencySelect();
+                document.getElementById('currency').value = resolveCurrencyCode(p.currency) || Currency.getPlatformCurrency();
+                updateCurrencyRateNote();
+                if (p.logo) {
+                    const previewImg = document.getElementById('logoPreview');
+                    previewImg.src = p.logo;
+                    previewImg.style.display = 'block';
+                    document.getElementById('logoPlaceholder').style.display = 'none';
+                }
+                const settings = AppDB.getSettings();
+                document.getElementById('defaultTax').value = settings.taxRate || 0;
+            }
+            loadProfileForm();
+
+            // ============================================================
+            // BILLING & SUBSCRIPTION
+            // ============================================================
+
+            // Base plan prices and the currency they're set in both come
+            // from Admin's platform settings (js/currency.js) rather than
+            // being hardcoded here, so an admin price/currency change is
+            // reflected immediately without touching this page.
+            var PLAN_PRICES = Currency.getPlanPrices();
+            var PLAN_CURRENCY = Currency.getPlatformCurrency();
+
+            function getSubscription() {
+                try {
+                    var raw = localStorage.getItem(scopedKey('receiptly_subscription'));
+                    return raw ? JSON.parse(raw) : null;
+                } catch (e) { return null; }
+            }
+
+            function saveSubscription(sub) {
+                localStorage.setItem(scopedKey('receiptly_subscription'), JSON.stringify(sub));
+            }
+
+            function getSubscriptionPayments() {
+                try {
+                    var raw = localStorage.getItem(scopedKey('receiptly_payments'));
+                    var list = raw ? JSON.parse(raw) : [];
+                    if (!Array.isArray(list)) list = [];
+                    return list.filter(function(p) { return p.type === 'subscription'; })
+                        .sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+                } catch (e) { return []; }
+            }
+
+            function addSubscriptionPayment(payment) {
+                var raw = localStorage.getItem(scopedKey('receiptly_payments'));
+                var list = [];
+                try { list = raw ? JSON.parse(raw) : []; } catch (e) { list = []; }
+                if (!Array.isArray(list)) list = [];
+                list.unshift(payment);
+                localStorage.setItem(scopedKey('receiptly_payments'), JSON.stringify(list));
+            }
+
+            function fmtMoney(n) {
+                return Currency.format(n, PLAN_CURRENCY);
+            }
+
+            // Shows a live-converted "≈ ..." amount next to a base-currency
+            // price whenever the user's own currency differs from the
+            // platform's base currency. Clears the target element if the
+            // currencies match or no exchange rate is available.
+            function showConvertedAmount(elId, amount) {
+                var el = document.getElementById(elId);
+                if (!el) return;
+                el.textContent = '';
+                var userCode = Currency.getUserCurrencyCode();
+                if (!userCode || userCode === PLAN_CURRENCY) return;
+                Currency.convert(amount, PLAN_CURRENCY, userCode).then(function(converted) {
+                    if (converted === null || converted === undefined) return;
+                    el.textContent = '≈ ' + Currency.format(converted, userCode);
+                });
+            }
+
+            // Renders the base price text for each plan card plus its
+            // live-converted equivalent in the user's own currency.
+            function renderPlanPrices() {
+                document.getElementById('planNormalPriceText').textContent = fmtMoney(PLAN_PRICES.Normal);
+                document.getElementById('planProPriceText').textContent = fmtMoney(PLAN_PRICES.Pro);
+                showConvertedAmount('planNormalConverted', PLAN_PRICES.Normal);
+                showConvertedAmount('planProConverted', PLAN_PRICES.Pro);
+            }
+
+            function fmtBillingDate(d) {
+                if (!d) return 'Not set';
+                var dt = new Date(d);
+                if (isNaN(dt.getTime())) return 'Not set';
+                return dt.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+            }
+
+            function renderBilling() {
+                var sub = getSubscription();
+                var status = sub ? (sub.status || 'inactive') : 'inactive';
+                var planLabel = sub && sub.plan ? sub.plan : 'None yet';
+
+                document.getElementById('billingPlanLabel').textContent = planLabel;
+
+                var badge = document.getElementById('billingStatusBadge');
+                var statusStyles = {
+                    active: { bg: 'var(--green-soft)', fg: 'var(--green)', label: 'Active' },
+                    pending: { bg: 'var(--orange-soft)', fg: 'var(--orange)', label: 'Pending Confirmation' },
+                    suspended: { bg: 'var(--red-soft)', fg: 'var(--red)', label: 'Suspended' },
+                    cancelled: { bg: 'var(--paper-sunken)', fg: 'var(--muted)', label: 'Cancelled' },
+                    inactive: { bg: 'var(--paper-sunken)', fg: 'var(--muted)', label: 'Not Subscribed' }
+                };
+                var st = statusStyles[status] || statusStyles.inactive;
+                badge.style.background = st.bg;
+                badge.style.color = st.fg;
+                badge.textContent = st.label;
+
+                document.getElementById('billingRenewsLabel').textContent =
+                    status === 'suspended' ? 'Overdue' : fmtBillingDate(sub && sub.renewsAt);
+
+                var lockedNotice = document.getElementById('billingLockedNotice');
+                lockedNotice.style.display = (status === 'suspended') ? 'block' : 'none';
+
+                // Pre-select whichever plan is active or was last requested.
+                var preselect = (sub && (sub.pendingPlan || sub.plan)) || null;
+                document.querySelectorAll('input[name="billingPlan"]').forEach(function(input) {
+                    input.checked = (input.value === preselect);
+                });
+
+                var payBankBtn = document.getElementById('payViaBankBtn');
+                var payCardBtn = document.getElementById('payViaCardBtn');
+                if (status === 'pending') {
+                    payBankBtn.disabled = true;
+                    payCardBtn.disabled = true;
+                    payBankBtn.textContent = 'Awaiting Admin Confirmation…';
+                    payCardBtn.style.display = 'none';
+                } else {
+                    payBankBtn.disabled = false;
+                    payCardBtn.disabled = false;
+                    payCardBtn.style.display = '';
+                    payBankBtn.textContent = '🏦 Bank Transfer';
+                }
+
+                // History
+                var history = getSubscriptionPayments();
+                var wrap = document.getElementById('billingHistoryWrap');
+                var list = document.getElementById('billingHistoryList');
+                if (history.length) {
+                    wrap.style.display = 'block';
+                    var histStatusStyles = {
+                        pending: { bg: 'var(--orange-soft)', fg: 'var(--orange)', label: 'Pending' },
+                        completed: { bg: 'var(--green-soft)', fg: 'var(--green)', label: 'Confirmed' },
+                        paid: { bg: 'var(--green-soft)', fg: 'var(--green)', label: 'Confirmed' },
+                        rejected: { bg: 'var(--red-soft)', fg: 'var(--red)', label: 'Rejected' },
+                        refunded: { bg: 'var(--paper-sunken)', fg: 'var(--muted)', label: 'Refunded' }
+                    };
+                    list.innerHTML = history.slice(0, 5).map(function(p) {
+                        var hs = histStatusStyles[p.status] || histStatusStyles.pending;
+                        return '<li style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:0.8rem;">' +
+                            '<span>' + escapeHTML(p.plan || '') + ' · ' + escapeHTML(fmtMoney(p.amount)) + ' · ' + escapeHTML(fmtBillingDate(p.date)) + '</span>' +
+                            '<span style="padding:2px 8px;border-radius:999px;font-size:0.7rem;font-weight:700;background:' + hs.bg + ';color:' + hs.fg + ';">' + hs.label + '</span>' +
+                            '</li>';
+                    }).join('');
+                } else {
+                    wrap.style.display = 'none';
+                }
+            }
+
+            function escapeHTML(str) {
+                return String(str == null ? '' : str)
+                    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            }
+
+            // Shared: get the currently selected plan, or show an
+            // inline error and return null if none is selected yet.
+            function getSelectedPlanOrError() {
+                var errorBox = document.getElementById('billingFormError');
+                errorBox.style.display = 'none';
+                var selected = document.querySelector('input[name="billingPlan"]:checked');
+                if (!selected) {
+                    errorBox.textContent = 'Please choose a plan (Normal or Pro) first.';
+                    errorBox.style.display = 'block';
+                    return null;
+                }
+                return selected.value;
+            }
+
+            // Records the actual subscription payment (shared by both
+            // the bank transfer and card flows) and puts the account
+            // into "pending" status awaiting admin confirmation.
+            function recordSubscriptionPayment(plan, method, reference) {
+                var amount = PLAN_PRICES[plan] || 0;
+                var now = new Date().toISOString();
+
+                var payment = {
+                    id: 'subpay_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+                    type: 'subscription',
+                    category: 'subscription',
+                    plan: plan,
+                    amount: amount,
+                    currency: PLAN_CURRENCY,
+                    method: method,
+                    reference: reference,
+                    status: 'pending',
+                    date: now
+                };
+                addSubscriptionPayment(payment);
+
+                var sub = getSubscription() || {};
+                sub.pendingPlan = plan;
+                sub.status = 'pending';
+                sub.billingCycle = 'Monthly';
+                sub.amount = amount;
+                sub.currency = PLAN_CURRENCY;
+                sub.lastPaymentRequestAt = now;
+                if (!sub.startedAt) sub.startedAt = now;
+                saveSubscription(sub);
+
+                // Also drop this into the shared audit trail (js/storage.js)
+                // so it shows up on the Audit Log page, not just here.
+                if (typeof DB !== 'undefined' && DB.addAuditLog) {
+                    DB.addAuditLog({
+                        action: 'subscription_payment_submitted',
+                        module: 'billing',
+                        details: 'Submitted ' + method + ' payment of ' + fmtMoney(amount) + ' for the ' + plan + ' plan'
+                    });
+                }
+
+                renderBilling();
+                if (typeof App !== 'undefined' && App.toast) {
+                    App.toast('Payment submitted — awaiting admin confirmation.');
+                } else if (typeof Popup !== 'undefined') {
+                    Popup.alert({ title: 'Payment submitted', message: 'Awaiting admin confirmation.', danger: false });
+                }
+            }
+
+            // ---------- Bank Transfer modal ----------
+            var bankModal = document.getElementById('bankTransferModal');
+            document.getElementById('payViaBankBtn').addEventListener('click', function() {
+                var plan = getSelectedPlanOrError();
+                if (!plan) return;
+                document.getElementById('bankModalAmount').textContent = fmtMoney(PLAN_PRICES[plan] || 0);
+                showConvertedAmount('bankModalConverted', PLAN_PRICES[plan] || 0);
+                document.getElementById('bankReference').value = '';
+                document.getElementById('bankReferenceError').style.display = 'none';
+                bankModal.style.display = 'flex';
+            });
+            function closeBankModal() { bankModal.style.display = 'none'; }
+            document.getElementById('bankModalClose').addEventListener('click', closeBankModal);
+            bankModal.addEventListener('click', function(e) { if (e.target === bankModal) closeBankModal(); });
+
+            document.getElementById('confirmBankTransferBtn').addEventListener('click', function() {
+                var plan = getSelectedPlanOrError();
+                if (!plan) { closeBankModal(); return; }
+                var reference = document.getElementById('bankReference').value.trim();
+                var refError = document.getElementById('bankReferenceError');
+                if (!reference) {
+                    refError.style.display = 'block';
+                    return;
+                }
+                refError.style.display = 'none';
+                recordSubscriptionPayment(plan, 'Bank Transfer', reference);
+                closeBankModal();
+            });
+
+            // ---------- Card payment modal ----------
+            var cardModal = document.getElementById('cardPaymentModal');
+            document.getElementById('payViaCardBtn').addEventListener('click', function() {
+                var plan = getSelectedPlanOrError();
+                if (!plan) return;
+                document.getElementById('cardModalAmount').textContent = fmtMoney(PLAN_PRICES[plan] || 0);
+                showConvertedAmount('cardModalConverted', PLAN_PRICES[plan] || 0);
+                document.getElementById('cardName').value = '';
+                document.getElementById('cardNumber').value = '';
+                document.getElementById('cardExpiry').value = '';
+                document.getElementById('cardCvv').value = '';
+                document.getElementById('cardFormError').style.display = 'none';
+                cardModal.style.display = 'flex';
+            });
+            function closeCardModal() { cardModal.style.display = 'none'; }
+            document.getElementById('cardModalClose').addEventListener('click', closeCardModal);
+            cardModal.addEventListener('click', function(e) { if (e.target === cardModal) closeCardModal(); });
+
+            // Light formatting as the user types, purely cosmetic.
+            document.getElementById('cardNumber').addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/[^\d]/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim();
+            });
+            document.getElementById('cardExpiry').addEventListener('input', function(e) {
+                var v = e.target.value.replace(/[^\d]/g, '').slice(0, 4);
+                if (v.length > 2) v = v.slice(0, 2) + '/' + v.slice(2);
+                e.target.value = v;
+            });
+            document.getElementById('cardCvv').addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/[^\d]/g, '').slice(0, 4);
+            });
+
+            document.getElementById('confirmCardPaymentBtn').addEventListener('click', function() {
+                var plan = getSelectedPlanOrError();
+                if (!plan) { closeCardModal(); return; }
+                var errorBox = document.getElementById('cardFormError');
+                var name = document.getElementById('cardName').value.trim();
+                var number = document.getElementById('cardNumber').value.replace(/\s/g, '');
+                var expiry = document.getElementById('cardExpiry').value.trim();
+                var cvv = document.getElementById('cardCvv').value.trim();
+
+                if (!name) { errorBox.textContent = 'Enter the name on the card.'; errorBox.style.display = 'block'; return; }
+                if (!/^\d{13,16}$/.test(number)) { errorBox.textContent = 'Enter a valid card number.'; errorBox.style.display = 'block'; return; }
+                if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry)) { errorBox.textContent = 'Enter the expiry as MM/YY.'; errorBox.style.display = 'block'; return; }
+                if (!/^\d{3,4}$/.test(cvv)) { errorBox.textContent = 'Enter a valid CVV.'; errorBox.style.display = 'block'; return; }
+                errorBox.style.display = 'none';
+
+                // No live payment gateway in this build — the card is
+                // captured and a reference generated automatically so
+                // admin can verify/settle it, same as bank transfers.
+                var reference = 'CARD-' + number.slice(-4) + '-' + Date.now().toString(36).toUpperCase();
+                recordSubscriptionPayment(plan, 'Card', reference);
+                closeCardModal();
+            });
+
+            renderBilling();
+            renderPlanPrices();
+            if (new URLSearchParams(window.location.search).get('locked') === '1') {
+                var billingCard = document.getElementById('billingCard');
+                if (billingCard) billingCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            // Logo handling
+            let pendingLogo = null;
+            const logoInput = document.getElementById('logoInput');
+            const logoPreview = document.getElementById('logoPreview');
+            const logoPlaceholder = document.getElementById('logoPlaceholder');
+
+            logoInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                // Downscale + compress before ever touching localStorage.
+                // Raw phone-camera photos can be several MB; stored as a
+                // base64 dataURL that's ~33% bigger, and this same string
+                // gets copied into every receipt created afterwards
+                // (see create-receipt.html businessLogo field). An
+                // uncompressed logo fills the ~5-10MB localStorage quota
+                // almost immediately and "storage full" errors show up
+                // the next time anything tries to save (e.g. a receipt).
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const img = new Image();
+                    img.onload = function() {
+                        const maxDim = 240;
+                        let w = img.width, h = img.height;
+                        if (w > h && w > maxDim) { h = Math.round(h * (maxDim / w)); w = maxDim; }
+                        else if (h > maxDim) { w = Math.round(w * (maxDim / h)); h = maxDim; }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = w;
+                        canvas.height = h;
+                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                        pendingLogo = canvas.toDataURL('image/jpeg', 0.7);
+                        logoPreview.src = pendingLogo;
+                        logoPreview.style.display = 'block';
+                        logoPlaceholder.style.display = 'none';
+                    };
+                    img.onerror = function() {
+                        showToast('Could not read image', 'That file could not be processed as an image.', 'error');
+                    };
+                    img.src = reader.result;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            document.getElementById('removeLogoBtn').addEventListener('click', function() {
+                pendingLogo = null;
+                logoPreview.src = '';
+                logoPreview.style.display = 'none';
+                logoPlaceholder.style.display = 'block';
+                logoInput.value = '';
+            });
+
+            // Profile form submit
+            document.getElementById('profileForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = document.getElementById('businessName').value.trim();
+                const field = document.getElementById('businessName').closest('.field');
+                field.classList.toggle('has-error', !name);
+                if (!name) return;
+
+                const profile = AppDB.getProfile();
+                profile.businessName = name;
+                profile.phone = document.getElementById('phone').value.trim();
+                profile.email = document.getElementById('pEmail').value.trim();
+                profile.address = document.getElementById('address').value.trim();
+                profile.website = document.getElementById('website').value.trim();
+                profile.footerMessage = document.getElementById('footerMessage').value.trim();
+                if (pendingLogo) profile.logo = pendingLogo;
+                const saved = AppDB.saveProfile(profile);
+                if (saved === false) {
+                    showToast('Storage is full', 'Your device storage is full. Delete some old receipts or remove your business logo, then try again.', 'error');
+                    return;
+                }
+                showToast('Business profile saved', 'Your profile has been updated successfully.', 'success');
+                // Update header business name
+                updateHeader();
+            });
+
+            // Defaults form submit
+            document.getElementById('defaultsForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const profile = AppDB.getProfile();
+                profile.currency = document.getElementById('currency').value.trim() || Currency.getPlatformCurrency();
+                const savedProfile = AppDB.saveProfile(profile);
+
+                const settings = AppDB.getSettings();
+                settings.taxRate = parseFloat(document.getElementById('defaultTax').value) || 0;
+                const savedSettings = AppDB.saveSettings(settings);
+                if (savedProfile === false || savedSettings === false) {
+                    showToast('Storage is full', 'Your device storage is full. Delete some old receipts or remove your business logo, then try again.', 'error');
+                    return;
+                }
+                showToast('Defaults saved', 'Receipt defaults updated successfully.', 'success');
+                // The user's currency just changed — refresh the
+                // live-converted plan/modal amounts to match.
+                renderPlanPrices();
+            });
+
+            // Clear all data
+            document.getElementById('clearAllDataBtn').addEventListener('click', async function() {
+                const ok = await Popup.confirm({
+                    title: 'Delete all data?',
+                    message: 'This permanently deletes every receipt, customer, expense, product, payment, and your business profile from this browser. This cannot be undone.',
+                    confirmText: 'Delete everything',
+                    danger: true
+                });
+                if (!ok) return;
+                const session = AppDB.getSession();
+                AppDB.clearData();
+                if (session) AppDB.setSession(session);
+                // Also clear logo preview
+                pendingLogo = null;
+                logoPreview.src = '';
+                logoPreview.style.display = 'none';
+                logoPlaceholder.style.display = 'block';
+                showToast('All data cleared', 'All business data has been removed from this browser.', 'success');
+                setTimeout(function() {
+                    window.location.reload();
+                }, 1000);
+            });
+
+            // ============================================================
+            // TWO-STEP VERIFICATION
+            // ============================================================
+            function renderTwoFa() {
+                var user = (typeof Scope !== 'undefined') ? Scope.currentUser() : null;
+                var on = typeof TwoFactor !== 'undefined' && TwoFactor.isEnabledForUser(user);
+                document.getElementById('twoFaStatusLabel').textContent = 'Two-step verification is ' + (on ? 'on' : 'off');
+                var btn = document.getElementById('twoFaToggleBtn');
+                btn.textContent = on ? 'Turn Off' : 'Turn On';
+                btn.classList.toggle('btn--danger', on);
+                btn.classList.toggle('btn--outline', !on);
+            }
+            document.getElementById('twoFaToggleBtn').addEventListener('click', function() {
+                if (typeof TwoFactor === 'undefined') return;
+                var user = (typeof Scope !== 'undefined') ? Scope.currentUser() : null;
+                var action = TwoFactor.isEnabledForUser(user) ? TwoFactor.disableForUser() : TwoFactor.setupForUser();
+                action.then(function(changed) {
+                    if (!changed) return;
+                    if (typeof DB !== 'undefined' && DB.addAuditLog) {
+                        DB.addAuditLog({
+                            action: 'two_factor_toggled',
+                            module: 'authentication',
+                            description: 'Two-step verification ' + (TwoFactor.isEnabledForUser(Scope.currentUser()) ? 'enabled' : 'disabled')
+                        });
+                    }
+                    renderTwoFa();
+                });
+            });
+            renderTwoFa();
+
+            // ============================================================
+            // STORAGE CHANGE LISTENER (sync across tabs)
+            // ============================================================
+            window.addEventListener('storage', function(e) {
+                if (e.key && (e.key.indexOf('receiptly_profile') === 0 || e.key.indexOf('receiptly_settings') === 0)) {
+                    loadProfileForm();
+                    updateHeader();
+                }
+            });
+
+            // ============================================================
+            // NOTE: this page already renders its own sidebar/topbar markup above,
+            // so we only run the auth guard here — App.initPage() would also call
+            // App.buildShell() and inject a second, unstyled sidebar into the page.
+            // ============================================================
+            if (typeof App !== 'undefined' && typeof App.requireAuth === 'function') {
+                App.requireAuth();
+            }
+            if (typeof AuditLog !== 'undefined') AuditLog.pageView('Settings');
+
+            console.log('%c Receiptly ',
+                'background:#1f6fe0;color:#fff;font-weight:700;font-size:16px;padding:6px 14px;border-radius:4px;'
+            );
+            console.log('%c Professional Receipts + Small Business Management', 'color:#4a4540;font-size:13px;');
+
+        })();
+    </script>
+
+    <script>
+        (function () {
+            var logoutLink = document.getElementById('logoutLink');
+            if (!logoutLink) return;
+            logoutLink.addEventListener('click', function (e) {
+                e.preventDefault();
+                // Scope (js/user-scope.js) is the single source of truth
+                // for session storage.
+                Scope.clearSession();
+                window.location.href = '../login.html';
+            });
+        })();
+    </script>
+<script src="../js/audit-log.js"></script>
+</body>
+</html>
